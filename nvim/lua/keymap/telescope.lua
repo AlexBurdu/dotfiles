@@ -1,5 +1,3 @@
-vim.cmd('source ~/.config/nvim/lua/keymap.vim')
-
 -- Telescope
 vim.keymap.set("n", "<Leader>e", ":Telescope buffers<CR>")
 vim.keymap.set("n", "<Leader>f", ":Telescope find_files<CR>")

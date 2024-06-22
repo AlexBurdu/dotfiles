@@ -15,15 +15,15 @@ Plug('christoomey/vim-tmux-navigator')
 Plug('nvim-lua/plenary.nvim')
 Plug('nvim-telescope/telescope.nvim', { ['tag'] = '0.1.5' })
 
--- Conditional loading of work or personal plugins (Vimscript)
-local work_plugins_path = vim.fn.expand("$HOME/.config/nvim/lua/plugins/work_plugins.lua")
-local personal_plugins_path = vim.fn.expand("$HOME/.config/nvim/lua/plugins/personal_plugins.vim")
-
-if vim.fn.filereadable(work_plugins_path) ~= 0 then
-  require('plugins.work_plugins')()
-end
-if vim.fn.filereadable(personal_plugins_path) ~=0 then
-  require('plugins.personal')()
+-- Dynamically load all plugins in the plugins directory
+-- Each file should be a lua module that returns a function that loads plugins
+-- using Plug(), similar to the above examples
+local plugins = vim.fn.glob("$HOME/.config/nvim/lua/plugins/*.lua", 0, 1)
+for _, plugin in ipairs(plugins) do
+  if plugin:match("plugins/init.lua") == nil then -- if not init.lua
+    -- Pass the Plug function to the plugin module
+    require('plugins.' .. plugin:match("plugins/(.*)"):gsub(".lua", ""))(Plug)
+  end
 end
 
 vim.call('plug#end')

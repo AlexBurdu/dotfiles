@@ -1,0 +1,79 @@
+[global_config]
+  extra_styling = False
+  title_transmit_fg_color = "#000000"
+  title_transmit_bg_color = "#729fcf"
+  title_inactive_bg_color = "#d3dae3"
+  title_use_system_font = False
+  title_font = JetBrainsMono Nerd Font Mono 9
+[keybindings]
+  go_up = ""
+  go_down = ""
+  go_left = ""
+  go_right = ""
+  rotate_cw = ""
+  rotate_ccw = ""
+  split_horiz = <Primary><Shift>h
+  split_vert = <Primary><Shift>e
+  close_term = <Primary><Shift>w
+  toggle_scrollbar = ""
+  line_up = <Primary>Up
+  line_down = <Primary>Down
+  close_window = <Primary><Shift>q
+  resize_up = ""
+  resize_down = ""
+  resize_left = ""
+  resize_right = ""
+  toggle_zoom = ""
+  next_tab = ""
+  prev_tab = ""
+  reset = <Primary><Shift>r
+  reset_clear = ""
+  hide_window = ""
+  ungroup_all = ""
+  ungroup_tab = ""
+  new_window = ""
+  new_terminator = ""
+  layout_launcher = ""
+  help = <Shift>F1
+[profiles]
+  [[default]]
+    background_color = "#d3dae3"
+    background_darkness = 1.0
+    cursor_color = "#c2c2c2"
+    font = JetBrainsMono Nerd Font 13
+    foreground_color = "#000000"
+    show_titlebar = False
+    scrollback_infinite = True
+    palette = "#000000:#aa0000:#00aa00:#aa5500:#0000aa:#aa00aa:#00aaaa:#aaaaaa:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ffff:#ffffff"
+    use_system_font = False
+    use_theme_colors = True
+  [[alex_light]]
+    background_color = "#eff1f5"
+    background_darkness = 0.92
+    cursor_color = "#aaaaaa"
+    font = JetBrainsMono Nerd Font 13
+    foreground_color = "#000000"
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#cd0000:#00cd00:#cdcd00:#0000ee:#cd00cd:#00cdcd:#e5e5e5:#7f7f7f:#ff0000:#00ff00:#ffff00:#5c5cff:#ff00ff:#00ffff:#ffffff"
+    use_system_font = False
+  [[alex_dark]]
+    cursor_color = "#aaaaaa"
+    font = JetBrainsMono Nerd Font 13
+    foreground_color = "#f3f3f3"
+    show_titlebar = False
+    scrollback_infinite = True
+    palette = "#000000:#cc0000:#4e9a06:#c4a000:#3465a4:#75507b:#06989a:#d3d7cf:#555753:#ef2929:#8ae234:#fce94f:#729fcf:#ad7fa8:#34e2e2:#eeeeec"
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      size = 1080, 400
+      type = Window
+[plugins]

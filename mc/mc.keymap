@@ -1,0 +1,8 @@
+[filemanager:empty-cmdline]
+ChangePanel = tab
+
+[filemanager]
+ChangePanel = ctrl-tab; shift-tab
+
+[input]
+Complete = tab

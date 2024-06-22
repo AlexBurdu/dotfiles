@@ -1,0 +1,5 @@
+require("plugins")
+require("options")
+require("keymap")
+require("color")
+require("copilot")

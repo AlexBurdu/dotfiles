@@ -1,0 +1,295 @@
+// Place your settings in this file to overwrite the default settings
+// Useful references:
+// - https://github.com/VSCodeVim/Vim
+// - https://github.com/Melkeydev/vscode_bindings/tree/main
+// - https://www.youtube.com/watch?v=GST8we5uABo
+// - https://code.visualstudio.com/docs/getstarted/keybindings#_display
+{
+    "extensions.ignoreRecommendations": true,
+    "files.autoSave": "onFocusChange",
+    "window.reopenFolders": "all",
+    "window.restoreWindows": "all",
+    "workbench.welcome.enabled": true,
+    "workbench.startupEditor": "newUntitledFile",
+    "[xml]": {
+    },
+    // THEMING AND APPEARANCE
+    "breadcrumbs.enabled": true,
+    "editor.fontFamily": "Mono",
+    "editor.fontSize": 12,
+    "editor.lineNumbers": "relative",
+    "editor.minimap.enabled": false,
+    "editor.wordWrap": "on",
+    "window.autoDetectColorScheme": true,
+    "window.titleBarStyle": "custom",
+    "window.zoomLevel": 2,
+    // "workbench.iconTheme": "material-icon-theme",
+    // "workbench.colorTheme": "Visual Studio Light",
+    "workbench.preferredLightColorTheme": "Visual Studio Light",
+    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+    "zenMode.hideLineNumbers": false,
+    // ################################################################################
+    // VIM CONFIGURATION 
+    "vim.leader": "<Space>",
+    "vim.useCtrlKeys": true,
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.hlsearch": true,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-a>": false,
+        "<C-e>": true,
+        "<C-f>": false
+    },
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "j"
+            ],
+            "commands": [
+                "<Esc>"
+            ]
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        // NAVIGATION
+        // switch b/w buffers
+        {
+            "before": [
+                "S-l"
+            ],
+            "commands": [
+                ":bnext"
+            ]
+        },
+        {
+            "before": [
+                "S-h"
+            ],
+            "commands": [
+                ":bprevious"
+            ]
+        },
+        // Splits
+        {
+            "before": [
+                "leader",
+                "v"
+            ],
+            "commands": [
+                ":vsplit"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "s"
+            ],
+            "commands": [
+                ":split"
+            ]
+        },
+        // Misc
+        {
+            "before": [
+                "leader",
+                "w"
+            ],
+            "commands": [
+                "workbench.action.files.save"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "q"
+            ],
+            "commands": [
+                ":q"
+            ]
+        },
+        {
+            "before": [
+                "C-p"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "f"
+            ],
+            "commands": [
+                "editor.action.formatDocument"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "i"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "d"
+            ],
+            "commands": [
+                "editor.action.revealDefinition"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "h"
+            ],
+            "commands": [
+                "editor.action.showDefinitionPreviewHover"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "e"
+            ],
+            "commands": [
+                "editor.action.showDefinitionPreviewHover"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "z"
+            ],
+            "commands": [
+                "workbench.action.toggleZenMode"
+            ]
+        },
+        // Navigate to warnings or errors in the file
+        {
+            "before": [
+                "leader",
+                "n"
+            ],
+            "commands": [
+                "editor.action.marker.next"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "N"
+            ],
+            "commands": [
+                "editor.action.marker.prev"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "b"
+            ],
+            "commands": [
+                "editor.debug.action.toggleInlineBreakpoint"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindings": [
+        // Stay in visual mode while indenting
+        {
+            "before": [
+                "<"
+            ],
+            "commands": [
+                "editor.action.outdentLines"
+            ]
+        },
+        {
+            "before": [
+                ">"
+            ],
+            "commands": [
+                "editor.action.indentLines"
+            ]
+        },
+        // Move selected lines while staying in visual mode
+        {
+            "before": [
+                "J"
+            ],
+            "commands": [
+                "editor.action.moveLinesDownAction"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "commands": [
+                "editor.action.moveLinesUpAction"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "j"
+            ],
+            "commands": [
+                "editor.action.joinLines"
+            ]
+        }
+    ],
+    // To improve performance",
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1
+    },
+    // End Vim Configuration ##########################################################
+    "files.eol": "\n",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    // ################################################################################
+    // LANGUAGES AND FRAMEWORKS
+    // Bazel
+    "bazel.executable": "./bazelw",
+    "bazel.buildifierFixOnFormat": true,
+    "settingsSync.ignoredSettings": [
+        "-bazel.executable",
+        "-bazel.buildifierExecutable"
+    ],
+    // Dart
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
+    },
+    "dart.debugExternalLibraries": true,
+    "dart.debugSdkLibraries": true,
+    "dart.previewLsp": true,
+    "database-client.defaultSelectLimit": 300,
+    "boot-java.change-detection.on": true,
+    "redhat.telemetry.enabled": false,
+    "workbench.colorTheme": "Visual Studio Light",
+    "window.menuBarVisibility": "compact"
+}

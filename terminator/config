@@ -68,12 +68,21 @@
     use_system_font = False
 [layouts]
   [[default]]
-    [[[child1]]]
-      parent = window0
-      profile = default
-      type = Terminal
-    [[[window0]]]
-      parent = ""
-      size = 1080, 400
+    [[[child0]]]
       type = Window
+      parent = ""
+      order = 0
+      position = 1215:528
+      maximised = False
+      fullscreen = False
+      size = 1395, 980
+      title = tmux
+      last_active_term = 5b18f99a-4acc-46f6-b134-e8d779350060
+      last_active_window = True
+    [[[terminal1]]]
+      type = Terminal
+      parent = child0
+      order = 0
+      profile = alex_light
+      uuid = 5b18f99a-4acc-46f6-b134-e8d779350060
 [plugins]

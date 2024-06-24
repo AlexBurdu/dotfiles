@@ -1,4 +1,5 @@
-require("plugins")
+require("config.lazy")
+require("plugins_plug")
 require("options")
 require("keymap")
 require("color")

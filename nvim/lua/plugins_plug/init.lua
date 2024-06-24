@@ -18,11 +18,11 @@ Plug('nvim-telescope/telescope.nvim', { ['tag'] = '0.1.5' })
 -- Dynamically load all plugins in the plugins directory
 -- Each file should be a lua module that returns a function that loads plugins
 -- using Plug(), similar to the above examples
-local plugins = vim.fn.glob("$HOME/.config/nvim/lua/plugins/*.lua", 0, 1)
+local plugins = vim.fn.glob("$HOME/.config/nvim/lua/plugins_plug/*.lua", 0, 1)
 for _, plugin in ipairs(plugins) do
-  if plugin:match("plugins/init.lua") == nil then -- if not init.lua
+  if plugin:match("plugins_plug/init.lua") == nil then -- if not init.lua
     -- Pass the Plug function to the plugin module
-    require('plugins.' .. plugin:match("plugins/(.*)"):gsub(".lua", ""))(Plug)
+    require('plugins_plug.' .. plugin:match("plugins_plug/(.*)"):gsub(".lua", ""))(Plug)
   end
 end
 

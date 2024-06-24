@@ -1,6 +1,6 @@
 " ### UI Settings###
 let timehour = (strftime("%H"))
-if timehour >= 20 || timehour < 5
+if timehour >= 19 || timehour < 5
   set background=dark
 else
   set background=light

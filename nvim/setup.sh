@@ -15,6 +15,9 @@ if [ "$response" = "y" ]; then
   ln -s $(pwd)/init.lua "$config_dir/init.lua"
 fi
 
+rm  -rf "$config_dir/lua/config"
+ln -s $(pwd)/lua/config/ "$config_dir/lua/config"
+
 # Symlink individual files and directories under lua
 rm  -rf "$config_dir/lua/color"
 ln -s $(pwd)/lua/color "$config_dir/lua/color"
@@ -53,6 +56,23 @@ for file in $(pwd)/lua/plugins/*; do
   read -r response
   if [ "$response" = "y" ]; then
     ln -s $file ~/.config/nvim/lua/plugins/$(basename $file)
+  fi
+done
+
+# Plug plugins that are loaded dynamically. 
+# We only symlink the init.lua file and prompt the user before symlink-ing
+# any of any of the other ones.
+mkdir ~/.config/nvim/lua/plugins_plug
+for file in $(pwd)/lua/plugins_plug/*; do
+  if [ "$file" = "$(pwd)/lua/plugins_plug/init.lua" ]; then
+    rm -rf ~/.config/nvim/lua/plugins_plug/init.lua
+    ln -s $file ~/.config/nvim/lua/plugins_plug/$(basename $file)
+    continue
+  fi
+  echo "Symlink $file? (y/n)"
+  read -r response
+  if [ "$response" = "y" ]; then
+    ln -s $file ~/.config/nvim/lua/plugins_plug/$(basename $file)
   fi
 done
 

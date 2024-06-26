@@ -42,37 +42,17 @@ for file in $(pwd)/lua/keymap/*; do
   fi
 done
 
-# plugins that are loaded dynamically. 
-# We only symlink the init.lua file and prompt the user before symlink-ing
-# any of any of the other ones.
-mkdir ~/.config/nvim/lua/plugins
+# Plugins that are loaded dynamically. 
+# We only symlink the lazy_nvim.lua file and prompt the user before symlink-ing
+# any of any of the plugins.
+mkdir -p "$config_dir/lua/plugins"
+rm -rf ~/.config/nvim/lua/lazy_nvim.lua
+ln -s "$(pwd)/lua/lazy_nvim.lua"   "$config_dir/lua/lazy_nvim.lua"
 for file in $(pwd)/lua/plugins/*; do
-  if [ "$file" = "$(pwd)/lua/plugins/init.lua" ]; then
-    rm -rf ~/.config/nvim/lua/plugins/init.lua
-    ln -s $file ~/.config/nvim/lua/plugins/$(basename $file)
-    continue
-  fi
   echo "Symlink $file? (y/n)"
   read -r response
   if [ "$response" = "y" ]; then
     ln -s $file ~/.config/nvim/lua/plugins/$(basename $file)
-  fi
-done
-
-# Plug plugins that are loaded dynamically. 
-# We only symlink the init.lua file and prompt the user before symlink-ing
-# any of any of the other ones.
-mkdir ~/.config/nvim/lua/plugins_plug
-for file in $(pwd)/lua/plugins_plug/*; do
-  if [ "$file" = "$(pwd)/lua/plugins_plug/init.lua" ]; then
-    rm -rf ~/.config/nvim/lua/plugins_plug/init.lua
-    ln -s $file ~/.config/nvim/lua/plugins_plug/$(basename $file)
-    continue
-  fi
-  echo "Symlink $file? (y/n)"
-  read -r response
-  if [ "$response" = "y" ]; then
-    ln -s $file ~/.config/nvim/lua/plugins_plug/$(basename $file)
   fi
 done
 

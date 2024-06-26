@@ -1,5 +1,4 @@
-require("config.lazy")
-require("plugins_plug")
+require("lazy_nvim")
 require("options")
 require("keymap")
 require("color")

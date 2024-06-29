@@ -1,5 +1,4 @@
 -- Loads all the keymap files in the current directory and its subdirectories
-
 local current_dir = vim.fn.expand("<sfile>:p:h")
 local files = vim.fn.glob(current_dir .. "/**/*", true, true)
 for _, file in ipairs(files) do

@@ -15,6 +15,14 @@ if [ "$response" = "y" ]; then
   ln -s $(pwd)/init.lua "$config_dir/init.lua"
 fi
 
+# Prompt the user before symlinking the lazy-lock.json file
+echo "Symlink nvim/lazy-lock.json? (y/n)"
+read -r response
+if [ "$response" = "y" ]; then
+  rm -rf "$config_dir/lazy-lock.json"
+  ln -s $(pwd)/lazy-lock.json "$config_dir/lazy-lock.json"
+fi
+
 rm  -rf "$config_dir/lua/config"
 ln -s $(pwd)/lua/config/ "$config_dir/lua/config"
 
@@ -52,6 +60,7 @@ for file in $(pwd)/lua/plugins/*; do
   echo "Symlink $file? (y/n)"
   read -r response
   if [ "$response" = "y" ]; then
+    rm -rf ~/.config/nvim/lua/plugins/$(basename $file)
     ln -s $file ~/.config/nvim/lua/plugins/$(basename $file)
   fi
 done

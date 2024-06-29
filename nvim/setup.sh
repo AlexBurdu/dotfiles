@@ -37,13 +37,13 @@ ln -s $(pwd)/lua/options "$config_dir/lua/options"
 # before symlinking it, with the exception of init.lua
 mkdir -p "$config_dir/lua/keymap"
 for file in $(pwd)/lua/keymap/*; do
+  response="n"
   if [ "$file" = "$(pwd)/lua/keymap/init.lua" ]; then
-    rm -rf "$config_dir/lua/keymap/$(basename $file)"
-    ln -s $file "$config_dir/lua/keymap/$(basename $file)"
-    continue
+    response="y"
+  else
+    echo "Symlink $file? (y/n)"
+    read -r response
   fi
-  echo "Symlink $file? (y/n)"
-  read -r response
   if [ "$response" = "y" ]; then
     rm -rf "$config_dir/lua/keymap/$(basename $file)"
     ln -s $file "$config_dir/lua/keymap/$(basename $file)"

@@ -16,8 +16,8 @@
 " functionality).
 "
 source ~/.config/nvim/lua/options/options.vim
-source ~/.config/nvim/lua/keymap.vim
-source ~/.config/nvim/lua/keymap/copilot.vim
+source ~/.config/nvim/lua/keymap/keymap.vim
+source ~/.config/ideavim/copilot.vim
 
 " ### Navigate ###
 nmap <Leader>e m'<Action>(Switcher)

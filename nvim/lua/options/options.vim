@@ -15,7 +15,7 @@ set number
 set relativenumber
 set nowrap
 
-set scrolloff=10
+set scrolloff=8
 
 set noswapfile
 set nobackup

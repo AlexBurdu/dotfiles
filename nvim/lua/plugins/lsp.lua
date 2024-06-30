@@ -11,6 +11,7 @@ return {
     "L3MON4D3/LuaSnip",
     "saadparwaiz1/cmp_luasnip",
     "j-hui/fidget.nvim",
+    "onsails/lspkind.nvim",
   },
 
   config = function()
@@ -27,8 +28,6 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = {
         "lua_ls",
-        -- "rust_analyzer",
-        -- "gopls",
       },
       handlers = {
         function(server_name) -- default handler (optional)

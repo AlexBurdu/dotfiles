@@ -1,5 +1,3 @@
-
-
 return {
   "chaoren/vim-wordmotion",
 

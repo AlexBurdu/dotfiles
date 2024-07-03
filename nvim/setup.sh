@@ -16,22 +16,25 @@ fi
 
 # Prompt the user before symlinking the init.lua file
 if [ $response != "a" ]; then
-  echo "Symlink nvim/init.lua? (y/n)"
+  echo "Do you want to copy (c), symlink (s) or don't change (n) nvim/init.lua?" 
   read -r response
 fi
-if [ "$response" = "y" -o $response = "a" ]; then
+if [ "$response" = "c" ]; then
+  rm -rf "$config_dir/init.lua"
+  cp $(pwd)/init.lua "$config_dir/init.lua"
+elif [ "$response" = "y" -o $response = "a" ]; then
   rm -rf "$config_dir/init.lua"
   ln -s $(pwd)/init.lua "$config_dir/init.lua"
 fi
 
 # Prompt the user before symlinking the lazy-lock.json file
 if [ $response != "a" ]; then
-  echo "Symlink nvim/lazy-lock.json? (y/n)"
+  echo "Copy (override) nvim/lazy-lock.json? (y/n)"
   read -r response
 fi
 if [ "$response" = "y" -o $response = "a" ]; then
   rm -rf "$config_dir/lazy-lock.json"
-  ln -s $(pwd)/lazy-lock.json "$config_dir/lazy-lock.json"
+  cp $(pwd)/lazy-lock.json "$config_dir/lazy-lock.json"
 fi
 
 rm  -rf "$config_dir/lua/config"

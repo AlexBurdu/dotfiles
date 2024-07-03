@@ -29,11 +29,6 @@ nnoremap <Leader><Leader>h :vsplit<CR>
 nnoremap <Leader><Leader>l :vsplit<CR><C-w>r
 nnoremap <Leader><Leader>k :split<CR>
 nnoremap <Leader><Leader>j :split<CR><C-w>r
-" Move between splits
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
 
 if !has('ide')
   " Allow navigating between splits in tmux when using netrw

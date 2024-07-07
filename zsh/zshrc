@@ -1,5 +1,6 @@
 source ~/.profile
 source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+alias inv='nvim $(fzf -m --preview "batcat --color=always {}")'
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -72,7 +73,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  colorize
   extract
   git
   tmux
@@ -120,3 +120,5 @@ fi
 
 # autosuggestions bindings
 bindkey '^Y' autosuggest-accept
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

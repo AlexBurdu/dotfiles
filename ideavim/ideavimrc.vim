@@ -19,10 +19,27 @@ source ~/.config/nvim/lua/options/options.vim
 source ~/.config/nvim/lua/keymap/keymap.vim
 source ~/.config/ideavim/copilot.vim
 
-" ### Navigate ###
+" ### NAVIGATE ###
 nmap <Leader>e m'<Action>(Switcher)
 nmap <C-t> m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
+
+" Move between splits
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Switch Buffers / Tabs
+nmap <S-h> m'<Action>(PreviousTab)
+nmap <S-l> m'<Action>(NextTab)
+
+" Move between splits / tab
+nmap <C-w>= <Action>(MaximizeEditorInSplit)
+nmap <C-w>\| <Action>(MaximizeEditorInSplit)
+nmap <C-w><C-r> <Action>(ChangeSplitOrientation)
+nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
+nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
 
 " Find/Grep and Replace
 nmap <Leader>g <Action>(FindInPath)
@@ -31,8 +48,8 @@ vmap <Leader>r <Action>(ReplaceInPath)
 nmap <Leader>r <Action>(ReplaceInPath)
 
 " Jump/GoTo
-nmap <Leader>d <Action>(QuickJavaDoc)
-nmap <Leader>h <Action>(ShowErrorDescription)
+nmap <Leader>h <Action>(QuickJavaDoc)
+"nmap <Leader><Leader>h <Action>(ShowErrorDescription) FIXME
 nmap <Leader>n m'<Action>(GotoNextError)
 nmap <Leader>N m'<Action>(GotoPreviousError)
 
@@ -45,18 +62,11 @@ nmap <Leader>u m'<Action>(GotoSuperMethod)
 nmap <Leader>a m'<Action>(FindUsages)
 nmap <Leader>b m'<Action>(Blaze.OpenCorrespondingBuildFile)
 
-" Move between splits / tab
-nmap <C-w>= <Action>(MaximizeEditorInSplit)
-nmap <C-w><C-r> <Action>(ChangeSplitOrientation)
-nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
-nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
-
 " VCS (Version Control System)
 map <Leader>vb <Action>(Annotate)
 map <Leader>vc <Action>(CheckinProject)
 map <Leader>vh <Action>(Vcs.ShowTabbedFileHistory)
 map <Leader>vd <Action>(Vcs.ShowDiffChangedLines)
-
 " ### Debug ###
 map <Leader><Leader>b <Action>(ToggleLineBreakpoint)
 " map <Leader><Leader>j <Action>(RunToCursor)

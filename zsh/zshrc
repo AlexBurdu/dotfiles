@@ -88,13 +88,8 @@ source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autoc
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 alias fzfvim='nvim $(fzf -m --preview "batcat --color=always {}")'
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
 # autosuggestions bindings
 bindkey '^Y' autosuggest-accept
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
 
 # Preferred editor based on availability
 if command -v nvim &> /dev/null; then
@@ -103,6 +98,18 @@ if command -v nvim &> /dev/null; then
 else
   export EDITOR='vim'
 fi
+
+# Check history file size and echo a warning if it's larger than 50k lines
+export HISTSIZE=100000
+history_size=$(wc -l < ~/.zsh_history)
+if [ $history_size -gt 50000 ]; then
+  echo "Warning: ~/.zsh_history file size is $history_size lines"
+fi
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"

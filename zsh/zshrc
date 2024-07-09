@@ -80,14 +80,18 @@ plugins=(
 
 ######################## USER CONFIGURATION ###################################
 source ~/.profile
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-
-fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
 
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 alias fzfvim='nvim $(fzf -m --preview "batcat --color=always {}")'
+
 # export MANPATH="/usr/local/man:$MANPATH"
+
+# autosuggestions bindings
+bindkey '^Y' autosuggest-accept
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -117,7 +121,4 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# autosuggestions bindings
-bindkey '^Y' autosuggest-accept
 

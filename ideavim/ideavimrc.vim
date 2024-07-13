@@ -41,36 +41,38 @@ nmap <C-w><C-r> <Action>(ChangeSplitOrientation)
 nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
 nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
 
-" Find/Grep and Replace
-nmap <Leader>g <Action>(FindInPath)
-vmap <Leader>g <Action>(FindInPath)
-vmap <Leader>r <Action>(ReplaceInPath)
-nmap <Leader>r <Action>(ReplaceInPath)
-
 " Jump/GoTo
-nmap <Leader>h <Action>(QuickJavaDoc)
-"nmap <Leader><Leader>h <Action>(ShowErrorDescription) FIXME
+nmap <Leader>sh <Action>(QuickJavaDoc)
+nmap <Leader>se <Action>(ShowErrorDescription)
 nmap <Leader>n m'<Action>(GotoNextError)
 nmap <Leader>N m'<Action>(GotoPreviousError)
 
-nmap <Leader>s m'<Action>(GotoSymbol)
-nmap <Leader>c m'<Action>(GotoClass)
-nmap <Leader>f m'<Action>(GotoFile)
-vmap <Leader>f m'<Action>(GotoFile)
-nmap <Leader>i m'<Action>(GotoImplementation)
-nmap <Leader>u m'<Action>(GotoSuperMethod)
-nmap <Leader>a m'<Action>(FindUsages)
-nmap <Leader>b m'<Action>(Blaze.OpenCorrespondingBuildFile)
+" Find/Grep and Replace
+nmap <Leader>fp <Action>(FindInPath)
+vmap <Leader>fp <Action>(FindInPath)
+vmap <Leader>fr <Action>(ReplaceInPath)
+nmap <Leader>fr <Action>(ReplaceInPath)
+
+" Find Stuff
+nmap <Leader>fy m'<Action>(GotoSymbol)
+nmap <Leader>fc m'<Action>(GotoClass)
+nmap <Leader>ff m'<Action>(GotoFile)
+vmap <Leader>ff m'<Action>(GotoFile)
+nmap <Leader>fu m'<Action>(FindUsages)
+nmap <Leader>fi m'<Action>(GotoImplementation)
+nmap <Leader>gu m'<Action>(GotoSuperMethod)
+nmap <Leader>gb m'<Action>(Blaze.OpenCorrespondingBuildFile)
 
 " VCS (Version Control System)
 map <Leader>vb <Action>(Annotate)
 map <Leader>vc <Action>(CheckinProject)
 map <Leader>vh <Action>(Vcs.ShowTabbedFileHistory)
 map <Leader>vd <Action>(Vcs.ShowDiffChangedLines)
+
 " ### Debug ###
 map <Leader><Leader>b <Action>(ToggleLineBreakpoint)
 " map <Leader><Leader>j <Action>(RunToCursor)
-map <Leader><Leader>d <Action>(DeviceAndSnapshotComboBox)
+" map <Leader><Leader>d <Action>(DeviceAndSnapshotComboBox)
 map <Leader>p <Action>(RefreshOrRunPreviewAction)
 
 " ### Refactor ###

@@ -30,24 +30,24 @@ return {
     vim.keymap.set("n", "<Leader>t", builtin.lsp_document_symbols, {})
 
     -- Find Files
-    vim.keymap.set("n", "<Leader>f", builtin.find_files, {})
-    vim.keymap.set("v", "<Leader>f", function ()
+    vim.keymap.set("n", "<Leader>ff", builtin.find_files, {})
+    vim.keymap.set("v", "<Leader>ff", function ()
       local selection = vim.getVisualSelection()
       builtin.find_files({default_text = selection})
     end)
-    -- Live Grep
-    vim.keymap.set("n", "<Leader>g", builtin.live_grep, {})
-    vim.keymap.set("v", "<Leader>g", function ()
+    -- Live Grep / Find in Path
+    vim.keymap.set("n", "<Leader>fp", builtin.live_grep, {})
+    vim.keymap.set("v", "<Leader>fp", function ()
       local selection = vim.getVisualSelection()
       builtin.live_grep({default_text = selection})
     end)
-    vim.keymap.set("n", "<Leader>s", builtin.grep_string)
+    vim.keymap.set("n", "<Leader>fs", builtin.grep_string)
 
     -- LSP
     vim.keymap.set("n", "gd", builtin.lsp_definitions, {})
-    vim.keymap.set("n", "<Leader>a", builtin.lsp_references)
-    vim.keymap.set("n", "<Leader>i", builtin.lsp_implementations)
-    vim.keymap.set("n", "<Leader>c", ":Telescope lsp_code_actions<CR>")
+    vim.keymap.set("n", "<Leader>fu", builtin.lsp_references)
+    vim.keymap.set("n", "<Leader>fi", builtin.lsp_implementations)
+    vim.keymap.set("n", "<Leader>fc", ":Telescope lsp_code_actions<CR>")
   end
 }
 

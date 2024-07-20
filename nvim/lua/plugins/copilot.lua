@@ -5,11 +5,11 @@ return {
   "github/copilot.vim",
 
   config = function()
-    vim.keymap.set('i', '<M-=>', '<Plug>(copilot-suggest)')
-    vim.keymap.set('i', '<M-->', '<Plug>(copilot-dismiss)')
-    vim.keymap.set('i', '<M-.>', '<Plug>(copilot-next)')
-    vim.keymap.set('i', '<M-,>', '<Plug>(copilot-previous)')
-    vim.keymap.set('i', '<M-/>', '<Plug>(copilot-accept-word)')
-    vim.keymap.set('i', '<M-\\>', '<Plug>(copilot-accept-line)')
+    vim.keymap.set('i', '<C-u>', '<Plug>(copilot-suggest)')
+    vim.keymap.set('i', '<C-d>', '<Plug>(copilot-dismiss)')
+    vim.keymap.set('i', '<C-j>', '<Plug>(copilot-next)')
+    vim.keymap.set('i', '<C-k>', '<Plug>(copilot-previous)')
+    vim.keymap.set('i', '<C-l>', '<Plug>(copilot-accept-word)')
+    vim.keymap.set('i', '<C-h>', '<Plug>(copilot-accept-line)')
   end
 }

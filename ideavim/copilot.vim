@@ -1,9 +1,9 @@
 " ### Copilot ###
 " See :actionlist copilot in intellij for more actions
 " When updating here, update nvim/lua/plugins/copilot.lua as well
-imap <M-=> <Action>(copilot.requestCompletions)
-imap <M--> <Action>(copilot.disposeInlays)
-imap <M-.> <Action>(copilot.cycleNextInlays)
-imap <M-,> <Action>(copilot.cyclePrevInlays)
-imap <M-/> <Action>(copilot.applyInlaysNextWord)
-imap <M-\> <Action>(copilot.applyInlaysNextLine)
+imap <C-u> <Action>(copilot.requestCompletions)
+imap <C-d> <Action>(copilot.disposeInlays)
+imap <C-j> <Action>(copilot.cycleNextInlays)
+imap <C-k> <Action>(copilot.cyclePrevInlays)
+imap <C-l> <Action>(copilot.applyInlaysNextWord)
+imap <C-h> <Action>(copilot.applyInlaysNextLine)

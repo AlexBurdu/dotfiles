@@ -60,6 +60,10 @@ else
   nnoremap <Leader><Leader>f gg=G<C-o>zz
 endif
 
+" Keep selection after indenting
+vnoremap < <gv
+vnoremap > >gv
+
 " Clear search highlighting
 nnoremap <C-n> :nohls<CR>
 

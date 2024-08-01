@@ -55,7 +55,7 @@ vmap <Leader>fr <Action>(ReplaceInPath)
 nmap <Leader>fr <Action>(ReplaceInPath)
 
 " Find Stuff
-nmap <Leader>fy m'<Action>(GotoSymbol)
+nmap <Leader>fs m'<Action>(GotoSymbol)
 nmap <Leader>fc m'<Action>(GotoClass)
 nmap <Leader>ff m'<Action>(GotoFile)
 vmap <Leader>ff m'<Action>(GotoFile)

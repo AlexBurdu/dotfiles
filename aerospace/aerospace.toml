@@ -85,14 +85,14 @@ outer.right =      5
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-ctrl-shift-slash = 'layout tiles horizontal vertical'
-ctrl-shift-comma = 'layout accordion horizontal vertical'
+alt-shift-slash = 'layout tiles horizontal vertical'
+alt-shift-comma = 'layout accordion horizontal vertical'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-ctrl-shift-h = 'focus left'
-ctrl-shift-j = 'focus down'
-ctrl-shift-k = 'focus up'
-ctrl-shift-l = 'focus right'
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
 alt-shift-h = 'move left'
@@ -104,7 +104,11 @@ alt-shift-l = 'move right'
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
+alt-shift-f = 'fullscreen'
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
+ctrl-shift-l = 'workspace next'
+ctrl-shift-h = 'workspace prev'
 ctrl-shift-1 = 'workspace 1'
 ctrl-shift-2 = 'workspace 2'
 ctrl-shift-3 = 'workspace 3'
@@ -136,7 +140,6 @@ ctrl-shift-x = 'workspace X'
 ctrl-shift-y = 'workspace Y'
 ctrl-shift-z = 'workspace Z'
 
-
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
@@ -152,7 +155,6 @@ alt-shift-b = 'move-node-to-workspace B'
 alt-shift-c = 'move-node-to-workspace C'
 alt-shift-d = 'move-node-to-workspace D'
 alt-shift-e = 'move-node-to-workspace E'
-alt-shift-f = 'move-node-to-workspace F'
 alt-shift-g = 'move-node-to-workspace G'
 alt-shift-i = 'move-node-to-workspace I'
 alt-shift-m = 'move-node-to-workspace M'
@@ -187,14 +189,17 @@ r = ['flatten-workspace-tree', 'mode main'] # reset layout
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
-alt-shift-f = 'fullscreen'
+alt-shift-h = ['join-with left']
+alt-shift-j = ['join-with down']
+alt-shift-k = ['join-with up']
+alt-shift-l = ['join-with right']
 
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
 # Run `aerospace --list-apps` to get the list of all running apps
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 1'
+
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'
 run = 'move-node-to-workspace 2'
@@ -202,5 +207,4 @@ run = 'move-node-to-workspace 2'
 [[on-window-detected]]
 if.app-id = 'com.apple.iCal'
 run = 'move-node-to-workspace 6'
-
 

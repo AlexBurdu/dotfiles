@@ -197,10 +197,6 @@ alt-shift-l = ['join-with right', 'mode main']
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
 # Run `aerospace --list-apps` to get the list of all running apps
 [[on-window-detected]]
-if.app-id = 'org.mozilla.firefox'
-run = 'move-node-to-workspace 1'
-
-[[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'
 run = 'move-node-to-workspace 2'
 
@@ -210,8 +206,9 @@ run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.iCal'
-run = 'move-node-to-workspace C'
+run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'scrcpy'
 run = 'move-node-to-workspace 4'
+

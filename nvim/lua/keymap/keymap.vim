@@ -46,6 +46,7 @@ nnoremap <Leader>y "+y
 vnoremap <Leader>y "+y
 nnoremap <Leader>Y "+Y
 xnoremap <Leader>p "_dP
+vnoremap <Leader>p "_dP
 nnoremap <Leader>d "_d
 vnoremap <Leader>d "_yd
 

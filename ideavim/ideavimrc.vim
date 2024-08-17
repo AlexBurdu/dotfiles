@@ -76,7 +76,7 @@ map <Leader>vN <Action>(VcsShowPrevChangeMarker)
 map <Leader><Leader>b <Action>(ToggleLineBreakpoint)
 " map <Leader><Leader>j <Action>(RunToCursor)
 " map <Leader><Leader>d <Action>(DeviceAndSnapshotComboBox)
-map <Leader>p <Action>(RefreshOrRunPreviewAction)
+map <Leader><Leader>p <Action>(RefreshOrRunPreviewAction)
 
 " ### Refactor ###
 nmap <Leader><Leader>a <Action>(AnalyzeMenu)

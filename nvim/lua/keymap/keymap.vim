@@ -56,7 +56,7 @@ nnoremap <Leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
 " ### FORMAT ###
 " Format the entire file
 if has('ide')
-  map <Leader><Leader>f <Action>(ReformatCode)zz
+  map <Leader><Leader>f <Action>(ReformatCode)<Action>(OptimizeImports)zz
 else
   nnoremap <Leader><Leader>f gg=G<C-o>zz
 endif

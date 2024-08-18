@@ -98,4 +98,4 @@ map <Leader>yb <Action>(Blaze.CopyBlazeTargetPathAction)
 " Toggle Tool Buttons visibility
 map <Leader>vt <Action>(ViewToolButtons)
 
-map <Leader>z <Action>(ToggleZenMode)
+map <Leader>z <Action>(ToggleDistractionFreeMode)

@@ -83,6 +83,11 @@ source ~/.profile
 source $ZSH/oh-my-zsh.sh
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+
+# Enable autocompletions
+zstyle ':autocomplete:*' fzf-completion yes
+zstyle ':autocomplete:*' widget-style menu-select
+zstyle ':autocomplete:*' min-delay 1.0
 source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -105,11 +110,6 @@ history_size=$(wc -l < ~/.zsh_history)
 if [ $history_size -gt 50000 ]; then
   echo "Warning: ~/.zsh_history file size is $history_size lines"
 fi
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"

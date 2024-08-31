@@ -205,10 +205,14 @@ if.app-id = 'com.google.android.studio-EAP'
 run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
+if.app-name-regex-substring = 'scrcpy'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
 if.app-id = 'com.apple.iCal'
 run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'scrcpy'
-run = 'move-node-to-workspace 4'
+if.app-id = 'com.amazon.Lassen'
+run = 'move-node-to-workspace 6'
 

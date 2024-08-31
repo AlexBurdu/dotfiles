@@ -14,6 +14,8 @@
 " code that will invoke the appropriate action (this mirrors the <Plug>(…)
 " syntax used by plugins to allow mapping different key sequences to plugin
 " functionality).
+" Configuring conflicting keys via .ideavimrc:
+" - https://github.com/JetBrains/ideavim/blob/master/doc/sethandler.md
 "
 source ~/.config/nvim/lua/options/options.vim
 source ~/.config/nvim/lua/keymap/keymap.vim
@@ -28,6 +30,8 @@ nmap <Leader>t m'<Action>(FileStructurePopup)
 " Move between splits
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
+" Use ctrl-k as an ide shortcut in visual mode
+sethandler <C-k> i-v:ide n:vim
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 

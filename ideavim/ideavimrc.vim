@@ -46,6 +46,9 @@ nmap <C-w><C-r> <Action>(ChangeSplitOrientation)
 nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
 nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
 
+" Use ctrl-p as an ide shortcut in insert mode
+sethandler <C-k> i-v:ide n:vim
+nmap <Leader>sp <Action>(ParameterInfo)
 " Jump/GoTo
 nmap <Leader>sh <Action>(QuickJavaDoc)
 nmap <Leader>se <Action>(ShowErrorDescription)

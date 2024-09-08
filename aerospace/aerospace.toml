@@ -97,8 +97,8 @@ alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
+alt-shift-minus = 'resize smart -150'
+alt-shift-equal = 'resize smart +150'
 
 alt-shift-f = 'fullscreen'
 alt-shift-t = 'layout floating tiling' # Toggle between floating and tiling layout
@@ -106,8 +106,7 @@ alt-shift-t = 'layout floating tiling' # Toggle between floating and tiling layo
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 ctrl-shift-n = 'workspace next'
 ctrl-shift-p = 'workspace prev'
-
-alt-shift-backtick = 'move-workspace-to-monitor --wrap-around next'
+#tab = 'workspace-back-and-forth'
 
 # In your config, you can drop workspace bindings that you don't need
 ctrl-shift-1 = 'workspace 1'

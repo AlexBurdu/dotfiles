@@ -180,8 +180,8 @@ alt-shift-l = ['join-with right']
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
 minus = 'resize smart -50'
 equal = 'resize smart +50'
-ctrl-minus = 'resize smart -200'
-ctrl-equal = 'resize smart +200'
+shift-minus = 'resize smart -200'
+shift-equal = 'resize smart +200'
 
 f = 'fullscreen'
 t = 'layout floating tiling' # Toggle between floating and tiling layout

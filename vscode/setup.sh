@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
+# Locations are different for Linux vs MacOS
+CONFIG_DIR=~/.config/Code/User
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  CONFIG_DIR=~/Library/Application\ Support/Code/User
+fi
 
-rm -rf ~/.config/Code/User/keybindings.json
-rm -rf ~/.config/Code/User/settings.json
+# Recursively create directories if they don't exist
+mkdir -p "$CONFIG_DIR"
 
-ln -s $(pwd)/keybindings.json ~/.config/Code/User/keybindings.json
-ln -s $(pwd)/settings.json ~/.config/Code/User/settings.json
+rm -rf "${CONFIG_DIR}/keybindings.json"
+rm -rf "${CONFIG_DIR}/settings.json"
+
+ln -s $(pwd)/keybindings.json "${CONFIG_DIR}/keybindings.json"
+ln -s $(pwd)/settings.json "${CONFIG_DIR}/settings.json"
 

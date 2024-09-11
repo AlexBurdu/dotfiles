@@ -24,7 +24,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 30
+accordion-padding = 8
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -75,9 +75,7 @@ outer.right =      5
 # - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
 #                   keypadMinus, keypadMultiply, keypadPlus
 # - Arrows.         left, down, up, right
-
 # All possible modifiers: cmd, alt, ctrl, shift
-
 # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
 # You can uncomment this line to open up terminal with alt + enter shortcut
@@ -102,11 +100,14 @@ alt-shift-equal = 'resize smart +150'
 
 alt-shift-f = 'fullscreen'
 alt-shift-t = 'layout floating tiling' # Toggle between floating and tiling layout
+alt-shift-slash = 'layout horizontal vertical'
+alt-shift-quote = 'layout tiles accordion'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 ctrl-shift-n = 'workspace next'
 ctrl-shift-p = 'workspace prev'
-#tab = 'workspace-back-and-forth'
+ctrl-shift-b = 'workspace-back-and-forth'
+ctrl-shift-backtick = 'workspace-back-and-forth'
 
 # In your config, you can drop workspace bindings that you don't need
 ctrl-shift-1 = 'workspace 1'
@@ -119,7 +120,7 @@ ctrl-shift-7 = 'workspace 7'
 ctrl-shift-8 = 'workspace 8'
 ctrl-shift-9 = 'workspace 9'
 # ctrl-shift-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
-ctrl-shift-b = 'workspace B'
+#ctrl-shift-b = 'workspace B'
 ctrl-shift-c = 'workspace C'
 ctrl-shift-d = 'workspace D'
 #ctrl-shift-e = 'workspace E'
@@ -152,9 +153,8 @@ s = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #t = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 #backspace = ['close-all-windows-but-current', 'mode main']
-#backtick = ['reload-config', 'mode main']
-slash = 'layout tiles horizontal vertical'
-comma = 'layout accordion horizontal vertical'
+slash = 'layout horizontal vertical'
+quote = 'layout tiles accordion'
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 tab = 'workspace-back-and-forth'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
@@ -184,7 +184,7 @@ shift-minus = 'resize smart -200'
 shift-equal = 'resize smart +200'
 
 f = 'fullscreen'
-t = 'layout floating tiling' # Toggle between floating and tiling layout
+t = ['layout floating tiling', 'move-mouse window-force-center'] # Toggle between floating and tiling layout
 g = 'layout floating tiling' # Toggle between floating and tiling layout
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
@@ -201,15 +201,15 @@ p = 'workspace prev'
 7 = 'workspace 7'
 8 = 'workspace 8'
 9 = 'workspace 9'
-a = 'workspace A' 
-b = 'workspace B'
+#a = 'workspace A' 
+#b = 'workspace B'
 c = 'workspace C'
 d = 'workspace D'
 e = 'workspace E'
 #f = 'workspace F'
 #g = 'workspace G'
 i = 'workspace I'
-m = 'workspace M'
+#m = 'workspace M'
 #n = 'workspace N'
 o = 'workspace O' 
 #p = 'workspace P'
@@ -233,15 +233,15 @@ shift-6 = ['move-node-to-workspace 6', 'workspace 6']
 shift-7 = ['move-node-to-workspace 7', 'workspace 7']
 shift-8 = ['move-node-to-workspace 8', 'workspace 8']
 shift-9 = ['move-node-to-workspace 9', 'workspace 9']
-shift-a = ['move-node-to-workspace A', 'workspace A']
-shift-b = ['move-node-to-workspace B', 'workspace B']
+#shift-a = ['move-node-to-workspace A', 'workspace A']
+#shift-b = ['move-node-to-workspace B', 'workspace B']
 shift-c = ['move-node-to-workspace C', 'workspace C']
 shift-d = ['move-node-to-workspace D', 'workspace D']
 shift-e = ['move-node-to-workspace E', 'workspace E']
-shift-f = ['move-node-to-workspace F', 'workspace F']
+#shift-f = ['move-node-to-workspace F', 'workspace F']
 #shift-g = ['move-node-to-workspace G', 'workspace G']
 shift-i = ['move-node-to-workspace I', 'workspace I']
-shift-m = ['move-node-to-workspace M', 'workspace M']
+#shift-m = ['move-node-to-workspace M', 'workspace M']
 #shift-n = ['move-node-to-workspace N', 'workspace N']
 shift-o = ['move-node-to-workspace O', 'workspace O']
 #shift-p = ['move-node-to-workspace P', 'workspace P']
@@ -258,19 +258,15 @@ shift-z = ['move-node-to-workspace Z', 'workspace Z']
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
 # Run `aerospace --list-apps` to get the list of all running apps
 [[on-window-detected]]
-if.app-id = 'com.jetbrains.intellij'
+if.app-name-regex-substring = 'Android Studio|Intellij|iTerm'
 run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
-if.app-id = 'com.google.android.studio-EAP'
-run = 'move-node-to-workspace 2'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'scrcpy'
+if.app-name-regex-substring = 'scrcpy|Music'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
-if.app-id = 'com.apple.iCal'
+if.app-name-regex-substring = 'Calendar'
 run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]

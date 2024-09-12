@@ -41,7 +41,8 @@
     "<C-d>": true,
     "<C-a>": false,
     "<C-e>": true,
-    "<C-f>": false
+    "<C-f>": false,
+    "<o>": true
   },
   "vim.insertModeKeyBindings": [],
   "vim.normalModeKeyBindingsNonRecursive": [
@@ -62,6 +63,39 @@
       ],
       "commands": [
         "workbench.action.quickOpen"
+      ]
+    },
+    // Move between splits
+    {
+      "before": [
+        "c-h"
+      ],
+      "commands": [
+        "workbench.action.focusLeftGroup"
+      ]
+    },
+    {
+      "before": [
+        "c-l"
+      ],
+      "commands": [
+        "workbench.action.focusRightGroup"
+      ]
+    },
+    {
+      "before": [
+        "c-j"
+      ],
+      "commands": [
+        "workbench.action.focusBelowGroup"
+      ]
+    },
+    {
+      "before": [
+        "c-k"
+      ],
+      "commands": [
+        "workbench.action.focusAboveGroup"
       ]
     },
     // switch b/w buffers

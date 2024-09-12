@@ -11,8 +11,7 @@
   "window.restoreWindows": "all",
   "workbench.welcome.enabled": true,
   "workbench.startupEditor": "newUntitledFile",
-  "[xml]": {
-  },
+  "[xml]": {},
   // THEMING AND APPEARANCE
   "breadcrumbs.enabled": true,
   "editor.fontFamily": "Mono",
@@ -26,7 +25,7 @@
   // "workbench.iconTheme": "material-icon-theme",
   // "workbench.colorTheme": "Visual Studio Light",
   "workbench.preferredLightColorTheme": "Visual Studio Light",
-  "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+  "workbench.preferredDarkColorTheme": "GitHub Dark Default",
   "zenMode.hideLineNumbers": false,
   // ################################################################################
   // VIM CONFIGURATION 
@@ -41,10 +40,27 @@
     "<C-e>": true,
     "<C-f>": false
   },
-  "vim.insertModeKeyBindings": [
-  ],
+  "vim.insertModeKeyBindings": [],
   "vim.normalModeKeyBindingsNonRecursive": [
     // NAVIGATION
+    // Quick open / switcher
+    {
+      "before": [
+        "C-p"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "e"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
     // switch b/w buffers
     {
       "before": [
@@ -77,49 +93,35 @@
       "before": [
         "leader",
         "leader",
+        "h"
+      ],
+      "commands": [
+        ":vsplit",
+        "workbench.action.focusLeftGroup"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "leader",
         "j"
       ],
       "commands": [
         ":split"
       ]
     },
-    // Misc
-    {
-      "before": [
-        "leader",
-        "w"
-      ],
-      "commands": [
-        "workbench.action.files.save"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "q"
-      ],
-      "commands": [
-        ":q"
-      ]
-    },
-    {
-      "before": [
-        "C-p"
-      ],
-      "commands": [
-        "workbench.action.quickOpen"
-      ]
-    },
     {
       "before": [
         "leader",
         "leader",
-        "f"
+        "k"
       ],
       "commands": [
-        "editor.action.formatDocument"
+        ":split",
+        "workbench.action.focusAboveGroup"
       ]
     },
+    // Find stuff
     {
       "before": [
         "leader",
@@ -130,11 +132,11 @@
         "editor.action.goToImplementation"
       ]
     },
+    // Jump/Go To/Reveal
     {
       "before": [
-        "leader",
-        "s",
-        "h"
+        "g",
+        "d"
       ],
       "commands": [
         "editor.action.revealDefinition"
@@ -142,7 +144,8 @@
     },
     {
       "before": [
-        "g",
+        "leader",
+        "s",
         "h"
       ],
       "commands": [
@@ -151,20 +154,12 @@
     },
     {
       "before": [
-        "g",
+        "leader",
+        "s",
         "e"
       ],
       "commands": [
         "editor.action.showDefinitionPreviewHover"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "z"
-      ],
-      "commands": [
-        "workbench.action.toggleZenMode"
       ]
     },
     // Navigate to warnings or errors in the file
@@ -186,13 +181,54 @@
         "editor.action.marker.prev"
       ]
     },
+    // DEBUG
     {
       "before": [
+        "leader",
         "leader",
         "b"
       ],
       "commands": [
         "editor.debug.action.toggleInlineBreakpoint"
+      ]
+    },
+
+    // Misc
+    {
+      "before": [
+        "leader",
+        "leader",
+        "f"
+      ],
+      "commands": [
+        "editor.action.formatDocument"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "q"
+      ],
+      "commands": [
+        ":q"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "z"
+      ],
+      "commands": [
+        "workbench.action.toggleZenMode"
       ]
     }
   ],

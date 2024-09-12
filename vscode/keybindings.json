@@ -1,22 +1,9 @@
 // Place your key bindings in this file to overwrite the defaults
 [
   // NAVIGATION
-  // Splits & Panes
   {
-    "key": "ctrl+j",
-    "command": "workbench.action.focusBelowGroup"
-  },
-  {
-    "key": "ctrl+k",
-    "command": "workbench.action.focusAboveGroup"
-  },
-  {
-    "key": "ctrl+l",
-    "command": "workbench.action.focusRightGroup"
-  },
-  {
-    "key": "ctrl+h",
-    "command": "workbench.action.focusLeftGroup"
+    "key": "ctrl+shift+e",
+    "command": "workbench.action.quickOpen"
   },
   // Editor
   {

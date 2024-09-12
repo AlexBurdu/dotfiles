@@ -11,6 +11,8 @@
   "window.restoreWindows": "all",
   "workbench.welcome.enabled": true,
   "workbench.startupEditor": "newUntitledFile",
+  "workbench.editor.showTabs": "none",
+  "workbench.activityBar.location": "hidden",
   "[xml]": {},
   // THEMING AND APPEARANCE
   "breadcrumbs.enabled": true,
@@ -24,10 +26,11 @@
   "window.zoomLevel": 2,
   // "workbench.iconTheme": "material-icon-theme",
   // "workbench.colorTheme": "Visual Studio Light",
+  //"workbench.preferredDarkColorTheme": "Deepdark Material Theme | Full Black Version",
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "workbench.preferredDarkColorTheme": "GitHub Dark Default",
   "zenMode.hideLineNumbers": false,
-  // ################################################################################
+  // ##########################################################################
   // VIM CONFIGURATION 
   "vim.leader": "<Space>",
   "vim.useCtrlKeys": true,
@@ -281,7 +284,7 @@
   "extensions.experimental.affinity": {
     "vscodevim.vim": 1
   },
-  // End Vim Configuration ##########################################################
+  // End Vim Configuration ####################################################
   "files.eol": "\n",
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
@@ -294,7 +297,7 @@
     "**/.settings": true,
     "**/.factorypath": true
   },
-  // ################################################################################
+  // ###########################################################################
   // LANGUAGES AND FRAMEWORKS
   // Bazel
   "bazel.executable": "./bazelw",

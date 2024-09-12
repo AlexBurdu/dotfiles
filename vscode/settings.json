@@ -25,10 +25,11 @@
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 2,
   // "workbench.iconTheme": "material-icon-theme",
-  // "workbench.colorTheme": "Visual Studio Light",
-  //"workbench.preferredDarkColorTheme": "Deepdark Material Theme | Full Black Version",
+  "window.menuBarVisibility": "compact",
+  "workbench.colorTheme": "Visual Studio Light",
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "workbench.preferredDarkColorTheme": "GitHub Dark Default",
+  //"workbench.preferredDarkColorTheme": "Deepdark Material Theme | Full Black Version",
   "zenMode.hideLineNumbers": false,
   // ##########################################################################
   // VIM CONFIGURATION 
@@ -303,15 +304,6 @@
       "commands": [
         "editor.action.moveLinesUpAction"
       ]
-    },
-    {
-      "before": [
-        "leader",
-        "j"
-      ],
-      "commands": [
-        "editor.action.joinLines"
-      ]
     }
   ],
   // To improve performance",
@@ -358,7 +350,5 @@
   "dart.previewLsp": true,
   "database-client.defaultSelectLimit": 300,
   "boot-java.change-detection.on": true,
-  "redhat.telemetry.enabled": false,
-  "workbench.colorTheme": "Visual Studio Light",
-  "window.menuBarVisibility": "compact"
+  "redhat.telemetry.enabled": false
 }

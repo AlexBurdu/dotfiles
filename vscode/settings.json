@@ -5,6 +5,7 @@
 // - https://www.youtube.com/watch?v=GST8we5uABo
 // - https://code.visualstudio.com/docs/getstarted/keybindings#_display
 {
+  "diffEditor.renderSideBySide": false,
   "extensions.ignoreRecommendations": true,
   "files.autoSave": "onFocusChange",
   "window.reopenFolders": "all",
@@ -21,6 +22,9 @@
   "editor.lineNumbers": "relative",
   "editor.minimap.enabled": false,
   "editor.wordWrap": "on",
+  "editor.cursorSurroundingLines": "8",
+  "editor.padding.bottom": 300,
+  "editor.scrollBeyondLastLine": false
   "window.autoDetectColorScheme": true,
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 2,

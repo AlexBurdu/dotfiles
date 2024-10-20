@@ -31,7 +31,7 @@
   // "workbench.iconTheme": "material-icon-theme",
   "window.menuBarVisibility": "compact",
   "workbench.colorTheme": "Visual Studio Light",
-  "workbench.preferredLightColorTheme": "Visual Studio Light",
+  "workbench.preferredLightColorTheme": "GitHub Light",
   "workbench.preferredDarkColorTheme": "GitHub Dark Default",
   //"workbench.preferredDarkColorTheme": "Deepdark Material Theme | Full Black Version",
   "zenMode.hideLineNumbers": false,

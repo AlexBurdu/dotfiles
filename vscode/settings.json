@@ -24,7 +24,7 @@
   "editor.wordWrap": "on",
   "editor.cursorSurroundingLines": "8",
   "editor.padding.bottom": 300,
-  "editor.scrollBeyondLastLine": false
+  "editor.scrollBeyondLastLine": false,
   "window.autoDetectColorScheme": true,
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 2,

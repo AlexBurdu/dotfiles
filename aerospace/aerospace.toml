@@ -181,7 +181,7 @@ ctrl-space = 'mode service'
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 space = ['reload-config', 'mode main']
-s = ['flatten-workspace-tree', 'mode main'] # reset layout
+s = ['flatten-workspace-tree'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #t = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 #backspace = ['close-all-windows-but-current', 'mode main']

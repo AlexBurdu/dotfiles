@@ -301,17 +301,17 @@ shift-z = ['move-node-to-workspace Z', 'workspace Z']
 # Run `aerospace --list-apps` to get the list of all running apps
 [[on-window-detected]]
 if.app-name-regex-substring = 'Android Studio|Intellij|iTerm'
-run = 'move-node-to-workspace 2'
+run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'scrcpy|Music'
-run = 'move-node-to-workspace 4'
+run = 'move-node-to-workspace 7'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Calendar'
-run = 'move-node-to-workspace 5'
-
-[[on-window-detected]]
-if.app-id = 'com.amazon.Lassen'
 run = 'move-node-to-workspace 6'
+
+#[[on-window-detected]]
+#if.app-id = 'com.amazon.Lassen'
+#run = 'move-node-to-workspace 5'
 

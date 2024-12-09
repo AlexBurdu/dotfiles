@@ -101,7 +101,9 @@ alt-shift-equal = 'resize smart +150'
 alt-shift-f = 'fullscreen'
 alt-shift-t = 'layout floating tiling' # Toggle between floating and tiling layout
 ctrl-shift-slash = 'layout horizontal vertical'
+alt-shift-slash = 'layout horizontal vertical'
 ctrl-shift-quote = 'layout tiles accordion'
+alt-shift-quote = 'layout tiles accordion'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 ctrl-shift-i = 'workspace next'

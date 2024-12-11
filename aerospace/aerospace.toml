@@ -306,11 +306,11 @@ run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'scrcpy|Music'
-run = 'move-node-to-workspace 7'
+run = 'move-node-to-workspace P'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Calendar'
-run = 'move-node-to-workspace 6'
+run = 'move-node-to-workspace 7'
 
 #[[on-window-detected]]
 #if.app-id = 'com.amazon.Lassen'

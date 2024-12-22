@@ -221,7 +221,7 @@ shift-o = ['move-node-to-workspace 2', 'workspace 2']
 shift-3 = ['move-node-to-workspace 3', 'workspace 3']
 shift-i = ['move-node-to-workspace 3', 'workspace 3']
 shift-4 = ['move-node-to-workspace 4', 'workspace 4']
-shift-u = ['move-node-to-workspace U', 'workspace U']
+shift-u = ['move-node-to-workspace 4', 'workspace 4']
 shift-5 = ['move-node-to-workspace 5', 'workspace 5']
 shift-y = ['move-node-to-workspace 5', 'workspace 5']
 shift-6 = ['move-node-to-workspace 6', 'workspace 6']
@@ -246,7 +246,7 @@ run = 'move-node-to-workspace 3' # I
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'gMail|Slack'
-run = 'move-node-to-workspace 4' # U
+run = 'move-node-to-workspace 4' # 4
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Music'

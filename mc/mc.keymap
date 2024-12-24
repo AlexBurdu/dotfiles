@@ -2,7 +2,7 @@
 ChangePanel = tab
 
 [filemanager]
-ChangePanel = ctrl-tab; shift-tab
+ChangePanel = ctrl-tab; shift-tab; alt-tab
 
 [input]
 Complete = tab

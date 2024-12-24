@@ -60,8 +60,15 @@ outer.bottom =     5
 outer.top =        5
 outer.right =      5
 
-# 'main' binding mode declaration
+# Bindings modes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+
+[mode.disable.binding]
+# This mode doesn't have any bindings. This is useful as a escape hatch to reuse binding in other apps.
+esc = 'mode main'
+space = 'mode main'
+
+# 'main' binding mode declaration
 # 'main' binding mode must be always presented
 [mode.main.binding]
 
@@ -147,12 +154,15 @@ alt-shift-0 = ['move-node-to-workspace 10', 'workspace 10']
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 ctrl-space = 'mode service'
+ctrl-backspace = 'mode disable'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 space = ['reload-config', 'mode main']
+ctrl-backspace = 'mode disable'
+
 s = ['flatten-workspace-tree'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #t = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout

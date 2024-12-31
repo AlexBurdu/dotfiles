@@ -28,9 +28,9 @@ nmap <C-t> m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
 
 " Bookmarks
+nmap <Leader>m <Action>(ToggleBookmarkWithMnemonic)
 " Workaround for https://youtrack.jetbrains.com/issue/VIM-2928/ideavim-global-mnemonic-bookmark-no-longer-works-for-remote-development
-nmap <Leader>' <Action>(ToggleBookmarkWithMnemonic)
-nmap <Leader>m m'<Action>(ShowBookmarks)
+nmap <Leader>' m'<Action>(ShowBookmarks)
 
 " Move between splits
 nnoremap <C-h> <C-w>h

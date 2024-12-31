@@ -26,6 +26,9 @@ nmap <Leader>e m'<Action>(Switcher)
 nmap <Leader><Leader>e m'<Action>(RecentFiles)
 nmap <C-t> m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
+
+" Bookmarks
+nmap <Leader><Leader>m <Action>(ToggleBookmarkWithMnemonic)
 nmap <Leader>m m'<Action>(ShowBookmarks)
 
 " Move between splits

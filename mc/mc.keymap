@@ -6,3 +6,9 @@ ChangePanel = ctrl-tab; shift-tab; alt-tab
 
 [input]
 Complete = tab
+
+[panel]
+Down = down; j
+Up = up; k
+Left = left; h
+Right = right; l

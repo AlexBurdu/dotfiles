@@ -34,6 +34,8 @@ nmap <Leader>' m'<Action>(ShowBookmarks)
 
 " Move between splits
 nnoremap <C-h> <C-w>h
+" Use ctrl-j as an ide shortcut in visual mode
+sethandler <C-j> i-v:ide n:vim
 nnoremap <C-j> <C-w>j
 " Use ctrl-k as an ide shortcut in visual mode
 sethandler <C-k> i-v:ide n:vim
@@ -51,8 +53,8 @@ nmap <C-w><C-r> <Action>(ChangeSplitOrientation)
 nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
 nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
 
-" Use ctrl-p as an ide shortcut in insert mode
-sethandler <C-k> i-v:ide n:vim
+" Show various info
+nmap <Leader>st <Action>(ExpressionTypeInfo)
 nmap <Leader>sp <Action>(ParameterInfo)
 " Jump/GoTo
 nmap <Leader>sh <Action>(QuickJavaDoc)

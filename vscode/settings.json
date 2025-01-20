@@ -196,6 +196,16 @@
     {
       "before": [
         "leader",
+        "g",
+        "b"
+      ],
+      "commands": [
+        "relatedFiles.openBuildFile"
+      ]
+    },
+    {
+      "before": [
+        "leader",
         "s",
         "h"
       ],

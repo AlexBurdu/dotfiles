@@ -255,7 +255,7 @@ if.app-name-regex-substring = 'Chrome'
 run = 'move-node-to-workspace 2' # O
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'Android Studio|Intellij|iTerm'
+if.app-name-regex-substring = 'Android Studio|Intellij|iTerm|Code|Cider'
 run = 'move-node-to-workspace 3' # I
 
 [[on-window-detected]]

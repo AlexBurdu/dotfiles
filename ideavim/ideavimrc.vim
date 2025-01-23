@@ -27,6 +27,11 @@ nmap <Leader><Leader>e m'<Action>(RecentFiles)
 nmap <C-t> m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
 
+# CamelCase motion
+map w [w
+map e ]w
+map b [b
+
 " Bookmarks
 nmap <Leader>m <Action>(ToggleBookmarkWithMnemonic)
 " Workaround for https://youtrack.jetbrains.com/issue/VIM-2928/ideavim-global-mnemonic-bookmark-no-longer-works-for-remote-development
@@ -54,6 +59,8 @@ nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
 nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
 
 " Show various info
+" Free up C-i for insert and visual mode to use as IDE shortcut
+sethandler <C-i> i-v:ide n:vim
 nmap <Leader>st <Action>(ExpressionTypeInfo)
 nmap <Leader>sp <Action>(ParameterInfo)
 " Jump/GoTo

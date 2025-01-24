@@ -247,7 +247,7 @@ shift-0 = ['move-node-to-workspace 10', 'workspace 10']
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
 # Run `aerospace --list-apps` to get the list of all running apps
 [[on-window-detected]]
-if.app-name-regex-substring = 'scrcpy|Firefox|finance'
+if.app-name-regex-substring = 'scrcpy|Firefox'
 run = 'move-node-to-workspace 1' # P
 
 [[on-window-detected]]

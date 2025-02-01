@@ -22,8 +22,8 @@ source ~/.config/nvim/lua/keymap/keymap.vim
 source ~/.config/ideavim/copilot.vim
 
 " ### NAVIGATE ###
-nmap <Leader>e m'<Action>(Switcher)
-nmap <Leader><Leader>e m'<Action>(RecentFiles)
+nmap <Leader>e m'<Action>(RecentFiles)
+nmap <Leader><Leader>e m'<Action>(Switcher)
 nmap <C-t> m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
 

@@ -19,7 +19,7 @@
 "
 source ~/.config/nvim/lua/options/options.vim
 source ~/.config/nvim/lua/keymap/keymap.vim
-source ~/.config/ideavim/copilot.vim
+" copilot is loaded in the code completion section
 
 " ### NAVIGATE ###
 nmap <Leader>e m'<Action>(RecentFiles)
@@ -84,6 +84,19 @@ nmap <Leader>fu m'<Action>(FindUsages)
 nmap <Leader>fi m'<Action>(GotoImplementation)
 nmap <Leader>gu m'<Action>(GotoSuperMethod)
 nmap <Leader>gb m'<Action>(Blaze.OpenCorrespondingBuildFile)
+
+" Code Completion
+imap <C-u> <Action>(CallInlineCompletionAction)
+" Use ctrl-n as an ide shortcut in insert mode only
+sethandler <C-n> n-v:ide i:vim
+imap <C-n> <Action>(PrevInlineCompletionSuggestionAction)
+sethandler <C-p> n-v:ide i:vim
+imap <C-p> <Action>(NextInlineCompletionSuggestionAction)
+imap <C-y> <Action>(InsertInlineCompletionWordAction)
+imap <C-h> <Action>(InsertInlineCompletionLineAction)
+" Copilot will override code completion bindings with its own, if the file is
+" available
+source ~/.config/ideavim/copilot.vim
 
 " VCS (Version Control System)
 map <Leader>vb <Action>(Annotate)

@@ -2,8 +2,8 @@
 set ignorecase
 set smartcase
 " Highlight search (incremental)
-set nohlsearch
-set incsearch
+"set nohlsearch
+"set incsearch
 
 set tabstop=2 softtabstop=2 shiftwidth=2
 set expandtab

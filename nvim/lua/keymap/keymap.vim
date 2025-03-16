@@ -66,5 +66,5 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Clear search highlighting
-nnoremap <C-n> :nohls<CR>
+nnoremap <C-n> :noh<CR>
 

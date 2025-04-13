@@ -94,9 +94,13 @@ sethandler <C-p> n-v:ide i:vim
 imap <C-p> <Action>(NextInlineCompletionSuggestionAction)
 imap <C-y> <Action>(InsertInlineCompletionWordAction)
 imap <C-h> <Action>(InsertInlineCompletionLineAction)
+
+" Include the Gemini specific key mappings
+source ~/.config/ideavim/gemini.vim
+
 " Copilot will override code completion bindings with its own, if the file is
 " available
-source ~/.config/ideavim/copilot.vim
+" source ~/.config/ideavim/copilot.vim
 
 " VCS (Version Control System)
 map <Leader>vb <Action>(Annotate)

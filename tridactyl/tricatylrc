@@ -1,0 +1,39 @@
+# vim: filetype=sh
+# rc file with commands for customizing Tridactyl Firefox extension
+# https://github.com/tridactyl/tridactyl
+# Manually input each command in Tridactyl command mode (`:`) or use the
+# `:source <path_to_your_config_file>` command to execute the saved
+# configuration.
+# To view the current Tridactyl configuration, use the `:viewconfig` command.
+
+# Currently Firefox uses this for the AI chatbot
+unbind <C-x>
+
+# vim like search in the page:
+# https://github.com/tridactyl/tridactyl/issues/64
+bind --mode=normal / fillcmdline find
+bind --mode=normal ? fillcmdline find -?
+bind --mode=normal n findnext 1
+bind --mode=normal N findnext -1
+bind --mode=normal <C-n> nohlsearch
+
+# Tab closing
+bind --mode=normal x tabclose
+# d clashes with gMail delete email
+unbind d
+
+# Prefer some of the gMail shortcuts for navigation inside the inbox
+# https://github.com/tridactyl/tridactyl/issues/57?utm_source=pocket_saves
+# https://github.com/tridactyl/tridactyl/issues/1193?utm_source=pocket_saves
+unbindurl ^https://mail.google.com/* --mode=normal j
+unbindurl ^https://mail.google.com/* --mode=normal k
+unbindurl ^https://mail.google.com/* --mode=normal v
+unbindurl ^https://mail.google.com/* --mode=normal a
+unbindurl ^https://mail.google.com/* --mode=normal u
+
+# Whatsapp
+# https://github.com/tridactyl/tridactyl/issues/3070
+bindurl web.whatsapp.com --mode=normal <Escape> composite hint -f m2 ; fillcmdline ; ex.hide_and_clear
+bindurl web.whatsapp.com --mode=insert <Escape> composite hint -f m2 ; fillcmdline ; ex.hide_and_clear
+bindurl web.whatsapp.com --mode=input <Escape> composite hint -f m2 ; fillcmdline ; ex.hide_and_clear
+

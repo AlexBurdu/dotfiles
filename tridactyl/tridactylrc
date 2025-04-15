@@ -6,6 +6,21 @@
 # configuration.
 # To view the current Tridactyl configuration, use the `:viewconfig` command.
 
+# Colorscheme
+# https://github.com/tridactyl/tridactyl/issues/69
+# https://github.com/tridactyl/base16-tridactyl
+# https://github.com/AlexBurdu/tridactyl-colorscheme-dracula/blob/main/README.md
+#
+#
+colourscheme --url https://raw.githubusercontent.com/AlexBurdu/tridactyl-colorscheme-dracula//main/dracula.css dracula
+
+# Remove local custom colorscheme
+unset customthemes
+
+# Hints
+# https://github.com/tridactyl/tridactyl/blob/f9e3e5585acd6c46b986a08635026d790b66b293/src/excmds.ts#L5171
+set hintchars jkluiopnmasdfqwerzxcv
+
 # Currently Firefox uses this for the AI chatbot
 unbind <C-x>
 

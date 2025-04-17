@@ -13,7 +13,6 @@
   "workbench.welcome.enabled": true,
   "workbench.startupEditor": "newUntitledFile",
   "workbench.editor.showTabs": "none",
-  "workbench.activityBar.location": "hidden",
   "[xml]": {},
   // THEMING AND APPEARANCE
   "breadcrumbs.enabled": true,
@@ -384,5 +383,13 @@
   "dart.previewLsp": true,
   "database-client.defaultSelectLimit": 300,
   "boot-java.change-detection.on": true,
-  "redhat.telemetry.enabled": false
+  "redhat.telemetry.enabled": false,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "workbench.activityBar.location": "hidden",
+  "git.openRepositoryInParentFolders": "always"
 }

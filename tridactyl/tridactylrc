@@ -45,6 +45,8 @@ unbindurl ^https://mail.google.com/* --mode=normal k
 unbindurl ^https://mail.google.com/* --mode=normal v
 unbindurl ^https://mail.google.com/* --mode=normal a
 unbindurl ^https://mail.google.com/* --mode=normal u
+unbindurl ^https://calendar.google.com/* --mode=normal j
+unbindurl ^https://calendar.google.com/* --mode=normal k
 
 # Whatsapp
 # https://github.com/tridactyl/tridactyl/issues/3070

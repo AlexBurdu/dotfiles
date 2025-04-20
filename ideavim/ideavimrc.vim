@@ -72,12 +72,14 @@ nmap <Leader>N m'<Action>(GotoPreviousError)
 " Find/Grep and Replace
 nmap <Leader>fp <Action>(FindInPath)
 vmap <Leader>fp <Action>(FindInPath)
-vmap <Leader>fr <Action>(ReplaceInPath)
 nmap <Leader>fr <Action>(ReplaceInPath)
+vmap <Leader>fr <Action>(ReplaceInPath)
 
 " Find Stuff
 nmap <Leader>fs m'<Action>(GotoSymbol)
+vmap <Leader>fs m'<Action>(GotoSymbol)
 nmap <Leader>fc m'<Action>(GotoClass)
+vmap <Leader>fc m'<Action>(GotoClass)
 nmap <Leader>ff m'<Action>(GotoFile)
 vmap <Leader>ff m'<Action>(GotoFile)
 "nmap <Leader>fu m'<Action>(FindUsages)

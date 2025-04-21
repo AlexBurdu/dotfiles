@@ -116,6 +116,9 @@ map <Leader>vN <Action>(VcsShowPrevChangeMarker)
 " ### Debug ###
 map <Leader><Leader>b <Action>(ToggleLineBreakpoint)
 " map <Leader><Leader>j <Action>(RunToCursor)
+" Select the active Run/Debug configuration
+map <Leader><Leader>c <Action>(RunConfiguration)
+" Select the device to use for the current run/debug configuration
 map <Leader><Leader>d <Action>(DeviceAndSnapshotComboBox)
 map <Leader><Leader>p <Action>(RefreshOrRunPreviewAction)
 

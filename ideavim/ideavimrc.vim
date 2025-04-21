@@ -125,6 +125,10 @@ nmap <Leader><Leader>g <Action>(RunAnything)
 nmap <Leader><Leader>r <Action>(Refactorings.QuickListPopupAction)
 vmap <Leader><Leader>r <Action>(Refactorings.QuickListPopupAction)
 
+" ### Paths ###
+" Copy file path from repo root
+nmap <Leader>yp <Action>(CopyPathFromRepositoryRootProvider)
+
 " Build Tools Support
 " Sync Gradle
 map <Leader><Leader>sg <Action>(ExternalSystem.RefreshAllProjects)<Action>(Android.SyncProject)

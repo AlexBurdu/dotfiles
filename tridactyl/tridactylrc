@@ -19,7 +19,7 @@ unset customthemes
 
 # Hints
 # https://github.com/tridactyl/tridactyl/blob/f9e3e5585acd6c46b986a08635026d790b66b293/src/excmds.ts#L5171
-set hintchars jkluionmasdfwerzxcv
+set hintchars jkliomasdfwezxcv
 
 # Currently Firefox uses this for the AI chatbot
 unbind <C-x>

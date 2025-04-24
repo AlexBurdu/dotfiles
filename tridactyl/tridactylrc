@@ -48,6 +48,7 @@ bind --mode=normal <C-y> scrollline -5
 # https://github.com/tridactyl/tridactyl/issues/1193?utm_source=pocket_saves
 unbindurl ^https://mail.google.com/* --mode=normal j
 unbindurl ^https://mail.google.com/* --mode=normal k
+unbindurl ^https://mail.google.com/* --mode=normal l
 unbindurl ^https://mail.google.com/* --mode=normal v
 unbindurl ^https://mail.google.com/* --mode=normal a
 unbindurl ^https://mail.google.com/* --mode=normal u

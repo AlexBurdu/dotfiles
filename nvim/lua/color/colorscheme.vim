@@ -1,7 +1,7 @@
 " ### UI Settings###
 set cursorline
 let timehour = (strftime("%H"))
-if timehour >= 19 || timehour < 5
+if timehour >= 20 || timehour < 5
   set background=dark
   colorscheme carbonfox
 else

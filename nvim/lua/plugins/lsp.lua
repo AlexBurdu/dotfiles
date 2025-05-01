@@ -18,16 +18,29 @@ return {
     local cmp = require('cmp')
     local cmp_lsp = require("cmp_nvim_lsp")
     local capabilities = vim.tbl_deep_extend(
-    "force",
-    {},
-    vim.lsp.protocol.make_client_capabilities(),
-    cmp_lsp.default_capabilities())
+      "force",
+      {},
+      vim.lsp.protocol.make_client_capabilities(),
+      cmp_lsp.default_capabilities())
 
     require("fidget").setup({})
     require("mason").setup()
     require("mason-lspconfig").setup({
+      -- See complete list of Mason supported serverrs: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
       ensure_installed = {
+        "ast_grep",
+        "buf_ls",
+        "bzl",
+        "clangd",
+        "docker_compose_language_service",
+        "dockerls",
+        "gopls",
+        "gradle_ls",
+        "jsonls",
+        -- "kotlin_language_server", HIGH CPU USAGE
         "lua_ls",
+        "marksman",
+        "pyright",
       },
       handlers = {
         function(server_name) -- default handler (optional)
@@ -87,8 +100,8 @@ return {
         { name = 'nvim_lsp' },
         { name = 'luasnip' }, -- For luasnip users.
       }, {
-        { name = 'buffer' },
-      })
+          { name = 'buffer' },
+        })
     })
 
     vim.diagnostic.config({

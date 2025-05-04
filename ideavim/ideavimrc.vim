@@ -111,7 +111,9 @@ map <Leader>vc <Action>(CheckinProject)
 map <Leader>vh <Action>(Vcs.ShowTabbedFileHistory)
 map <Leader>vd <Action>(Vcs.ShowDiffChangedLines)
 map <Leader>vn <Action>(VcsShowNextChangeMarker)
+map ]c <Action>(VcsShowNextChangeMarker)
 map <Leader>vN <Action>(VcsShowPrevChangeMarker)
+map [c <Action>(VcsShowPrevChangeMarker)
 
 " ### Debug ###
 map <Leader><Leader>b <Action>(ToggleLineBreakpoint)

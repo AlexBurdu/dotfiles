@@ -43,6 +43,8 @@ return {
     end)
     vim.keymap.set("n", "<Leader>fs", builtin.grep_string)
 
+    vim.keymap.set("n", "<c-t>", builtin.lsp_document_symbols, {})
+
     -- LSP
     vim.keymap.set("n", "gd", builtin.lsp_definitions, {})
     vim.keymap.set("n", "<Leader>fu", builtin.lsp_references)

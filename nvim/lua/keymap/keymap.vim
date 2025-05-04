@@ -15,7 +15,7 @@ nnoremap <C-b> <C-b>zz
 if !has('ide')
   " Open explorer (similar mapping to IntelliJ file tree)
   nnoremap <M-f> :Ex<CR>
-  nnoremap <C-t> :Vex<CR>
+  " nnoremap <C-t> :Vex<CR>
 endif
 
 " Navigate to next/previous occurence but keep cursor centered

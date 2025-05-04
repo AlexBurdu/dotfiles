@@ -12,7 +12,7 @@
 # https://github.com/AlexBurdu/tridactyl-colorscheme-dracula/blob/main/README.md
 #
 #
-colourscheme --url https://raw.githubusercontent.com/AlexBurdu/tridactyl-colorscheme-dracula//main/dracula.css dracula
+colourscheme --url https://raw.githubusercontent.com/AlexBurdu/tridactyl-colorscheme-dracula/main/dracula.css dracula
 
 # Remove local custom colorscheme
 unset customthemes

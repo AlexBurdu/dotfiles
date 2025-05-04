@@ -8,3 +8,7 @@ To view the current Tridactyl configuration, use the `:viewconfig` command.
 1. Place the .tridactylrc file in the appropriate directory on the new machine by running the `setup.sh` bash script.
 1. Reload Tridactyl with the :source command to apply the configuration.
 
+```
+source --url https://raw.githubusercontent.com/AlexBurdu/dotfiles/refs/heads/main/tridactyl/tridactylrc
+```
+

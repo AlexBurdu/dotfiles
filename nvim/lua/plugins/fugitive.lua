@@ -3,7 +3,6 @@ return {
   "tpope/vim-fugitive",
   config = function()
     vim.keymap.set("n", "<leader>vs", vim.cmd.Git)
-    vim.keymap.set("n", "<M-v>", vim.cmd.Git)
 
     local ThePrimeagen_Fugitive = vim.api.nvim_create_augroup("ThePrimeagen_Fugitive", {})
 
@@ -29,7 +28,7 @@ return {
 
         -- NOTE: It allows me to easily set the branch i am pushing and any tracking
         -- needed if i did not set the branch up correctly
-        vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
+        -- vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
       end,
     })
 

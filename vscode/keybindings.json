@@ -1,5 +1,52 @@
 // Place your key bindings in this file to overwrite the defaults
 [
+  // General AI ############################################
+  // Inline Suggestions
+  {
+    "key": "ctrl+y",
+    "command": "editor.action.inlineSuggest.acceptNextWord",
+    "when": "editorTextFocus && inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "editor.action.inlineSuggest.showNext",
+    "when": "inlineSuggestionVisible && !editorReadonly"
+  },
+  {
+    "key": "ctrl+p",
+    "command": "editor.action.inlineSuggest.showPrevious",
+    "when": "inlineSuggestionVisible && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "editor.action.inlineSuggest.acceptNextLine",
+    "when": "editorFocus && inlineSuggestionVisible"
+  },
+  // Gemini ############################################
+  {
+    "key": "alt+x alt+g",
+    "command": "cloudcode.gemini.chatView.focus"
+  },
+  {
+    "key": "ctrl+u",
+    "command": "cloudcode.duetAI.generateCode",
+    "when": "authLoggedIn && config.geminicodeassist.enable && editorTextFocus && !inGeminiDiffView && !isInDiffEditor && vim.mode == 'Insert'"
+  },
+  {
+    "key": "ctrl+\\",
+    "command": "cloudcode.duetAI.showinEditor",
+    "when": "editorTextFocus && shouldRegisterInEditorCommand && !inGeminiDiffView && !isInDiffEditor"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "cloudcode.duetAI.rejectCompletion",
+    "when": "authLoggedIn && config.geminicodeassist.enable && inlineSuggestionVisible"
+  },
+  {
+    "key": "cmd+n",
+    "command": "geminicodeassist.chat.new",
+    "when": "cloudcode.gemini.chatView.active"
+  },
   // Copilot ############################################
   {
     "key": "alt+x alt+c",
@@ -136,22 +183,6 @@
     "command": "-editor.action.revealDefinition",
     "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
   },
-  // Inline Suggestions
-  {
-    "key": "alt+.",
-    "command": "editor.action.inlineSuggest.showNext",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "alt+,",
-    "command": "editor.action.inlineSuggest.showPrevious",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "alt+/",
-    "command": "editor.action.inlineSuggest.acceptNextWord",
-    "when": "editorTextFocus && !editorReadonly"
-  },
   // Misc
   {
     "key": "ctrl+shift+a",
@@ -247,5 +278,9 @@
     "key": "ctrl+d",
     "command": "list.focusPageDown",
     "when": "listFocus && !inputFocus && !treestickyScrollFocused"
+  },
+  {
+    "key": "shift+escape",
+    "command": "workbench.action.closeSidebar"
   }
 ]

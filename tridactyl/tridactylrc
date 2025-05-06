@@ -45,8 +45,8 @@ bind --mode=normal <C-y> scrollline -5
 # bind --mode=normal <C-y> scroll_up
 
 # Prefer some of the gMail shortcuts for navigation inside the inbox
-# https://github.com/tridactyl/tridactyl/issues/57?utm_source=pocket_saves
-# https://github.com/tridactyl/tridactyl/issues/1193?utm_source=pocket_saves
+# https://github.com/tridactyl/tridactyl/issues/57
+# https://github.com/tridactyl/tridactyl/issues/1193
 unbindurl ^https://mail.google.com/* --mode=normal j
 unbindurl ^https://mail.google.com/* --mode=normal k
 unbindurl ^https://mail.google.com/* --mode=normal l

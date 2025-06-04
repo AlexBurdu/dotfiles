@@ -34,384 +34,384 @@
   //"workbench.preferredDarkColorTheme": "Deepdark Material Theme | Full Black Version",
   "zenMode.hideLineNumbers": false,
   "zenMode.fullScreen": false,
-  "zenMode.hideStatusBar": false
+  "zenMode.hideStatusBar": false,
   // ##########################################################################
   // VIM CONFIGURATION 
-"vim.leader": "<Space>",
-"vim.useCtrlKeys": true,
-"vim.easymotion": false,
-"vim.incsearch": true,
-"vim.hlsearch": true,
-"vim.handleKeys": {
-  "<C-d>": true,
-  "<C-u>": true,
-  "<C-a>": true,
-  "<C-e>": true,
-  "<C-f>": false,
-  "<o>": true
-},
-"vim.insertModeKeyBindings": [],
-"vim.normalModeKeyBindingsNonRecursive": [
-  // NAVIGATION
-  // Quick open / switcher
-  {
-    "before": [
-      "C-p"
-    ],
-    "commands": [
-      "workbench.action.quickOpen"
-    ]
+  "vim.leader": "<Space>",
+  "vim.useCtrlKeys": true,
+  "vim.easymotion": false,
+  "vim.incsearch": true,
+  "vim.hlsearch": true,
+  "vim.handleKeys": {
+    "<C-d>": true,
+    "<C-u>": true,
+    "<C-a>": true,
+    "<C-e>": true,
+    "<C-f>": false,
+    "<o>": true
   },
-  {
-    "before": [
-      "leader",
-      "e"
-    ],
-    "commands": [
-      "workbench.action.quickOpen"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "t"
-    ],
-    "commands": [
-      "breadcrumbs.focusAndSelect"
-    ]
-  },
-  // Move between splits
-  {
-    "before": [
-      "c-h"
-    ],
-    "commands": [
-      "workbench.action.focusLeftGroup"
-    ]
-  },
-  {
-    "before": [
-      "c-l"
-    ],
-    "commands": [
-      "workbench.action.focusRightGroup"
-    ]
-  },
-  {
-    "before": [
-      "c-j"
-    ],
-    "commands": [
-      "workbench.action.focusBelowGroup"
-    ]
-  },
-  {
-    "before": [
-      "c-k"
-    ],
-    "commands": [
-      "workbench.action.focusAboveGroup"
-    ]
-  },
-  // switch b/w buffers
-  {
-    "before": [
-      "S-l"
-    ],
-    "commands": [
-      ":bnext"
-    ]
-  },
-  {
-    "before": [
-      "S-h"
-    ],
-    "commands": [
-      ":bprevious"
-    ]
-  },
-  // Splits
-  {
-    "before": [
-      "leader",
-      "leader",
-      "l"
-    ],
-    "commands": [
-      ":vsplit"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "leader",
-      "h"
-    ],
-    "commands": [
-      ":vsplit",
-      "workbench.action.focusLeftGroup"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "leader",
-      "j"
-    ],
-    "commands": [
-      ":split"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "leader",
-      "k"
-    ],
-    "commands": [
-      ":split",
-      "workbench.action.focusAboveGroup"
-    ]
-  },
-  // Find stuff
-  {
-    "before": [
-      "leader",
-      "f",
-      "i"
-    ],
-    "commands": [
-      "editor.action.goToImplementation"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "f",
-      "s"
-    ],
-    "commands": [
-      "workbench.action.showAllSymbols"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "f",
-      "f"
-    ],
-    "commands": [
-      "workbench.action.findInFiles"
-    ]
-  },
-  // Jump/Go To/Reveal
-  {
-    "before": [
-      "g",
-      "d"
-    ],
-    "commands": [
-      "editor.action.revealDefinition"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "g",
-      "b"
-    ],
-    "commands": [
-      "relatedFiles.openBuildFile"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "s",
-      "h"
-    ],
-    "commands": [
-      "editor.action.showDefinitionPreviewHover"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "s",
-      "e"
-    ],
-    "commands": [
-      "editor.action.showDefinitionPreviewHover"
-    ]
-  },
-  // Navigate to warnings or errors in the file
-  {
-    "before": [
-      "leader",
-      "n"
-    ],
-    "commands": [
-      "editor.action.marker.next"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "N"
-    ],
-    "commands": [
-      "editor.action.marker.prev"
-    ]
-  },
-  // DEBUG
-  {
-    "before": [
-      "leader",
-      "leader",
-      "b"
-    ],
-    "commands": [
-      "editor.debug.action.toggleInlineBreakpoint"
-    ]
-  },
-  // Misc
-  {
-    "before": [
-      "leader",
-      "leader",
-      "f"
-    ],
-    "commands": [
-      "editor.action.formatDocument"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "w"
-    ],
-    "commands": [
-      "workbench.action.files.save"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "q"
-    ],
-    "commands": [
-      ":q"
-    ]
-  },
-  {
-    "before": [
-      "leader",
-      "z"
-    ],
-    "commands": [
-      "workbench.action.toggleZenMode"
-    ]
-  },
-  // UI
-  // Toolbars
-  {
-    "before": [
-      "leader",
-      "v",
-      "t"
-    ],
-    "commands": [
-      "workbench.action.toggleActivityBarVisibility"
-    ]
-  }
-],
-"vim.visualModeKeyBindings": [
-  // Stay in visual mode while indenting
-  {
-    "before": [
-      "<"
-    ],
-    "commands": [
-      "editor.action.outdentLines"
-    ]
-  },
-  {
-    "before": [
-      ">"
-    ],
-    "commands": [
-      "editor.action.indentLines"
-    ]
-  },
-  // Move selected lines while staying in visual mode
-  {
-    "before": [
-      "J"
-    ],
-    "commands": [
-      "editor.action.moveLinesDownAction"
-    ]
-  },
-  {
-    "before": [
-      "K"
-    ],
-    "commands": [
-      "editor.action.moveLinesUpAction"
-    ]
-  }
-],
-// To improve performance",
-"extensions.experimental.affinity": {
-  "vscodevim.vim": 1
-},
-// End Vim Configuration ####################################################
-"files.eol": "\n",
-"[json]": {
-  "editor.defaultFormatter": "vscode.json-language-features"
-},
-"editor.suggestSelection": "first",
-"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-"files.exclude": {
-  "**/.classpath": true,
-  "**/.project": true,
-  "**/.settings": true,
-  "**/.factorypath": true
-},
-// ###########################################################################
-// LANGUAGES AND FRAMEWORKS
-// Bazel
-"bazel.executable": "./bazelw",
-"bazel.buildifierFixOnFormat": true,
-"settingsSync.ignoredSettings": [
-  "-bazel.executable",
-  "-bazel.buildifierExecutable"
-],
-// Dart
-"[dart]": {
-  "editor.formatOnSave": true,
-  "editor.formatOnType": true,
-  "editor.rulers": [
-    80
+  "vim.insertModeKeyBindings": [],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // NAVIGATION
+    // Quick open / switcher
+    {
+      "before": [
+        "C-p"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "e"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "t"
+      ],
+      "commands": [
+        "breadcrumbs.focusAndSelect"
+      ]
+    },
+    // Move between splits
+    {
+      "before": [
+        "c-h"
+      ],
+      "commands": [
+        "workbench.action.focusLeftGroup"
+      ]
+    },
+    {
+      "before": [
+        "c-l"
+      ],
+      "commands": [
+        "workbench.action.focusRightGroup"
+      ]
+    },
+    {
+      "before": [
+        "c-j"
+      ],
+      "commands": [
+        "workbench.action.focusBelowGroup"
+      ]
+    },
+    {
+      "before": [
+        "c-k"
+      ],
+      "commands": [
+        "workbench.action.focusAboveGroup"
+      ]
+    },
+    // switch b/w buffers
+    {
+      "before": [
+        "S-l"
+      ],
+      "commands": [
+        ":bnext"
+      ]
+    },
+    {
+      "before": [
+        "S-h"
+      ],
+      "commands": [
+        ":bprevious"
+      ]
+    },
+    // Splits
+    {
+      "before": [
+        "leader",
+        "leader",
+        "l"
+      ],
+      "commands": [
+        ":vsplit"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "leader",
+        "h"
+      ],
+      "commands": [
+        ":vsplit",
+        "workbench.action.focusLeftGroup"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "leader",
+        "j"
+      ],
+      "commands": [
+        ":split"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "leader",
+        "k"
+      ],
+      "commands": [
+        ":split",
+        "workbench.action.focusAboveGroup"
+      ]
+    },
+    // Find stuff
+    {
+      "before": [
+        "leader",
+        "f",
+        "i"
+      ],
+      "commands": [
+        "editor.action.goToImplementation"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "f",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.showAllSymbols"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "f",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.findInFiles"
+      ]
+    },
+    // Jump/Go To/Reveal
+    {
+      "before": [
+        "g",
+        "d"
+      ],
+      "commands": [
+        "editor.action.revealDefinition"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "g",
+        "b"
+      ],
+      "commands": [
+        "relatedFiles.openBuildFile"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "s",
+        "h"
+      ],
+      "commands": [
+        "editor.action.showDefinitionPreviewHover"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "s",
+        "e"
+      ],
+      "commands": [
+        "editor.action.showDefinitionPreviewHover"
+      ]
+    },
+    // Navigate to warnings or errors in the file
+    {
+      "before": [
+        "leader",
+        "n"
+      ],
+      "commands": [
+        "editor.action.marker.next"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "N"
+      ],
+      "commands": [
+        "editor.action.marker.prev"
+      ]
+    },
+    // DEBUG
+    {
+      "before": [
+        "leader",
+        "leader",
+        "b"
+      ],
+      "commands": [
+        "editor.debug.action.toggleInlineBreakpoint"
+      ]
+    },
+    // Misc
+    {
+      "before": [
+        "leader",
+        "leader",
+        "f"
+      ],
+      "commands": [
+        "editor.action.formatDocument"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "q"
+      ],
+      "commands": [
+        ":q"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "z"
+      ],
+      "commands": [
+        "workbench.action.toggleZenMode"
+      ]
+    },
+    // UI
+    // Toolbars
+    {
+      "before": [
+        "leader",
+        "v",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.toggleActivityBarVisibility"
+      ]
+    }
   ],
-  "editor.selectionHighlight": false,
-  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "vim.visualModeKeyBindings": [
+    // Stay in visual mode while indenting
+    {
+      "before": [
+        "<"
+      ],
+      "commands": [
+        "editor.action.outdentLines"
+      ]
+    },
+    {
+      "before": [
+        ">"
+      ],
+      "commands": [
+        "editor.action.indentLines"
+      ]
+    },
+    // Move selected lines while staying in visual mode
+    {
+      "before": [
+        "J"
+      ],
+      "commands": [
+        "editor.action.moveLinesDownAction"
+      ]
+    },
+    {
+      "before": [
+        "K"
+      ],
+      "commands": [
+        "editor.action.moveLinesUpAction"
+      ]
+    }
+  ],
+  // To improve performance",
+  "extensions.experimental.affinity": {
+    "vscodevim.vim": 1
+  },
+  // End Vim Configuration ####################################################
+  "files.eol": "\n",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   "editor.suggestSelection": "first",
-  "editor.tabCompletion": "onlySnippets",
-  "editor.wordBasedSuggestions": "off"
-},
-"dart.debugExternalLibraries": true,
-"dart.debugSdkLibraries": true,
-"dart.previewLsp": true,
-"database-client.defaultSelectLimit": 300,
-"boot-java.change-detection.on": true,
-"redhat.telemetry.enabled": false,
-"github.copilot.enable": {
-  "*": true,
-  "plaintext": false,
-  "markdown": false,
-  "scminput": false
-},
-"git.openRepositoryInParentFolders": "always",
-"database-client.autoSync": true,
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  // ###########################################################################
+  // LANGUAGES AND FRAMEWORKS
+  // Bazel
+  "bazel.executable": "./bazelw",
+  "bazel.buildifierFixOnFormat": true,
+  "settingsSync.ignoredSettings": [
+    "-bazel.executable",
+    "-bazel.buildifierExecutable"
+  ],
+  // Dart
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [
+      80
+    ],
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "dart.debugExternalLibraries": true,
+  "dart.debugSdkLibraries": true,
+  "dart.previewLsp": true,
+  "database-client.defaultSelectLimit": 300,
+  "boot-java.change-detection.on": true,
+  "redhat.telemetry.enabled": false,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "git.openRepositoryInParentFolders": "always",
+  "database-client.autoSync": true,
 }

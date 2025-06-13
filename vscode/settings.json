@@ -16,7 +16,7 @@
   "[xml]": {},
   // THEMING AND APPEARANCE
   "breadcrumbs.enabled": true,
-  "editor.fontFamily": "Mono",
+  "editor.fontFamily": "JetBrains Mono Nerd",
   "editor.fontSize": 12,
   "editor.lineNumbers": "relative",
   "editor.minimap.enabled": false,
@@ -367,19 +367,22 @@
     "vscodevim.vim": 1
   },
   // End Vim Configuration ####################################################
+
   "files.eol": "\n",
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+
+  // ###########################################################################
+  // Local Config
   "files.exclude": {
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true
   },
-  // ###########################################################################
   // LANGUAGES AND FRAMEWORKS
   // Bazel
   "bazel.executable": "./bazelw",
@@ -415,4 +418,8 @@
   },
   "git.openRepositoryInParentFolders": "always",
   "database-client.autoSync": true,
+
+  // ###########################################################################
+  // Config that needs to be moved to the common or local sections
+
 }

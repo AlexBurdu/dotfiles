@@ -258,9 +258,9 @@ shift-0 = ['move-node-to-workspace 10', 'workspace 10']
 if.app-name-regex-substring = 'scrcpy|Firefox'
 run = 'move-node-to-workspace 1' # P
 
-[[on-window-detected]]
-if.app-name-regex-substring = 'Chrome'
-run = 'move-node-to-workspace 2' # O
+# [[on-window-detected]]
+# if.app-name-regex-substring = 'Chrome'
+# run = 'move-node-to-workspace 2' # O
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Android Studio|Intellij|iTerm|Code|Cider'

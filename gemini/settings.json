@@ -1,0 +1,11 @@
+{
+  "theme": "Google Code",
+  "preferredEditor": "neovim",
+  "vimMode": false,
+  "checkpointing": {
+    "enabled": true
+  },
+  "fileFiltering": {
+    "respectGitIgnore": true
+  }
+}

@@ -2,10 +2,15 @@
   "theme": "Google Code",
   "preferredEditor": "neovim",
   "vimMode": false,
+  "loadMemoryFromIncludeDirectories": true,
   "checkpointing": {
     "enabled": true
   },
+  "excludeTools": [
+    "run_shell_command(rm)"
+  ],
   "fileFiltering": {
     "respectGitIgnore": true
-  }
+  },
+  "usageStatisticsEnabled": false
 }

@@ -1,7 +1,7 @@
 {
   "theme": "Google Code",
   "preferredEditor": "neovim",
-  "vimMode": false,
+  "vimMode": true,
   "loadMemoryFromIncludeDirectories": true,
   "checkpointing": {
     "enabled": true

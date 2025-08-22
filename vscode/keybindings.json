@@ -47,27 +47,6 @@
     "command": "geminicodeassist.chat.new",
     "when": "cloudcode.gemini.chatView.active"
   },
-  // Copilot ############################################
-  {
-    "key": "alt+x alt+c",
-    "command": "workbench.panel.chat.view.copilot.focus"
-  },
-  {
-    "key": "alt+x alt+c",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "sideBarVisible"
-  },
-  {
-    "key": "cmd+enter",
-    "command": "-chatEditor.action.accept",
-    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress"
-  },
-  {
-    "key": "ctrl+enter",
-    "command": "-github.copilot.generate",
-    "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
-  },
-  // End Copilot ############################################
   // NAVIGATION
   {
     "key": "ctrl+shift+e",
@@ -300,9 +279,13 @@
     "when": "listFocus && !inputFocus && !treestickyScrollFocused"
   },
   {
+    "key": "ctrl+shift+escape",
+    "command": "workbench.action.closeSidebar"
+  },
+  {
     "key": "shift+escape",
     "command": "workbench.action.closeSidebar"
-  }
+  },
   {
     "key": "pageup",
     "command": "-list.focusPageUp",
@@ -337,10 +320,31 @@
     "key": "ctrl+shift+f10",
     "command": "testing.runAtCursor",
     "when": "editorTextFocus"
-  }  
+  }, 
   // ###########################################################################
   // Local Config
 
+  // Copilot ############################################
+  {
+    "key": "alt+x alt+c",
+    "command": "workbench.panel.chat.view.copilot.focus"
+  },
+  {
+    "key": "alt+x alt+c",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarVisible"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-chatEditor.action.accept",
+    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress"
+  },
+  {
+    "key": "ctrl+enter",
+    "command": "-github.copilot.generate",
+    "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
+  }
+  // End Copilot ############################################
   // ###########################################################################
   // Config that needs to be moved to the common or local sections
 

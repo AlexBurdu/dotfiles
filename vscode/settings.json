@@ -307,6 +307,16 @@
     {
       "before": [
         "leader",
+        "y",
+        "b"
+      ],
+      "commands": [
+        "blaze.copyTargetAtCursor"
+      ]
+    },
+    {
+      "before": [
+        "leader",
         "z"
       ],
       "commands": [

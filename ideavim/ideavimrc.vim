@@ -111,6 +111,8 @@ map <Leader>vc <Action>(CheckinProject)
 map <Leader>vh <Action>(Vcs.ShowTabbedFileHistory)
 map <Leader>vd <Action>(Vcs.ShowDiffChangedLines)
 map <Leader>vn <Action>(VcsShowNextChangeMarker)
+map <Leader>vo <Action>(TextEditorWithPreview.Layout.EditorOnly)
+map <Leader>vp <Action>(TextEditorWithPreview.Layout.EditorAndPreview)
 map ]c <Action>(VcsShowNextChangeMarker)
 map <Leader>vN <Action>(VcsShowPrevChangeMarker)
 map [c <Action>(VcsShowPrevChangeMarker)
@@ -149,3 +151,5 @@ map <Leader>yb <Action>(Blaze.CopyBlazeTargetPathAction)
 map <Leader>vt <Action>(ViewToolButtons)
 
 map <Leader>z <Action>(ToggleDistractionFreeMode)
+
+source ~/.config/ideavim/intellijbazel.vim

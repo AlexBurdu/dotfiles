@@ -59,6 +59,9 @@ nmap <C-w>L <Action>(MoveEditorToOppositeTabGroup)
 nmap <C-w>H <Action>(MoveEditorToOppositeTabGroup)
 
 " Show various info
+" Show context menu / popup menu
+nmap <Leader><Leader>m <Action>(ShowPopupMenu)
+
 " Free up C-i for insert and visual mode to use as IDE shortcut
 sethandler <C-i> i-v:ide n:vim
 nmap <Leader>st <Action>(ExpressionTypeInfo)

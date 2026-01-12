@@ -55,7 +55,31 @@ for file in "$SCRIPT_DIR"/*; do
 
         # Handle JSON files
         if [[ "$filename" == *.json ]]; then
-            merge_json "$file" "$TARGET_DIR/$filename"
+            read -p "For $filename, do you want to (m)erge, sym(l)ink, or (s)kip? [m/l/s] " -n 1 -r
+            echo
+            case $REPLY in
+                [Mm]*)
+                    merge_json "$file" "$TARGET_DIR/$filename"
+                    ;;
+                [Ll]*)
+                    target_symlink="$TARGET_DIR/$filename"
+                    if [ -e "$target_symlink" ] || [ -L "$target_symlink" ]; then
+                        read -p "Overwrite $target_symlink? (y/n) " -n 1 -r
+                        echo
+                        if [[ $REPLY =~ ^[Yy]$ ]]; then
+                            ln -sf "$file" "$target_symlink"
+                        fi
+                    else
+                        ln -s "$file" "$target_symlink"
+                    fi
+                    ;;
+                [Ss]*)
+                    echo "Skipping $filename."
+                    ;;
+                *)
+                    echo "Invalid option. Skipping $filename."
+                    ;;
+            esac
             continue
         fi
 

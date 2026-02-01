@@ -1,0 +1,12 @@
+# Ghostty Configuration
+
+# Theme
+theme = light:catppuccin-latte.conf,dark:catppuccin-mocha.conf
+
+# Font
+# font-family = "JetBrains Mono"
+# font-size = 13
+
+# Window
+# window-padding-x = 10
+# window-padding-y = 10

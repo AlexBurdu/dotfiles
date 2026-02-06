@@ -1,3 +1,5 @@
+-- nvim-lspconfig is a Neovim plugin that provides configurations for various
+-- language servers.
 return {
   "neovim/nvim-lspconfig",
   dependencies = {

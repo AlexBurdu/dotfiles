@@ -1,3 +1,6 @@
+-- Trouble is a Neovim plugin that provides a list of diagnostics, references,
+-- and other items in a single view.
+-- https://github.com/folke/trouble.nvim
 return {
   {
     "folke/trouble.nvim",

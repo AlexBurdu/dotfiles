@@ -1,3 +1,4 @@
+-- Git integration for Neovim
 -- https://github.com/tpope/vim-fugitive
 return {
   "tpope/vim-fugitive",

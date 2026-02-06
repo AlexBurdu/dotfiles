@@ -1,3 +1,6 @@
+-- Tmux Navigator configuration for Neovim
+-- Tmux Navigator allows seamless navigation between Neovim and Tmux panes.
+-- https://github.com/christoomey/vim-tmux-navigator
 return {
   "christoomey/vim-tmux-navigator",
   cmd = {

@@ -1,3 +1,6 @@
+-- Telescope is a fuzzy finder for Neovim, allowing you to search and filter
+-- files, buffers, and more.
+-- https://github.com/nvim-telescope/telescope.nvim
 function vim.getVisualSelection()
   -- source: https://github.com/nvim-telescope/telescope.nvim/issues/1923
   vim.cmd('noau normal! "vy"')

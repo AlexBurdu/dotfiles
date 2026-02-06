@@ -1,3 +1,7 @@
+-- Tree-sitter is a parser generator tool that produces parsers for programming
+-- languages.
+-- In other words, it allows Neovim to understand the structure of code, allowing 
+-- for better syntax highlighting, code folding, and other features.
 -- https://github.com/nvim-treesitter/nvim-treesitter
 return {
   "nvim-treesitter/nvim-treesitter",

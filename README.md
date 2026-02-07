@@ -98,6 +98,7 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | Shortcut | Action |
 |---|---|
 | `C-s n` | Enter copy mode |
+| `C-s v` | Open scrollback in nvim (read-only) |
 | `v` | Begin selection (in copy mode) |
 | `y` | Copy to system clipboard (in copy mode) |
 | `C-s p` | Paste from system clipboard |

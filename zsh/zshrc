@@ -92,6 +92,8 @@ source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete/zsh-autoc
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 alias fzfvim='nvim $(fzf -m --preview "batcat --color=always {}")'
+alias v='nvim .'
+alias m='mc'
 
 # autosuggestions bindings
 bindkey '^Y' autosuggest-accept

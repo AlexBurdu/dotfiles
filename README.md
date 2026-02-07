@@ -18,9 +18,11 @@ All tools share consistent vim-style patterns. See full details in each section 
 | Action | [Tmux](#tmux-prefix-c-s) | [Neovim](#neovim-leader-space) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#vs-code) | [MC](#midnight-commander) |
 |---|---|---|---|---|---|
 | Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` (lists) | `h/j/k/l` |
+| Create split h/j/k/l | `C-s h/j/k/l` | `Space Space h/j/k/l` | - | - | - |
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
 | Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
 | Next tab/buffer | `C-s ]` | `S-l` | `S-l` | - | - |
+| Last window | `C-s Enter` | - | - | - | - |
 
 ### Find & Code Intelligence
 
@@ -62,10 +64,13 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | Shortcut | Action |
 |---|---|
 | `C-s c` | New window (inherits current directory) |
-| `C-s "` | Horizontal split (inherits current directory) |
-| `C-s %` | Vertical split (inherits current directory) |
+| `C-s h` | Split left |
+| `C-s j` | Split below |
+| `C-s k` | Split above |
+| `C-s l` | Split right |
 | `C-s ]` | Next window |
 | `C-s [` | Previous window |
+| `C-s Enter` | Switch to last window |
 | `C-s \` | Switch to last session |
 | `C-\` | Switch to last session (no prefix) |
 

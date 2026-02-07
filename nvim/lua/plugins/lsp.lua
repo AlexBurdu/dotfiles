@@ -39,7 +39,7 @@ return {
         "gopls",
         "gradle_ls",
         "jsonls",
-        -- "kotlin_language_server", HIGH CPU USAGE
+        "kotlin_lsp",
         "lua_ls",
         "marksman",
         "pyright",

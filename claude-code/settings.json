@@ -1,4 +1,9 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(command tmux rename-window *)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {

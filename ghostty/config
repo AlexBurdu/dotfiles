@@ -7,6 +7,9 @@ theme = light:catppuccin-latte.conf,dark:catppuccin-mocha.conf
 # font-family = "JetBrains Mono"
 # font-size = 13
 
+# Keyboard
+macos-option-as-alt = true
+
 # Window
 # window-padding-x = 10
 # window-padding-y = 10

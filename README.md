@@ -22,6 +22,8 @@ All tools share consistent vim-style patterns. See full details in each section 
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
 | Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
 | Next tab/buffer | `C-s ]` | `S-l` | `S-l` | - | - |
+| Move tab/window left | `C-s {` / `C-{` | - | - | - | - |
+| Move tab/window right | `C-s }` / `C-}` | - | - | - | - |
 | Last window | `C-s Enter` | - | - | - | - |
 
 ### Find & Code Intelligence
@@ -70,6 +72,8 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `C-s l` | Split right |
 | `C-s ]` | Next window |
 | `C-s [` | Previous window |
+| `C-s {` / `C-{` | Move window left |
+| `C-s }` / `C-}` | Move window right |
 | `C-s Enter` | Switch to last window |
 | `C-s \` | Switch to last session |
 | `C-\` | Switch to last session (no prefix) |

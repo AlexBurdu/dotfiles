@@ -91,7 +91,7 @@ case "$STATE" in
       name=$(load_name)
     fi
     save_name "$name"
-    tmux rename-window "$name"
+    tmux rename-window -t "$PANE_ID" "$name"
     ;;
   working)
     # Fired on SessionStart — try git branch,
@@ -99,16 +99,16 @@ case "$STATE" in
     name=$(detect_branch)
     name="${name:-claude}"
     save_name "$name"
-    tmux rename-window "$name"
+    tmux rename-window -t "$PANE_ID" "$name"
     ;;
   waiting)
     # Fired on Stop — prepend hand emoji.
     name=$(load_name)
-    tmux rename-window "✋${name}"
+    tmux rename-window -t "$PANE_ID" "✋${name}"
     ;;
   ready)
     # Fired on SessionEnd — clean up.
-    tmux rename-window "ready"
+    tmux rename-window -t "$PANE_ID" "ready"
     rm -f "$STATE_FILE"
     ;;
 esac

@@ -1,16 +1,43 @@
 {
-  "theme": "Google Code",
-  "preferredEditor": "neovim",
-  "vimMode": true,
-  "loadMemoryFromIncludeDirectories": true,
-  "checkpointing": {
+  "general": {
+    "checkpointing": {
+      "enabled": true
+    },
+    "preferredEditor": "neovim",
+    "vimMode": true,
+    "previewFeatures": true
+  },
+  "tools": {
+    "exclude": [
+      "run_shell_command(rm)"
+    ],
+    "shell": {
+      "showColor": true
+    }
+  },
+  "context": {
+    "fileFiltering": {
+      "respectGitIgnore": false
+    },
+    "loadFromIncludeDirectories": true
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "ui": {
+    "theme": "Shades Of Purple",
+    "showStatusInTitle": true,
+    "showMemoryUsage": true,
+    "showCitations": true,
+    "showModelInfoInChat": true
+  },
+  "privacy": {
+    "usageStatisticsEnabled": false
+  },
+  "ide": {
     "enabled": true
-  },
-  "excludeTools": [
-    "run_shell_command(rm)"
-  ],
-  "fileFiltering": {
-    "respectGitIgnore": true
-  },
-  "usageStatisticsEnabled": false
+  }
 }
+

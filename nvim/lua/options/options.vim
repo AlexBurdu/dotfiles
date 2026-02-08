@@ -26,3 +26,6 @@ endif
 
 " Override netwrw settings to show line numbers
 let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
+
+" Clear jumplist on startup (prevent cross-session jumps)
+autocmd VimEnter * clearjumps

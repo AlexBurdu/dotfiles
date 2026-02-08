@@ -13,16 +13,14 @@ nnoremap <C-u> <C-u>zz
 nnoremap <C-b> <C-b>zz
 
 if !has('ide')
-  " Open explorer (similar mapping to IntelliJ file tree)
-  nnoremap <M-f> :Ex<CR>
-  " nnoremap <C-t> :Vex<CR>
+  " Oil.nvim handles <M-f> mapping in plugins/oil.lua
 endif
 
 " Navigate to next/previous occurence but keep cursor centered
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
-" Switch Buffers 
+" Switch Buffers
 nnoremap <S-h> :bprevious<CR>
 nnoremap <S-l> :bnext<CR>
 

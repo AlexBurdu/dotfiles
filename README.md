@@ -47,6 +47,7 @@ All tools share consistent vim-style patterns. See full details in each section 
 | Action | [Tmux](#tmux-prefix-c-s) | [Neovim](#neovim-leader-space) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#vs-code) | [MC](#midnight-commander) |
 |---|---|---|---|---|---|
 | Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` (lists) | `h/j/k/l` |
+| Breadcrumb/navbar | - | `C-t` | `C-t` | `C-t` | - |
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space Space h/j/k/l` | - | - | - |
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
 | Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
@@ -145,6 +146,7 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 
 Keymaps: [nvim/lua/keymap/keymap.vim](./nvim/lua/keymap/keymap.vim)
 Plugins: [nvim/lua/plugins/](./nvim/lua/plugins/)
+File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 
 ### Navigation
 | Shortcut | Action |
@@ -156,7 +158,28 @@ Plugins: [nvim/lua/plugins/](./nvim/lua/plugins/)
 | `n` / `N` | Next/previous search match (centered) |
 | `S-h` | Previous buffer |
 | `S-l` | Next buffer |
-| `Alt-f` | Open file explorer (netrw) |
+| `\` | Open file explorer (oil.nvim) |
+
+### File Explorer (oil.nvim)
+| Shortcut | Action |
+|---|---|
+| `\` | Open at current file |
+| `Enter` | Open file/directory |
+| `-` | Go to parent directory |
+| `gh` | Toggle hidden files |
+| `gs` | Change sort order |
+| `Space .` | Set cwd to current directory (teaches zoxide) |
+| `q` | Close |
+
+Edit filenames and `:w` to rename/move/delete files. Deletes go to trash.
+
+### Breadcrumb Navigation (dropbar.nvim)
+| Shortcut | Action |
+|---|---|
+| `C-t` | Open breadcrumb picker |
+| `C-j` / `C-k` | Move down/up in menu |
+| `C-l` | Expand/enter submenu |
+| `C-h` | Close menu |
 
 ### Splits
 | Shortcut | Action |
@@ -172,20 +195,25 @@ Plugins: [nvim/lua/plugins/](./nvim/lua/plugins/)
 |---|---|
 | `Space ff` | Find files |
 | `Space fp` | Live grep (find in path) |
-| `Space fs` | Grep string under cursor |
-| `Space e` | Show buffers |
+| `Space fr` | Replace in path (Spectre) |
+| `Space fs` | Find symbol (LSP workspace symbols) |
+| `Space fc` | Find class/type (LSP type definitions) |
+| `Space fw` | Find workspace (zoxide), set cwd, open oil |
+| `Space e` | Recent files (current directory) |
 | `Space t` | LSP document symbols |
-| `C-t` | LSP document symbols |
+| `C-t` | Pick from breadcrumb (dropbar.nvim) |
 | `gd` | Go to definition |
 | `Space fu` | Find references (LSP) |
 | `Space fi` | Find implementations (LSP) |
-| `Space fc` | LSP code actions |
 
 ### Editing
 | Shortcut | Action |
 |---|---|
 | `Space w` | Save |
 | `Space q` | Quit |
+| `C-/` | Toggle comment |
+| `gcc` | Toggle comment line |
+| `gc{motion}` | Comment over motion |
 | `J` / `K` (visual) | Move selected lines down/up |
 | `Space r` | Replace word under cursor |
 | `Space Space f` | Format entire file |
@@ -254,7 +282,7 @@ Bazel: [ideavim/intellijbazel.vim](./ideavim/intellijbazel.vim)
 | `Space t` | File structure popup |
 | `Space e` | Recent files |
 | `Space Space e` | Switcher |
-| `Alt-f` | Open file tree |
+| `\` | Open file tree (current file selected) |
 
 ### Find & Goto
 | Shortcut | Action |
@@ -440,3 +468,19 @@ Config: [karabiner/karabiner.json](./karabiner/karabiner.json)
 |---|---|---|
 | `Return` | Return | Left Control |
 | `Left Command` | Delete/Backspace | Left Command |
+
+---
+
+## Zoxide
+
+Config: [zsh/zshrc](./zsh/zshrc) (init line)
+
+Smarter `cd` that learns your frequently used directories.
+
+| Command | Action |
+|---|---|
+| `z <partial>` | Jump to matching directory (e.g., `z dot` → `~/dotfiles`) |
+| `zi` | Interactive directory picker |
+| `Space fw` (nvim) | Telescope picker for zoxide directories (sets cwd, opens oil) |
+
+Zoxide learns automatically as you `cd` around. In nvim, `Space .` in oil.nvim also teaches zoxide.

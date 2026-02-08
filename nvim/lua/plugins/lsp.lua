@@ -43,6 +43,7 @@ return {
         "lua_ls",
         "marksman",
         "pyright",
+        "starpls",
       },
       handlers = {
         function(server_name) -- default handler (optional)

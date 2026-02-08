@@ -4,7 +4,7 @@
 #
 # Called by Claude Code hooks with JSON on stdin.
 # Usage: tmux-status-hook.sh <state>
-#   States: prompt, working, waiting, ready
+#   States: prompt, working, waiting, ready, resume
 #
 # Dependencies: git, gh (GitHub CLI), tmux
 
@@ -23,6 +23,16 @@ load_name() {
   else
     echo "claude"
   fi
+}
+
+# Get current window name (strip emoji prefix if present).
+current_name() {
+  tmux display-message -p '#{window_name}' | sed 's/^[✋⏳]*//'
+}
+
+# Check if name contains issue/PR reference (worth preserving).
+has_ref() {
+  printf '%s' "$1" | grep -qE '(issue|pr)-[0-9]+'
 }
 
 # Detect PR/issue references from raw hook JSON
@@ -83,28 +93,53 @@ detect_branch() {
 
 case "$STATE" in
   prompt)
-    # Fired on UserPromptSubmit — parse the prompt
-    # for references, update name if found.
-    name=$(detect_refs)
-    if [ -z "$name" ]; then
-      # No ref in this prompt; keep existing name.
-      name=$(load_name)
+    # Fired on UserPromptSubmit — parse the prompt for references.
+    # Only update name if NEW refs found; preserve existing issue/PR.
+    saved=$(load_name)
+    new_ref=$(detect_refs)
+
+    if [ -n "$new_ref" ]; then
+      # New ref found in prompt — use it.
+      name="$new_ref"
+    elif has_ref "$saved"; then
+      # No new ref, but we have a saved issue/PR — keep it.
+      name="$saved"
+    else
+      # No ref anywhere — keep whatever we have.
+      name="${saved:-claude}"
     fi
     save_name "$name"
     tmux rename-window -t "$PANE_ID" "$name"
     ;;
   working)
-    # Fired on SessionStart — try git branch,
-    # fall back to "claude".
-    name=$(detect_branch)
-    name="${name:-claude}"
+    # Fired on SessionStart — preserve existing issue/PR name,
+    # otherwise try git branch, fall back to "claude".
+    saved=$(load_name)
+
+    if has_ref "$saved"; then
+      # Preserve saved issue/PR reference.
+      name="$saved"
+    else
+      # No saved ref — try branch, then "claude".
+      name=$(detect_branch)
+      name="${name:-claude}"
+    fi
     save_name "$name"
     tmux rename-window -t "$PANE_ID" "$name"
     ;;
   waiting)
     # Fired on Stop — prepend hand emoji.
+    # Preserve the saved name (don't overwrite).
     name=$(load_name)
+    [ -z "$name" ] && name="claude"
     tmux rename-window -t "$PANE_ID" "✋${name}"
+    ;;
+  resume)
+    # Fired on PreToolUse — Claude is working, remove hand.
+    # Preserve the saved name (don't overwrite).
+    name=$(load_name)
+    [ -z "$name" ] && name="claude"
+    tmux rename-window -t "$PANE_ID" "$name"
     ;;
   ready)
     # Fired on SessionEnd — clean up.

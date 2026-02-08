@@ -5,6 +5,16 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/tmux-status-hook.sh resume"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

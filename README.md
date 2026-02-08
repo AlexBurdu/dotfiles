@@ -32,7 +32,7 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 
 ## Notes
 
-- Neovim theme syncs at runtime via `send-keys`
+- Neovim detects OS appearance on startup; tmux syncs at runtime via `send-keys`
 - MC requires restart to apply new skin
 - Nvim also has focus dimming (inactive splits get dimmed background)
 

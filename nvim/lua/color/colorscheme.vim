@@ -1,7 +1,20 @@
 " ### UI Settings###
 set cursorline
-let timehour = (strftime("%H"))
-if timehour >= 20 || timehour < 5
+
+" Detect OS dark/light mode (consistent with tmux/set-themes.sh)
+function! s:IsDarkMode()
+  if has('mac')
+    " macOS: returns "Dark" if dark mode is enabled
+    let l:result = system('defaults read -g AppleInterfaceStyle 2>/dev/null')
+    return l:result =~# 'Dark'
+  else
+    " Linux/GNOME: check color-scheme setting
+    let l:result = system('gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null')
+    return l:result =~# 'dark'
+  endif
+endfunction
+
+if s:IsDarkMode()
   set background=dark
   colorscheme carbonfox
   " Background colors for focus dimming (matches custom carbonfox bg1 / slightly lighter)

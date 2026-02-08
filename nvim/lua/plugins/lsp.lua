@@ -28,11 +28,11 @@ return {
     require("fidget").setup({})
     require("mason").setup()
     require("mason-lspconfig").setup({
+      automatic_installation = true,
       -- See complete list of Mason supported serverrs: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
       ensure_installed = {
         "ast_grep",
         "buf_ls",
-        "bzl",
         "clangd",
         "docker_compose_language_service",
         "dockerls",

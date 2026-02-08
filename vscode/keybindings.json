@@ -1,7 +1,12 @@
 // Place your key bindings in this file to overwrite the defaults
 [
-  // General AI ############################################
-  // Inline Suggestions
+  // ===========================================================================
+  // AI
+  // ===========================================================================
+
+  // GENERAL AI
+  // ---------------------------------------------------------------------------
+  // Inline suggestions
   {
     "key": "ctrl+y",
     "command": "editor.action.inlineSuggest.acceptNextWord",
@@ -22,7 +27,9 @@
     "command": "editor.action.inlineSuggest.acceptNextLine",
     "when": "editorFocus && inlineSuggestionVisible"
   },
-  // Gemini ############################################
+
+  // GEMINI
+  // ---------------------------------------------------------------------------
   {
     "key": "alt+x alt+g",
     "command": "cloudcode.gemini.chatView.focus"
@@ -47,12 +54,18 @@
     "command": "geminicodeassist.chat.new",
     "when": "cloudcode.gemini.chatView.active"
   },
+
+  // ===========================================================================
   // NAVIGATION
+  // ===========================================================================
+
   {
     "key": "ctrl+shift+e",
     "command": "workbench.action.quickOpen"
   },
-  // Editor
+
+  // EDITOR
+  // ---------------------------------------------------------------------------
   {
     "key": "ctrl+f4",
     "command": "workbench.action.closeActiveEditor"
@@ -77,7 +90,9 @@
     "command": "breadcrumbs.focusAndSelect",
     "when": "breadcrumbsPossible && breadcrumbsVisible"
   },
-  // Terminal
+
+  // TERMINAL
+  // ---------------------------------------------------------------------------
   {
     "key": "alt+t",
     "command": "workbench.action.terminal.focus",
@@ -117,8 +132,10 @@
     "key": "ctrl+shift+j",
     "command": "workbench.action.togglePanel"
   },
-  // Side Bar
-  // File Tree
+
+  // SIDE BAR
+  // ---------------------------------------------------------------------------
+  // File tree
   {
     "key": "alt+f",
     "command": "workbench.explorer.fileView.focus"
@@ -133,7 +150,7 @@
     "command": "explorer.newFile",
     "when": "explorerViewletFocus"
   },
-  // Source Control
+  // Source control
   {
     "key": "alt+v",
     "command": "workbench.scm.focus"
@@ -172,7 +189,17 @@
     "command": "-editor.action.revealDefinition",
     "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
   },
-  // Misc
+  {
+    "key": "ctrl+shift+escape",
+    "command": "workbench.action.closeSidebar"
+  },
+  {
+    "key": "shift+escape",
+    "command": "workbench.action.closeSidebar"
+  },
+
+  // LIST NAVIGATION
+  // ---------------------------------------------------------------------------
   {
     "key": "ctrl+shift+a",
     "command": "-editor.action.blockComment",
@@ -279,14 +306,6 @@
     "when": "listFocus && !inputFocus && !treestickyScrollFocused"
   },
   {
-    "key": "ctrl+shift+escape",
-    "command": "workbench.action.closeSidebar"
-  },
-  {
-    "key": "shift+escape",
-    "command": "workbench.action.closeSidebar"
-  },
-  {
     "key": "pageup",
     "command": "-list.focusPageUp",
     "when": "listFocus && !inputFocus && !treestickyScrollFocused"
@@ -311,6 +330,9 @@
     "command": "quickInput.next",
     "when": "inQuickInput && quickInputType == 'quickPick'"
   },
+
+  // MISC
+  // ---------------------------------------------------------------------------
   {
     "key": "ctrl+/",
     "command": "editor.action.commentLine",
@@ -320,11 +342,14 @@
     "key": "ctrl+shift+f10",
     "command": "testing.runAtCursor",
     "when": "editorTextFocus"
-  }, 
-  // ###########################################################################
-  // Local Config
+  },
 
-  // Copilot ############################################
+  // ===========================================================================
+  // LOCAL CONFIG (personal/home only - not copied to work)
+  // ===========================================================================
+
+  // COPILOT
+  // ---------------------------------------------------------------------------
   {
     "key": "alt+x alt+c",
     "command": "workbench.panel.chat.view.copilot.focus"
@@ -344,8 +369,4 @@
     "command": "-github.copilot.generate",
     "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
   }
-  // End Copilot ############################################
-  // ###########################################################################
-  // Config that needs to be moved to the common or local sections
-
 ]

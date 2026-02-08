@@ -24,5 +24,26 @@ augroup FocusDim
   autocmd!
   autocmd FocusLost * execute 'highlight Normal guibg=' . g:focus_dimmed_bg
   autocmd FocusGained * execute 'highlight Normal guibg=' . g:focus_normal_bg
+
+  " Update focus colors and highlights when colorscheme changes
+  " (e.g., when tmux switches theme via :colorscheme command)
+  autocmd ColorScheme carbonfox call s:SetCarbonfoxColors()
+  autocmd ColorScheme dayfox call s:SetDayfoxColors()
 augroup END
+
+" Dark theme: black background with dark gray dimming
+function! s:SetCarbonfoxColors()
+  let g:focus_normal_bg = '#000000'  " focused bg (black)
+  let g:focus_dimmed_bg = '#111111'  " unfocused bg (dark gray)
+  highlight Normal guibg=#000000     " set focused split bg
+  highlight NormalNC guibg=#111111   " set unfocused split bg
+endfunction
+
+" Light theme: light gray background with darker gray dimming
+function! s:SetDayfoxColors()
+  let g:focus_normal_bg = '#f0f1f7'  " focused bg (light gray)
+  let g:focus_dimmed_bg = '#e0e1e7'  " unfocused bg (darker gray)
+  highlight Normal guibg=#f0f1f7     " set focused split bg
+  highlight NormalNC guibg=#e0e1e7   " set unfocused split bg
+endfunction
 

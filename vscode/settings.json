@@ -5,16 +5,30 @@
 // - https://www.youtube.com/watch?v=GST8we5uABo
 // - https://code.visualstudio.com/docs/getstarted/keybindings#_display
 {
+  // ===========================================================================
+  // GENERAL
+  // ===========================================================================
+
   "diffEditor.renderSideBySide": false,
+  "diffEditor.codeLens": true,
   "extensions.ignoreRecommendations": true,
   "files.autoSave": "onFocusChange",
+  "files.eol": "\n",
   "window.reopenFolders": "all",
   "window.restoreWindows": "all",
   "workbench.welcome.enabled": true,
   "workbench.startupEditor": "newUntitledFile",
   "workbench.editor.showTabs": "none",
   "[xml]": {},
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+
+  // ===========================================================================
   // THEMING AND APPEARANCE
+  // ===========================================================================
   "breadcrumbs.enabled": true,
   "editor.fontFamily": "JetBrains Mono Nerd",
   "editor.fontSize": 12,
@@ -36,8 +50,11 @@
   "zenMode.hideLineNumbers": false,
   "zenMode.fullScreen": false,
   "zenMode.hideStatusBar": false,
-  // ##########################################################################
-  // VIM CONFIGURATION 
+
+  // ===========================================================================
+  // VIM CONFIGURATION
+  // ===========================================================================
+
   "vim.leader": "<Space>",
   "vim.useCtrlKeys": true,
   "vim.easymotion": false,
@@ -372,36 +389,44 @@
       ]
     }
   ],
-  // To improve performance",
+  // To improve performance
   "extensions.experimental.affinity": {
     "vscodevim.vim": 1
   },
-  // End Vim Configuration ####################################################
 
-  "files.eol": "\n",
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  // ===========================================================================
+  // LOCAL CONFIG (personal/home only - not copied to work)
+  // ===========================================================================
 
-  // ###########################################################################
-  // Local Config
   "files.exclude": {
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true
   },
-  // LANGUAGES AND FRAMEWORKS
-  // Bazel
+  "chat.mcp.gallery.enabled": true,
+  "git.openRepositoryInParentFolders": "always",
+
+  // COPILOT
+  // ---------------------------------------------------------------------------
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": false,
+    "scminput": false
+  },
+
+  // BAZEL
+  // ---------------------------------------------------------------------------
   "bazel.executable": "./bazelw",
   "bazel.buildifierFixOnFormat": true,
   "settingsSync.ignoredSettings": [
     "-bazel.executable",
     "-bazel.buildifierExecutable"
   ],
-  // Dart
+
+  // DART
+  // ---------------------------------------------------------------------------
   "[dart]": {
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
@@ -417,19 +442,14 @@
   "dart.debugExternalLibraries": true,
   "dart.debugSdkLibraries": true,
   "dart.previewLsp": true,
-  "database-client.defaultSelectLimit": 300,
+
+  // JAVA
+  // ---------------------------------------------------------------------------
   "boot-java.change-detection.on": true,
   "redhat.telemetry.enabled": false,
-  "github.copilot.enable": {
-    "*": true,
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false
-  },
-  "git.openRepositoryInParentFolders": "always",
-  "database-client.autoSync": true,
 
-  // ###########################################################################
-  // Config that needs to be moved to the common or local sections
-
+  // DATABASE
+  // ---------------------------------------------------------------------------
+  "database-client.defaultSelectLimit": 300,
+  "database-client.autoSync": true
 }

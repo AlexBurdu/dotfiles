@@ -122,3 +122,6 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# zoxide - smarter cd command (tracks frequently used directories)
+eval "$(zoxide init zsh)"
+

@@ -22,6 +22,8 @@ source ~/.config/nvim/lua/keymap/keymap.vim
 " copilot is loaded in the code completion section
 
 " ### NAVIGATE ###
+" Open file explorer with current file selected (like oil.nvim's \)
+nmap \ m'<Action>(SelectInProjectView)
 nmap <Leader>e m'<Action>(RecentFiles)
 nmap <Leader><Leader>e m'<Action>(Switcher)
 nmap <C-t> m'<Action>(ShowNavBar)

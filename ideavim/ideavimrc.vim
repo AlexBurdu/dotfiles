@@ -24,6 +24,7 @@ source ~/.config/nvim/lua/keymap/keymap.vim
 " ### NAVIGATE ###
 " Open file explorer with current file selected (like oil.nvim's \)
 nmap \ m'<Action>(SelectInProjectView)
+nmap <M-f> m'<Action>(SelectInProjectView)
 nmap <Leader>e m'<Action>(RecentFiles)
 nmap <Leader><Leader>e m'<Action>(Switcher)
 nmap <C-t> m'<Action>(ShowNavBar)

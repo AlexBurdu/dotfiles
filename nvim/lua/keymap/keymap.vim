@@ -13,7 +13,7 @@ nnoremap <C-u> <C-u>zz
 nnoremap <C-b> <C-b>zz
 
 if !has('ide')
-  " Oil.nvim handles <M-f> mapping in plugins/oil.lua
+  nnoremap <M-f> :lua require('oil').open()<CR>
 endif
 
 " Navigate to next/previous occurence but keep cursor centered

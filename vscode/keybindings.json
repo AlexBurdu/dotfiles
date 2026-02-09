@@ -135,13 +135,23 @@
 
   // SIDE BAR
   // ---------------------------------------------------------------------------
-  // File tree
+  // File tree (Alt+F and \ both work)
   {
     "key": "alt+f",
     "command": "workbench.explorer.fileView.focus"
   },
   {
     "key": "alt+f",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "explorerViewletFocus"
+  },
+  {
+    "key": "\\",
+    "command": "workbench.explorer.fileView.focus",
+    "when": "!editorTextFocus"
+  },
+  {
+    "key": "\\",
     "command": "workbench.action.toggleSidebarVisibility",
     "when": "explorerViewletFocus"
   },

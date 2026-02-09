@@ -4,6 +4,7 @@ return {
   "tpope/vim-fugitive",
   config = function()
     vim.keymap.set("n", "<leader>vs", vim.cmd.Git)
+    vim.keymap.set("n", "<M-v>", vim.cmd.Git)
 
     local ThePrimeagen_Fugitive = vim.api.nvim_create_augroup("ThePrimeagen_Fugitive", {})
 

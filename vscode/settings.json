@@ -340,6 +340,27 @@
         "workbench.action.toggleZenMode"
       ]
     },
+    // VCS/Git
+    {
+      "before": [
+        "leader",
+        "v",
+        "d"
+      ],
+      "commands": [
+        "git.openChange"
+      ]
+    },
+    {
+      "before": [
+        "leader",
+        "v",
+        "s"
+      ],
+      "commands": [
+        "workbench.view.scm"
+      ]
+    },
     // UI
     // Toolbars
     {

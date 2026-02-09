@@ -112,6 +112,7 @@ source ~/.config/ideavim/gemini.vim
 " source ~/.config/ideavim/copilot.vim
 
 " VCS (Version Control System)
+nmap <M-v> m'<Action>(ActivateVersionControlToolWindow)
 map <Leader>vb <Action>(Annotate)
 map <Leader>vc <Action>(CheckinProject)
 map <Leader>vh <Action>(Vcs.ShowTabbedFileHistory)

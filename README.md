@@ -158,7 +158,7 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `n` / `N` | Next/previous search match (centered) |
 | `S-h` | Previous buffer |
 | `S-l` | Next buffer |
-| `\` | Open file explorer (oil.nvim) |
+| `\` / `Alt-f` | Open file explorer (oil.nvim) |
 
 ### File Explorer (oil.nvim)
 | Shortcut | Action |
@@ -282,7 +282,7 @@ Bazel: [ideavim/intellijbazel.vim](./ideavim/intellijbazel.vim)
 | `Space t` | File structure popup |
 | `Space e` | Recent files |
 | `Space Space e` | Switcher |
-| `\` | Open file tree (current file selected) |
+| `\` / `Alt-f` | Open file tree (current file selected) |
 
 ### Find & Goto
 | Shortcut | Action |
@@ -372,7 +372,7 @@ Settings: [vscode/settings.json](./vscode/settings.json)
 |---|---|
 | `C-Shift-e` | Quick open |
 | `C-t` | Focus breadcrumbs |
-| `Alt-f` | Toggle file explorer |
+| `\` / `Alt-f` | Toggle file explorer |
 | `Alt-e` | Focus editor group |
 | `Alt-v` | Toggle source control |
 | `C-f4` | Close editor |

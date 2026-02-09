@@ -68,6 +68,13 @@ All tools share consistent vim-style patterns. See full details in each section 
 | Document symbols | `Space t` | `Space t` |
 | Zen/distraction-free | `Space z` | `Space z` |
 
+### VCS/Git
+
+| Action | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) |
+|---|---|---|
+| Show hunk diff | `Space vd` | `Space vd` |
+| Git status | `Space vs` | `Space vs` |
+
 ### AI Completion
 
 | Action | [Neovim](#copilot-insert-mode) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#ai-completion) |
@@ -232,6 +239,7 @@ Edit filenames and `:w` to rename/move/delete files. Deletes go to trash.
 | Shortcut | Action |
 |---|---|
 | `Space vs` | Git status |
+| `Space vd` | Show hunk diff (signify) |
 | `Space p` (fugitive) | Git push |
 | `Space P` (fugitive) | Git pull --rebase |
 | `gu` / `gh` | Get left/right side in merge conflict |

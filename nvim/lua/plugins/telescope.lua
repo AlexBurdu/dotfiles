@@ -39,10 +39,25 @@ return {
     })
     local builtin = require('telescope.builtin')
 
+    -- Try LSP, fall back to grep-based search when no LSP is available.
+    local function lsp_or_fallback(lsp_fn, fallback_fn)
+      return function()
+        local clients = vim.lsp.get_clients({ bufnr = 0 })
+        if #clients > 0 then
+          lsp_fn()
+        else
+          fallback_fn()
+        end
+      end
+    end
+
     vim.keymap.set("n", "<Leader>e", function()
       builtin.oldfiles({ cwd_only = true })
     end, {})
-    vim.keymap.set("n", "<Leader>t", builtin.lsp_document_symbols, {})
+    vim.keymap.set("n", "<Leader>t", lsp_or_fallback(
+      builtin.lsp_document_symbols,
+      builtin.current_buffer_fuzzy_find
+    ), {})
 
     -- Find Files
     vim.keymap.set("n", "<Leader>ff", builtin.find_files, {})
@@ -56,13 +71,28 @@ return {
       local selection = vim.getVisualSelection()
       builtin.live_grep({default_text = selection})
     end)
-    vim.keymap.set("n", "<Leader>fs", builtin.lsp_workspace_symbols)
+    vim.keymap.set("n", "<Leader>fs", lsp_or_fallback(
+      builtin.lsp_workspace_symbols,
+      builtin.live_grep
+    ))
 
-    -- LSP (use native vim.lsp for gd due to telescope + nvim 0.11 bug)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-    vim.keymap.set("n", "<Leader>fu", builtin.lsp_references)
-    vim.keymap.set("n", "<Leader>fi", builtin.lsp_implementations)
-    vim.keymap.set("n", "<Leader>fc", builtin.lsp_type_definitions)
+    -- LSP with grep fallbacks
+    vim.keymap.set("n", "gd", lsp_or_fallback(
+      vim.lsp.buf.definition,
+      function() builtin.grep_string({ word_match = '-w' }) end
+    ), {})
+    vim.keymap.set("n", "<Leader>fu", lsp_or_fallback(
+      builtin.lsp_references,
+      function() builtin.grep_string({ word_match = '-w' }) end
+    ))
+    vim.keymap.set("n", "<Leader>fi", lsp_or_fallback(
+      builtin.lsp_implementations,
+      function() builtin.grep_string({ word_match = '-w' }) end
+    ))
+    vim.keymap.set("n", "<Leader>fc", lsp_or_fallback(
+      builtin.lsp_type_definitions,
+      function() builtin.grep_string({ word_match = '-w' }) end
+    ))
   end
 }
 

@@ -70,10 +70,10 @@ All tools share consistent vim-style patterns. See full details in each section 
 
 ### VCS/Git
 
-| Action | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) |
-|---|---|---|
-| Show hunk diff | `Space vd` | `Space vd` |
-| Git status | `Space vs` | `Space vs` |
+| Action | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) | [VS Code](#vs-code) |
+|---|---|---|---|
+| VCS panel | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
+| Show hunk diff | `Space vd` | `Space vd` | `Space vd` |
 
 ### AI Completion
 

@@ -8,7 +8,7 @@
 # Usage: tmux-status-hook.sh <state>
 #   States: prompt, working, waiting, ready, resume
 #
-# Dependencies: tmux
+# Dependencies: tmux, git (optional, for branch detection)
 
 # Exit silently if not inside tmux.
 [ -z "$TMUX" ] && exit 0
@@ -25,11 +25,6 @@ load_name() {
   else
     echo "claude"
   fi
-}
-
-# Get current window name (strip emoji prefix if present).
-current_name() {
-  tmux display-message -p '#{window_name}' | sed 's/^[✋⏳]*//'
 }
 
 # Check if name contains issue/PR reference (worth preserving).
@@ -73,6 +68,17 @@ detect_refs() {
   fi
 }
 
+# Fall back to git branch name (issue-N pattern).
+detect_branch() {
+  local branch issue
+  branch=$(git branch --show-current 2>/dev/null)
+  issue=$(printf '%s' "$branch" \
+    | sed -n 's/^issue-\([0-9][0-9]*\)$/\1/p')
+  if [ -n "$issue" ]; then
+    echo "issue-${issue}"
+  fi
+}
+
 case "$STATE" in
   prompt)
     # Fired on UserPromptSubmit — parse the prompt for references.
@@ -95,13 +101,14 @@ case "$STATE" in
     ;;
   working)
     # Fired on SessionStart — preserve existing issue/PR name,
-    # otherwise fall back to "claude".
+    # otherwise try git branch, fall back to "claude".
     saved=$(load_name)
 
     if has_ref "$saved"; then
       name="$saved"
     else
-      name="${saved:-claude}"
+      name=$(detect_branch)
+      name="${name:-claude}"
     fi
     save_name "$name"
     tmux rename-window -t "$PANE_ID" "$name"

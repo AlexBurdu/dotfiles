@@ -27,4 +27,4 @@ get_handler() {
 HANDLER=$(get_handler "$TYPE")
 [[ -z "$HANDLER" ]] && HANDLER=$(get_handler "default")
 
-exec $HANDLER "$FILE"
+exec "$HANDLER" "$FILE"

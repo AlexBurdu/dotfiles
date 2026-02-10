@@ -57,9 +57,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "name": "tmux-status-prompt",
+            "name": "tmux-status-working",
             "type": "command",
-            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh prompt; printf '{\"decision\":\"allow\"}'"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working; printf '{\"decision\":\"allow\"}'"
           }
         ]
       }

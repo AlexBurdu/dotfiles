@@ -1,0 +1,61 @@
+description = "Merge current branch PR and clean up worktree"
+prompt = """
+Merge the current branch's PR and clean up the worktree.
+
+You are inside a worktree created by git worktree add.
+Merge the PR, return to the main repo, and remove the worktree.
+
+Steps:
+
+1. Detect the current branch. Abort if on main or master.
+   git branch --show-current
+
+2. Find the main repo root and current worktree path:
+   git worktree list
+   Abort if not inside a secondary worktree.
+
+3. Gather PR info:
+   gh pr view --json number,title,url,reviews,statusCheckRollup,additions,deletions,changedFiles
+   Abort if no PR exists for this branch.
+
+4. If branch matches issue-<N>, also fetch the issue:
+   gh issue view <N> --json title,body,url
+
+5. Ask me to confirm before merging. Then merge (squash):
+   gh pr merge --squash --delete-branch
+
+6. Change to the main repo root.
+
+7. Pull latest main:
+   git pull --ff-only
+
+8. Remove the worktree and prune:
+   git worktree remove <worktree-path>
+   git worktree prune
+
+9. Delete the local branch if it still exists:
+   git branch -d <branch>
+
+10. If running inside tmux, rename the window:
+    command tmux rename-window "ready"
+
+11. Print a summary using this template:
+
+    ═══ Merge Complete ═════════════════════════════
+    Issue:    #<N> — <issue title>
+              <issue URL>
+              <first 2-3 lines of issue body, trimmed>
+    PR:       #<M> — <PR title>
+              <PR URL>
+    Diff:     <changedFiles> files (+<additions> -<deletions>)
+    Method:   Squash
+    Checks:   ✓ all passed | ✗ <N> failed (list names)
+    Reviews:  <reviewer names and status, e.g. "alex ✓">
+    Cleanup:  Worktree removed, branch deleted
+    ════════════════════════════════════════════════
+
+    Omit the Issue section if the branch doesn't match
+    an issue pattern or the issue lookup fails.
+
+If merge fails, stop and report the error. Do NOT force merge.
+"""

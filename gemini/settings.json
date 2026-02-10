@@ -38,6 +38,56 @@
   },
   "ide": {
     "enabled": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "name": "tmux-status-working",
+            "type": "command",
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working; printf '{\"decision\":\"allow\"}'"
+          }
+        ]
+      }
+    ],
+    "BeforeAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "tmux-status-prompt",
+            "type": "command",
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh prompt; printf '{\"decision\":\"allow\"}'"
+          }
+        ]
+      }
+    ],
+    "AfterAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "tmux-status-waiting",
+            "type": "command",
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh waiting; printf '{\"decision\":\"allow\"}'"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "exit",
+        "hooks": [
+          {
+            "name": "tmux-status-ready",
+            "type": "command",
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh ready; printf '{\"decision\":\"allow\"}'"
+          }
+        ]
+      }
+    ]
   }
 }
 

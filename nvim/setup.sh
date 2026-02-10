@@ -61,6 +61,7 @@ plugin_desc() {
     copilot.lua)          echo "copilot — GitHub Copilot AI code completion" ;;
     dropbar.lua)          echo "dropbar — breadcrumb navigation bar showing code context" ;;
     fugitive.lua)         echo "fugitive — Git integration (status, diff, blame)" ;;
+    lawrencium.lua)       echo "lawrencium — Mercurial (hg) integration (status, diff, log)" ;;
     lsp.lua)              echo "lsp — language server protocol with Mason and completion" ;;
     nightfox-theme.lua)   echo "nightfox — color theme with light/dark variants" ;;
     oil.lua)              echo "oil — file explorer (replaces netrw, supports trash)" ;;

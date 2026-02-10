@@ -2,6 +2,9 @@
 -- https://github.com/tpope/vim-fugitive
 return {
   "tpope/vim-fugitive",
+  cond = function()
+    return vim.fn.finddir(".git", vim.fn.getcwd() .. ";") ~= ""
+  end,
   config = function()
     vim.keymap.set("n", "<leader>vs", vim.cmd.Git)
     vim.keymap.set("n", "<M-v>", vim.cmd.Git)

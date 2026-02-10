@@ -1,32 +1,38 @@
 #!/usr/bin/env bash
+# Symlinks IdeaVim config files into ~/.config/ideavim and
+# links ~/.ideavimrc for IntelliJ to pick up.
+set -euo pipefail
+source "$(dirname "$0")/../bash/link.sh"
+echo "=== IdeaVim — vim bindings for IntelliJ → ~/.config/ideavim ==="
+
 CONFIG_DIR=~/.config/ideavim
 
-rm ~/.ideavimrc
-rm -rf ~/.config/ideavim.bak
-cp -R ~/.config/ideavim ~/.config/ideavim.bak
+# Descriptions for each .vim file
+vim_desc() {
+  case "$1" in
+    ideavimrc.vim)     echo "IdeaVim main config — leader key, IDE action mappings, plugin emulation" ;;
+    copilot.vim)       echo "copilot — GitHub Copilot keybindings for IntelliJ" ;;
+    gemini.vim)        echo "gemini — Google Gemini AI code completion actions" ;;
+    intellijbazel.vim) echo "intellijbazel — Bazel build actions, jump to BUILD files" ;;
+    *)                 echo "$1" ;;
+  esac
+}
 
-mkdir -p $CONFIG_DIR
-# loop through all *.vim files in the current directory
-for file in $(pwd)/*.vim; do
-  response="n"
-  echo $file
-  # check if symlink already exists and if it is a symlink, not a regular file
-  # if it exists, prompt the user to overwrite it
-  if [ -L "$CONFIG_DIR/$(basename $file)" ]; then
-    echo "Symlink already exists: $CONFIG_DIR/$(basename $file)"
-    echo "Do you want to overwrite it? (y/n)"
-    read -r response
-  # Skip prompting for the ideavimrc.vim file
-  elif [ "$file" = "$(pwd)/ideavimrc.vim" ]; then
-    response="y"
-  else
-    echo "Symlink $file? (y/n)"
-    read -r response
-  fi
-  if [ "$response" = "y" ]; then
-    rm -rf "$CONFIG_DIR/$(basename $file)"
-    ln -s $file "$CONFIG_DIR/$(basename $file)"
-  fi
+# Backup existing config
+if [ -d "$CONFIG_DIR" ]; then
+  cp -r "$CONFIG_DIR" "${CONFIG_DIR}.bak"
+fi
+
+mkdir -p "$CONFIG_DIR"
+
+# Symlink all .vim files
+for file in "$(pwd)"/*.vim; do
+  name=$(basename "$file")
+  desc=$(vim_desc "$name")
+  link "$file" "$CONFIG_DIR/$name" "$desc"
 done
 
-ln -s ~/.config/ideavim/ideavimrc.vim ~/.ideavimrc
+# Link ideavimrc.vim to ~/.ideavimrc (IntelliJ reads from home dir)
+rm -f ~/.ideavimrc
+ln -s "$CONFIG_DIR/ideavimrc.vim" ~/.ideavimrc
+echo "Linked ~/.ideavimrc → $CONFIG_DIR/ideavimrc.vim"

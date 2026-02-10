@@ -6,6 +6,10 @@ echo "=== Claude Code — settings, instructions → ~/.claude ==="
 
 # Backup existing config
 if [ -d ~/.claude ]; then
+  if [ -L ~/.claude.bak ]; then
+    echo "Error: ~/.claude.bak is a symlink, refusing to overwrite"
+    exit 1
+  fi
   echo "Backing up existing ~/.claude to ~/.claude.bak..."
   rm -rf ~/.claude.bak
   cp -a ~/.claude ~/.claude.bak

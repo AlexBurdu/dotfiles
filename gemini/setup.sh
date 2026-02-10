@@ -17,6 +17,10 @@ BACKUP_DIR="$HOME/.gemini.bak"
 
 # Backup existing config
 if [ -d "$TARGET_DIR" ]; then
+  if [ -L "$BACKUP_DIR" ]; then
+    echo "Error: $BACKUP_DIR is a symlink, refusing to overwrite"
+    exit 1
+  fi
   echo "Backing up existing $TARGET_DIR to $BACKUP_DIR..."
   rm -rf "$BACKUP_DIR"
   cp -a "$TARGET_DIR" "$BACKUP_DIR"

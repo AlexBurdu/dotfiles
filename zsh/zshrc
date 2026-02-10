@@ -108,8 +108,8 @@ fi
 
 # Check history file size and echo a warning if it's larger than 50k lines
 export HISTSIZE=100000
-history_size=$(wc -l < ~/.zsh_history)
-if [ $history_size -gt 50000 ]; then
+history_size=$(wc -l < ~/.zsh_history 2>/dev/null || echo 0)
+if [ "$history_size" -gt 50000 ]; then
   echo "Warning: ~/.zsh_history file size is $history_size lines"
 fi
 

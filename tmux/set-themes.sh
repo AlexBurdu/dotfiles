@@ -47,11 +47,12 @@ else
   nvim_theme=dayfox
 fi
 
-# Save theme for reference
-echo "$nvim_theme" > /tmp/tmux-theme
+# Save theme for reference (user-owned directory, not /tmp)
+mkdir -p ~/.local/share/tmux
+echo "$nvim_theme" > ~/.local/share/tmux/theme
 
 # Sync nvim theme in all vim panes
 for pane in $(tmux list-panes -a -F "#{pane_id}:#{pane_current_command}" \
   | grep -i vim | cut -d: -f1); do
-  tmux send-keys -t "$pane" Escape ":colorscheme $nvim_theme" Enter
+  tmux send-keys -t "$pane" Escape ":colorscheme ${nvim_theme}" Enter
 done

@@ -1,129 +1,68 @@
 #!/usr/bin/env bash
-# Agent hook: updates the tmux window name to reflect agent
-# state (working / waiting / ready).
+# Agent hook: updates the tmux window name to show current
+# activity while working, and elapsed time while waiting.
 #
-# Works with Claude Code, Gemini CLI, or any agent that calls
-# it with JSON on stdin.
+# Designed to complement tmux-pilot, which sets meaningful
+# session names (e.g., claude-fix-42). This hook only manages
+# the window name to show agent state — no duplication.
 #
 # Usage: tmux-status-hook.sh <state>
-#   States: prompt, working, waiting, ready, resume
+#   activity  — PreToolUse: reads tool name from stdin JSON
+#   working   — SessionStart / UserPromptSubmit
+#   waiting   — Stop / AfterAgent
+#   ready     — SessionEnd
 #
-# Dependencies: tmux
+# Dependencies: tmux, date
+
+# Safety: if this file contains git conflict markers,
+# exit silently instead of breaking all tool use.
+# This file is symlinked from ~/.config/tmux/hooks/ into
+# the dotfiles repo — git conflicts go live instantly.
+if grep -q '^<<<<<<<' "$0" 2>/dev/null; then
+  exit 0
+fi
 
 # Exit silently if not inside tmux.
 [ -z "$TMUX" ] && exit 0
 
 STATE="${1:-working}"
 PANE_ID=$(tmux display-message -p '#{pane_id}')
-STATE_FILE="/tmp/claude-tmux-${PANE_ID//[%]/_}"
 
-save_name() { printf '%s' "$1" > "$STATE_FILE"; }
-
-load_name() {
-  if [ -f "$STATE_FILE" ]; then
-    cat "$STATE_FILE"
-  else
-    echo "claude"
-  fi
-}
-
-# Get current window name (strip emoji prefix if present).
-current_name() {
-  tmux display-message -p '#{window_name}' | sed 's/^[✋⏳]*//'
-}
-
-# Check if name contains issue/PR reference (worth preserving).
-has_ref() {
-  printf '%s' "$1" | grep -qE '(issue|pr)-[0-9]+'
-}
-
-# Detect PR/issue references from raw hook JSON
-# on stdin (no JSON parser needed).
-detect_refs() {
-  local input pr_num issue_num
-  input=$(cat)
-
-  # GitHub URL patterns (most reliable).
-  pr_num=$(printf '%s' "$input" \
-    | grep -oE '/pull/[0-9]+' | head -1 \
-    | grep -oE '[0-9]+')
-  issue_num=$(printf '%s' "$input" \
-    | grep -oE '/issues/[0-9]+' | head -1 \
-    | grep -oE '[0-9]+')
-
-  # Keyword + #N fallbacks.
-  if [ -z "$pr_num" ]; then
-    pr_num=$(printf '%s' "$input" \
-      | grep -oiE '(review|pr) #[0-9]+' \
-      | head -1 | grep -oE '[0-9]+')
-  fi
-  if [ -z "$issue_num" ]; then
-    issue_num=$(printf '%s' "$input" \
-      | grep -oiE '(fix|issue|close) #[0-9]+' \
-      | head -1 | grep -oE '[0-9]+')
-  fi
-
-  # Build the name.
-  if [ -n "$pr_num" ] && [ -n "$issue_num" ]; then
-    echo "pr-${pr_num}-issue-${issue_num}"
-  elif [ -n "$pr_num" ]; then
-    echo "pr-${pr_num}"
-  elif [ -n "$issue_num" ]; then
-    echo "issue-${issue_num}"
-  fi
+# Map Claude Code / Gemini tool names to short labels.
+map_tool() {
+  case "$1" in
+    Read|Glob|Grep)          echo "reading" ;;
+    Write|Edit|NotebookEdit) echo "editing" ;;
+    Bash)                    echo "running" ;;
+    Task)                    echo "delegating" ;;
+    WebFetch|WebSearch)      echo "searching" ;;
+    *)                       echo "working" ;;
+  esac
 }
 
 case "$STATE" in
-  prompt)
-    # Fired on UserPromptSubmit — parse the prompt for references.
-    # Only update name if NEW refs found; preserve existing issue/PR.
-    saved=$(load_name)
-    new_ref=$(detect_refs)
-
-    if [ -n "$new_ref" ]; then
-      # New ref found in prompt — use it.
-      name="$new_ref"
-    elif has_ref "$saved"; then
-      # No new ref, but we have a saved issue/PR — keep it.
-      name="$saved"
-    else
-      # No ref anywhere — keep whatever we have.
-      name="${saved:-claude}"
-    fi
-    save_name "$name"
-    tmux rename-window -t "$PANE_ID" "$name"
+  activity)
+    # Fired on PreToolUse — extract tool name from stdin
+    # JSON and show a human-readable activity label.
+    input=$(cat)
+    tool=$(printf '%s' "$input" \
+      | grep -oE '"tool_name" *: *"[^"]*"' \
+      | head -1 | sed 's/.*"\([^"]*\)"$/\1/')
+    tmux rename-window -t "$PANE_ID" "$(map_tool "$tool")"
     ;;
   working)
-    # Fired on SessionStart — preserve existing issue/PR name,
-    # otherwise fall back to "claude".
-    saved=$(load_name)
-
-    if has_ref "$saved"; then
-      name="$saved"
-    else
-      name="${saved:-claude}"
-    fi
-    save_name "$name"
-    tmux rename-window -t "$PANE_ID" "$name"
+    # Fired on SessionStart or UserPromptSubmit.
+    tmux rename-window -t "$PANE_ID" "working"
     ;;
   waiting)
-    # Fired on Stop — prepend hand emoji.
-    # Preserve the saved name (don't overwrite).
-    name=$(load_name)
-    [ -z "$name" ] && name="claude"
-    tmux rename-window -t "$PANE_ID" "✋${name}"
-    ;;
-  resume)
-    # Fired on PreToolUse — agent is working, remove hand.
-    # Preserve the saved name (don't overwrite).
-    name=$(load_name)
-    [ -z "$name" ] && name="claude"
-    tmux rename-window -t "$PANE_ID" "$name"
+    # Fired on Stop / AfterAgent — show hand + timestamp
+    # so user knows when the agent started waiting.
+    ts=$(date +%H:%M)
+    tmux rename-window -t "$PANE_ID" "✋${ts}"
     ;;
   ready)
-    # Fired on SessionEnd — clean up.
+    # Fired on SessionEnd — agent is done.
     tmux rename-window -t "$PANE_ID" "ready"
-    rm -f "$STATE_FILE"
     ;;
 esac
 

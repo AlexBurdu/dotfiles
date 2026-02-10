@@ -1,83 +1,112 @@
 #!/usr/bin/env bash
-config_dir=~/.config/nvim
+# Symlinks Neovim config, plugins, and keymaps into ~/.config/nvim.
+set -euo pipefail
+source "$(dirname "$0")/../bash/link.sh"
+echo "=== Neovim — config, plugins, keymaps → ~/.config/nvim ==="
+
+CONFIG_DIR=~/.config/nvim
 
 # Backup existing config
-cp -r ~/.config/nvim ~/.config/nvim.bak
+if [ -d "$CONFIG_DIR" ]; then
+  cp -r "$CONFIG_DIR" "${CONFIG_DIR}.bak"
+fi
 
 # Recursively create directories if they don't exist
-mkdir -p "$config_dir/lua"
+mkdir -p "$CONFIG_DIR/lua/keymap" "$CONFIG_DIR/lua/plugins"
 
-# Prompt the user if they want to symlink all files
-echo "Symlink all nvim plugins and configuration files? If no (n), you will be promped for each file. (y/n)"
-read -r response
-if [ "$response" = "y" ]; then
-  response="a"
+# Batch mode — skip individual prompts
+all="n"
+echo "Symlink all nvim plugins and configuration files?"
+read -rp "If no (n), you will be prompted for each file. (y/n) " ans
+if [[ "$ans" == "y" ]]; then
+  all="a"
 fi
 
-# Prompt the user before symlinking the init.lua file
-if [ $response != "a" ]; then
-  echo "Do you want to copy (c), symlink (s) or don't change (n) nvim/init.lua?" 
-  read -r response
+# init.lua — offer copy vs symlink
+if [[ "$all" != "a" ]]; then
+  echo "Main entry point — loads lazy.nvim, keymaps, colors, and options"
+  echo "  $(pwd)/init.lua → $CONFIG_DIR/init.lua"
+  read -rp "Copy (c), symlink (s) or don't change (n)? " ans
+else
+  ans="s"
 fi
-if [ "$response" = "c" ]; then
-  rm -rf "$config_dir/init.lua"
-  cp $(pwd)/init.lua "$config_dir/init.lua"
-elif [ "$response" = "y" -o $response = "a" ]; then
-  rm -rf "$config_dir/init.lua"
-  ln -s $(pwd)/init.lua "$config_dir/init.lua"
-fi
-
-# Prompt the user before symlinking the lazy-lock.json file
-if [ $response != "a" ]; then
-  echo "Copy (override) nvim/lazy-lock.json? (y/n)"
-  read -r response
-fi
-if [ "$response" = "y" -o $response = "a" ]; then
-  rm -rf "$config_dir/lazy-lock.json"
-  cp $(pwd)/lazy-lock.json "$config_dir/lazy-lock.json"
+if [[ "$ans" == "c" ]]; then
+  rm -rf "$CONFIG_DIR/init.lua"
+  cp "$(pwd)/init.lua" "$CONFIG_DIR/init.lua"
+elif [[ "$ans" == "s" || "$all" == "a" ]]; then
+  rm -rf "$CONFIG_DIR/init.lua"
+  ln -s "$(pwd)/init.lua" "$CONFIG_DIR/init.lua"
 fi
 
-rm  -rf "$config_dir/lua/config"
-ln -s $(pwd)/lua/config/ "$config_dir/lua/config"
-
-# Symlink individual files and directories under lua
-rm  -rf "$config_dir/lua/color"
-ln -s $(pwd)/lua/color "$config_dir/lua/color"
-
-rm  -rf "$config_dir/lua/options"
-ln -s $(pwd)/lua/options "$config_dir/lua/options"
-
-
-# Symlink files inside the keymap directory. Prompt the user for each file
-# before symlinking it, with the exception of init.lua
-mkdir -p "$config_dir/lua/keymap"
-for file in $(pwd)/lua/keymap/*; do
-  if [ $response != "a" -a "$file" = "$(pwd)/lua/keymap/init.lua" ]; then
-    response="y"
-  elif [ $response != "a" ]; then
-    echo "Symlink $file? (y/n)"
-    read -r response
-  fi
-  if [ "$response" = "y" -o $response = "a" ]; then
-    rm -rf "$config_dir/lua/keymap/$(basename $file)"
-    ln -s $file "$config_dir/lua/keymap/$(basename $file)"
+# Core lua directories — always symlink in batch mode
+for entry in \
+  "$(pwd)/lua/config|$CONFIG_DIR/lua/config|Core config — autocommands, diagnostics, general settings" \
+  "$(pwd)/lua/color|$CONFIG_DIR/lua/color|Color scheme — sources and configures the active theme" \
+  "$(pwd)/lua/options|$CONFIG_DIR/lua/options|Editor options — tabs, line numbers, clipboard, filetype mappings" \
+  "$(pwd)/lua/lazy_nvim.lua|$CONFIG_DIR/lua/lazy_nvim.lua|Lazy.nvim — plugin manager bootstrap and loader"; do
+  IFS='|' read -r src dst desc <<< "$entry"
+  if [[ "$all" == "a" ]]; then
+    mkdir -p "$(dirname "$dst")"
+    rm -rf "$dst"
+    ln -s "$src" "$dst"
+  else
+    link "$src" "$dst" "$desc"
   fi
 done
 
-# Plugins that are loaded dynamically. 
-# We only symlink the lazy_nvim.lua file and prompt the user before symlink-ing
-# any of any of the plugins.
-mkdir -p "$config_dir/lua/plugins"
-rm -rf ~/.config/nvim/lua/lazy_nvim.lua
-ln -s "$(pwd)/lua/lazy_nvim.lua"   "$config_dir/lua/lazy_nvim.lua"
-for file in $(pwd)/lua/plugins/*; do
-  if [ $response != "a" ]; then
-    echo "Symlink $file? (y/n)"
-    read -r response
-  fi
-  if [ "$response" = "y" -o $response = "a" ]; then
-    rm -rf ~/.config/nvim/lua/plugins/$(basename $file)
-    ln -s $file ~/.config/nvim/lua/plugins/$(basename $file)
+# Plugin descriptions — used for per-file prompts
+plugin_desc() {
+  case "$1" in
+    comment.lua)          echo "comment — toggle code comments with Ctrl-/" ;;
+    copilot.lua)          echo "copilot — GitHub Copilot AI code completion" ;;
+    dropbar.lua)          echo "dropbar — breadcrumb navigation bar showing code context" ;;
+    fugitive.lua)         echo "fugitive — Git integration (status, diff, blame)" ;;
+    lsp.lua)              echo "lsp — language server protocol with Mason and completion" ;;
+    nightfox-theme.lua)   echo "nightfox — color theme with light/dark variants" ;;
+    oil.lua)              echo "oil — file explorer (replaces netrw, supports trash)" ;;
+    spectre.lua)          echo "spectre — project-wide find and replace" ;;
+    telescope-zoxide.lua) echo "telescope-zoxide — jump to frequent dirs via zoxide" ;;
+    telescope.lua)        echo "telescope — fuzzy finder for files, buffers, and grep" ;;
+    tmux-navigator.lua)   echo "tmux-navigator — seamless Ctrl-h/j/k/l between nvim and tmux panes" ;;
+    treesitter.lua)       echo "treesitter — syntax highlighting and code structure parsing" ;;
+    trouble.lua)          echo "trouble — diagnostics list (errors, warnings, references)" ;;
+    undotree.lua)         echo "undotree — visual undo history tree" ;;
+    vim-signify.lua)      echo "vim-signify — git diff signs in the gutter" ;;
+    wordmotion.lua)       echo "wordmotion — enhanced word-boundary navigation (camelCase, snake_case)" ;;
+    zenmode.lua)          echo "zenmode — distraction-free focused editing mode" ;;
+    *)                    echo "$1" ;;
+  esac
+}
+
+# Keymap modules
+echo ""
+echo "=== Keymap modules ==="
+for file in "$(pwd)"/lua/keymap/*; do
+  name=$(basename "$file")
+  dst="$CONFIG_DIR/lua/keymap/$name"
+  case "$name" in
+    init.lua) desc="Keymap init — loads all keybinding modules" ;;
+    *)        desc="Keymap: ${name%.lua} bindings" ;;
+  esac
+  if [[ "$all" == "a" ]]; then
+    rm -rf "$dst"
+    ln -s "$file" "$dst"
+  else
+    link "$file" "$dst" "$desc"
   fi
 done
 
+# Plugin modules
+echo ""
+echo "=== Plugin modules ==="
+for file in "$(pwd)"/lua/plugins/*; do
+  name=$(basename "$file")
+  dst="$CONFIG_DIR/lua/plugins/$name"
+  desc=$(plugin_desc "$name")
+  if [[ "$all" == "a" ]]; then
+    rm -rf "$dst"
+    ln -s "$file" "$dst"
+  else
+    link "$file" "$dst" "$desc"
+  fi
+done

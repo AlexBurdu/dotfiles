@@ -10,7 +10,45 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/tmux-status-hook.sh resume"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh resume"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.bzl) buildifier \"$CLAUDE_FILE_PATH\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.kt) ktfmt --kotlinlang-style \"$CLAUDE_FILE_PATH\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -p @pilot-workdir \"$(dirname \"$CLAUDE_FILE_PATH\")\" 2>/dev/null; true"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tmux set-option -p @pilot-workdir \"$(dirname \"$CLAUDE_FILE_PATH\")\" 2>/dev/null; true"
           }
         ]
       }
@@ -20,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/tmux-status-hook.sh working"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working"
           }
         ]
       }
@@ -30,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/tmux-status-hook.sh prompt"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh prompt"
           }
         ]
       }
@@ -40,7 +78,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/tmux-status-hook.sh waiting"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh waiting"
           }
         ]
       }
@@ -50,7 +88,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/tmux-status-hook.sh ready"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh ready"
           }
         ]
       }

@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Installs zsh plugins and symlinks zshrc into ~/.zshrc.
+set -euo pipefail
+source "$(dirname "$0")/../bash/link.sh"
+echo "=== Zsh — plugins, zshrc → ~/.zshrc ==="
 
 # Install zoxide (smarter cd that tracks frequently used directories)
 echo ""
@@ -6,8 +10,7 @@ echo "zoxide is a smarter 'cd' command that learns your habits."
 echo "It lets you jump to frequently used directories with 'z <partial-name>'."
 echo "Example: 'z dot' could jump to ~/dotfiles"
 echo ""
-echo "Install zoxide? (y/n)"
-read -r response
+read -rp "Install zoxide? (y/n) " response
 if [ "$response" = "y" ]; then
   if [[ "$OSTYPE" == "darwin"* ]]; then
     brew install zoxide
@@ -23,18 +26,17 @@ if [ "$response" = "y" ]; then
 fi
 
 # Clone themes & plugins
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
-git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
-
-rm -rf ~/.zshrc
-echo "Do you want to copy or symlink ~/.zshrc? (c/s)"
-read -r response
-if [ "$response" = "c" ]; then
-  cp $(pwd)/zshrc ~/.zshrc
-elif [ "$response" = "s" ]; then
-  ln -s $(pwd)/zshrc ~/.zshrc
+echo ""
+read -rp "Install/update zsh plugins (powerlevel10k, autocomplete, completions, autosuggestions, fzf)? (y/n) " response
+if [ "$response" = "y" ]; then
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 2>/dev/null || true
+  git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete 2>/dev/null || true
+  git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions 2>/dev/null || true
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-autosuggestions 2>/dev/null || true
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf 2>/dev/null || true
+  ~/.fzf/install
 fi
+
+echo ""
+link "$(pwd)/zshrc" ~/.zshrc \
+  "Zsh config (oh-my-zsh, powerlevel10k, vim-mode, fzf, aliases)"

@@ -70,10 +70,10 @@ All tools share consistent vim-style patterns. See full details in each section 
 
 ### VCS/Git
 
-| Action | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) | [VS Code](#vs-code) |
-|---|---|---|---|
-| VCS panel | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
-| Show hunk diff | `Space vd` | `Space vd` | `Space vd` |
+| Action | [Tmux](#ai-agent-management-tmux-pilot) | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) | [VS Code](#vs-code) |
+|---|---|---|---|---|
+| VCS panel | `C-s d` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
+| Show hunk diff | - | `Space vd` | `Space vd` | `Space vd` |
 
 ### AI Completion
 
@@ -140,6 +140,27 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `y` | Copy to system clipboard (in copy mode) |
 | `C-s p` | Paste from system clipboard |
 
+### AI Agent Management ([tmux-pilot](https://github.com/AlexBurdu/tmux-pilot))
+| Shortcut | Action |
+|---|---|
+| `C-s a` | Launch new agent (prompt, pick agent, name session) |
+| `C-s g` | Agent deck (fzf popup — all panes, live preview, actions) |
+| `C-s d` | VCS status popup (fugitive for git, lawrencium for hg) |
+
+#### Inside the agent deck (`C-s g`)
+| Shortcut | Action |
+|---|---|
+| `Enter` | Attach to selected pane |
+| `C-e` / `C-y` | Scroll preview (line) |
+| `C-d` / `C-u` | Scroll preview (half-page) |
+| `M-d` | Git diff popup |
+| `M-s` | Commit + push worktree |
+| `M-x` | Kill pane + cleanup worktree |
+| `M-p` | Pause agent (sends `/exit`) |
+| `M-r` | Resume agent (sends `claude --continue`) |
+| `M-n` | Launch new agent |
+| `Esc` | Close deck |
+
 ### Misc
 | Shortcut | Action |
 |---|---|
@@ -198,20 +219,22 @@ Edit filenames and `:w` to rename/move/delete files. Deletes go to trash.
 | `C-w H/J/K/L` | Move split directionally (nvim default) |
 
 ### Telescope (Fuzzy Finder)
-| Shortcut | Action |
-|---|---|
-| `Space ff` | Find files |
-| `Space fp` | Live grep (find in path) |
-| `Space fr` | Replace in path (Spectre) |
-| `Space fs` | Find symbol (LSP workspace symbols) |
-| `Space fc` | Find class/type (LSP type definitions) |
-| `Space fw` | Find workspace (zoxide), set cwd, open oil |
-| `Space e` | Recent files (current directory) |
-| `Space t` | LSP document symbols |
-| `C-t` | Pick from breadcrumb (dropbar.nvim) |
-| `gd` | Go to definition |
-| `Space fu` | Find references (LSP) |
-| `Space fi` | Find implementations (LSP) |
+| Shortcut | With LSP | Fallback (no LSP) |
+|---|---|---|
+| `Space ff` | Find files | Find files |
+| `Space fp` | Live grep (find in path) | Live grep |
+| `Space fr` | Replace in path (Spectre) | Replace in path |
+| `Space fs` | LSP workspace symbols | Live grep |
+| `Space fc` | LSP type definitions | Grep word under cursor |
+| `Space fw` | Find workspace (zoxide), set cwd, open oil | — |
+| `Space e` | Recent files (current directory) | — |
+| `Space t` | LSP document symbols | Fuzzy find in buffer |
+| `C-t` | Pick from breadcrumb (dropbar.nvim) | — |
+| `gd` | Go to definition | Grep word under cursor |
+| `Space fu` | Find references (LSP) | Grep word under cursor |
+| `Space fi` | Find implementations (LSP) | Grep word under cursor |
+
+LSP bindings automatically fall back to grep-based search when no language server is attached.
 
 ### Editing
 | Shortcut | Action |

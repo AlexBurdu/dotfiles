@@ -33,4 +33,20 @@ merge_json "$(pwd)/settings.json" "$TARGET_DIR/settings.json" \
 link "$(pwd)/GEMINI.md" "$TARGET_DIR/GEMINI.md" \
   "Global Gemini instructions (commit format, conventions)"
 
+# Install command groups
+mkdir -p "$TARGET_DIR/commands"
+for group in commands/*/; do
+  group_name=$(basename "$group")
+  echo ""
+  read -rp "Install $group_name commands? (y/n) " ans
+  if [[ "$ans" == "y" ]]; then
+    for cmd in "$group"*; do
+      name=$(basename "$cmd")
+      link "$(pwd)/$cmd" \
+        "$TARGET_DIR/commands/$group_name/${name}" \
+        "Command /$group_name:${name%.toml}"
+    done
+  fi
+done
+
 echo "Gemini CLI setup complete."

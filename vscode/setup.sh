@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Symlinks VS Code keybindings and settings into the platform-specific config dir.
+set -euo pipefail
+source "$(dirname "$0")/../bash/link.sh"
+echo "=== VS Code — keybindings and settings → platform config dir ==="
 
 # Locations are different for Linux vs MacOS
 CONFIG_DIR=~/.config/Code/User
@@ -7,12 +10,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   CONFIG_DIR=~/Library/Application\ Support/Code/User
 fi
 
-# Recursively create directories if they don't exist
-mkdir -p "$CONFIG_DIR"
+link "$(pwd)/keybindings.json" "${CONFIG_DIR}/keybindings.json" \
+  "VS Code keyboard shortcuts (vim-consistent bindings)"
 
-rm -rf "${CONFIG_DIR}/keybindings.json"
-rm -rf "${CONFIG_DIR}/settings.json"
-
-ln -s "$SCRIPT_DIR/keybindings.json" "${CONFIG_DIR}/keybindings.json"
-ln -s "$SCRIPT_DIR/settings.json" "${CONFIG_DIR}/settings.json"
-
+link "$(pwd)/settings.json" "${CONFIG_DIR}/settings.json" \
+  "VS Code editor settings and preferences"

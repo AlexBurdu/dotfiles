@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
+# Symlinks Tridactyl (Firefox vim-mode) config into ~/.config/tridactyl.
+set -euo pipefail
+source "$(dirname "$0")/../bash/link.sh"
+echo "=== Tridactyl — Firefox vim-mode keybindings → ~/.config/tridactyl ==="
 
-CONFIG_DIR=~/.config/tridactyl
-
-# Recursively create directories if they don't exist
-mkdir -p "$CONFIG_DIR"
-
-rm -rf $CONFIG_DIR/tridactylrc
-ln -s $(pwd)/tridactylrc $CONFIG_DIR/tridactylrc
+link "$(pwd)/tridactylrc" ~/.config/tridactyl/tridactylrc \
+  "Tridactyl vim-mode keybindings for Firefox"

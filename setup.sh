@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
-# Script that iterates through all directories looking for a setup.sh file to run from those directories.
+# Master setup — runs setup.sh in each subdirectory.
+# Prompts before each one so you can skip what you don't need.
+set -euo pipefail
 
 root_dir=$(pwd)
 
-# Find all setup.sh files in other directories than the current one.
-setup_files=$(find . -name "setup.sh" -not -path "./setup.sh")
-
-for setup in $setup_files; do
-  echo "Running setup.sh in $(dirname $setup)"
-  cd "$(dirname $setup)"
-  bash setup.sh
-  cd $root_dir
+# Find all setup.sh files in subdirectories
+for setup in */setup.sh; do
+  dir=$(dirname "$setup")
+  echo ""
+  read -rp "Run $dir/setup.sh? (y/n) " ans
+  if [[ "$ans" == "y" ]]; then
+    cd "$dir"
+    bash setup.sh
+    cd "$root_dir"
+  fi
 done
 
-echo "All setup.sh files have been run."
+echo ""
+echo "All selected setup scripts have been run."

@@ -125,3 +125,6 @@ fi
 # zoxide - smarter cd command (tracks frequently used directories)
 eval "$(zoxide init zsh)"
 
+# Portable git worktree + agent launcher functions
+[[ -f "$HOME/.config/zsh/worktree.zsh" ]] && source "$HOME/.config/zsh/worktree.zsh"
+

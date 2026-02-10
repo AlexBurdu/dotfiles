@@ -10,7 +10,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh resume"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh activity"
           }
         ]
       }
@@ -68,7 +68,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh prompt"
+            "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working"
           }
         ]
       }

@@ -23,18 +23,30 @@ update_handlers() {
   local types
   types=$(grep '^\[' "$handlers_ini" | tr -d '[]' | grep -v '^default$')
 
+  # Escape sed metacharacters in paths.
+  local mc_escaped
+  mc_escaped=$(printf '%s' "$MC_CONFIG" | sed 's/[|&/\]/\\&/g')
+
   for type in $types; do
+    # Type names come from handlers.ini section headers —
+    # validate they are safe alphanumeric identifiers.
+    if ! printf '%s' "$type" | grep -qE '^[a-zA-Z0-9_-]+$'; then
+      echo "Skipping invalid handler type: $type" >&2
+      continue
+    fi
+
+    local open_cmd="$mc_escaped/open-file.sh $type %f"
     # Try [Include/TYPE] section first (e.g., [Include/image])
     if grep -q "^\[Include/$type\]" "$ext_ini"; then
       sed -i'' -e "/^\[Include\/$type\]/,/^\[/{
-        s|^Open=.*|Open=$MC_CONFIG/open-file.sh $type %f|
-        s|^View=.*|View=$MC_CONFIG/open-file.sh $type %f|
+        s|^Open=.*|Open=$open_cmd|
+        s|^View=.*|View=$open_cmd|
       }" "$ext_ini"
     # Try direct [TYPE] section (e.g., [pdf])
     elif grep -q "^\[$type\]" "$ext_ini"; then
       sed -i'' -e "/^\[$type\]/,/^\[/{
-        s|^Open=.*|Open=$MC_CONFIG/open-file.sh $type %f|
-        s|^View=.*|View=$MC_CONFIG/open-file.sh $type %f|
+        s|^Open=.*|Open=$open_cmd|
+        s|^View=.*|View=$open_cmd|
       }" "$ext_ini"
     fi
   done
@@ -42,7 +54,7 @@ update_handlers() {
   # Update [Default] section for fallback handling
   if grep -q "^\[Default\]" "$ext_ini"; then
     sed -i'' -e "/^\[Default\]/,/^\[/{
-      s|^Open=.*|Open=$MC_CONFIG/open-file.sh default %f|
+      s|^Open=.*|Open=$mc_escaped/open-file.sh default %f|
     }" "$ext_ini"
   fi
 

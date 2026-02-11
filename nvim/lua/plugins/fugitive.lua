@@ -4,6 +4,7 @@ return {
   "tpope/vim-fugitive",
   cond = function()
     return vim.fn.finddir(".git", vim.fn.getcwd() .. ";") ~= ""
+      or vim.fn.findfile(".git", vim.fn.getcwd() .. ";") ~= ""
   end,
   config = function()
     vim.keymap.set("n", "<leader>vs", vim.cmd.Git)

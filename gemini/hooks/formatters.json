@@ -1,0 +1,25 @@
+{
+  "_description": "AfterTool formatters (buildifier for .bzl, ktfmt for .kt)",
+  "hooks": {
+    "AfterTool": [
+      {
+        "matcher": "write_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.bzl) buildifier \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "write_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.kt) ktfmt --kotlinlang-style \"$f\";; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

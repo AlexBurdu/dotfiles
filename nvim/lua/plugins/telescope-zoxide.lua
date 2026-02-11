@@ -8,8 +8,8 @@ return {
           mappings = {
             default = {
               action = function(selection)
-                vim.cmd("cd " .. selection.path)
-                vim.cmd("Oil " .. selection.path)
+                vim.cmd("cd " .. vim.fn.fnameescape(selection.path))
+                vim.cmd("Oil " .. vim.fn.fnameescape(selection.path))
               end,
             },
           },

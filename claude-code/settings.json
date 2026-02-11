@@ -21,7 +21,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.bzl) buildifier \"$CLAUDE_FILE_PATH\";; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.bzl) buildifier \"$f\";; esac"
           }
         ]
       },
@@ -30,25 +30,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.kt) ktfmt --kotlinlang-style \"$CLAUDE_FILE_PATH\";; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.kt) ktfmt --kotlinlang-style \"$f\";; esac"
           }
         ]
       },
       {
-        "matcher": "Write",
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "tmux set-option -p @pilot-workdir \"$(dirname \"$CLAUDE_FILE_PATH\")\" 2>/dev/null; true"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "tmux set-option -p @pilot-workdir \"$(dirname \"$CLAUDE_FILE_PATH\")\" 2>/dev/null; true"
+            "command": "jq -r '.tool_input.file_path // empty' | while IFS= read -r f; do [ -n \"$f\" ] && tmux set-option -p @pilot-workdir \"$(dirname \"$f\")\" 2>/dev/null; done; true"
           }
         ]
       }

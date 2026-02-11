@@ -76,6 +76,17 @@
         ]
       }
     ],
+    "AfterTool": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | xargs -I{} sh -c 'tmux set-option -p @pilot-workdir \"$(dirname \"{}\")\" 2>/dev/null; true'"
+          }
+        ]
+      }
+    ],
     "SessionEnd": [
       {
         "matcher": "exit",

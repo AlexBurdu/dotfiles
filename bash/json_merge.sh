@@ -40,8 +40,19 @@ merge_json() {
 
   if [[ ! -f "$dst" ]]; then
     echo "  Destination does not exist — will copy source."
-    read -rp "Copy? (y/n) " ans
-    if [[ "$ans" == "y" ]]; then
+    read -rp "Copy? (y/n/e to edit) " ans
+    if [[ "$ans" == "e" ]]; then
+      local tmpfile
+      tmpfile=$(mktemp "${TMPDIR:-/tmp}/merge_json.XXXXXX.json")
+      jq --sort-keys . "$src" > "$tmpfile"
+      "${EDITOR:-vi}" "$tmpfile"
+      if ! jq empty "$tmpfile" 2>/dev/null; then
+        echo "  Error: edited file is not valid JSON, aborting."
+        rm -f "$tmpfile"
+        return 1
+      fi
+      jq . "$tmpfile" > "$dst" && rm -f "$tmpfile"
+    elif [[ "$ans" == "y" ]]; then
       cp "$src" "$dst"
     fi
     return 0
@@ -68,8 +79,20 @@ merge_json() {
     | sed 's/^/    /' || true
   echo ""
 
-  read -rp "Merge? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Merge? (y/n/e to edit) " ans
+  if [[ "$ans" == "e" ]]; then
+    local tmpfile
+    tmpfile=$(mktemp "${TMPDIR:-/tmp}/merge_json.XXXXXX.json")
+    echo "$merged" | jq --sort-keys . > "$tmpfile"
+    "${EDITOR:-vi}" "$tmpfile"
+    if ! jq empty "$tmpfile" 2>/dev/null; then
+      echo "  Error: edited file is not valid JSON, aborting."
+      rm -f "$tmpfile"
+      return 1
+    fi
+    jq . "$tmpfile" > "$dst.tmp" && mv "$dst.tmp" "$dst"
+    rm -f "$tmpfile"
+  elif [[ "$ans" == "y" ]]; then
     echo "$merged" | jq . > "$dst.tmp" && mv "$dst.tmp" "$dst"
   fi
 }

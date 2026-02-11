@@ -10,3 +10,4 @@
 
 - Use GitHub PR labels for categorization (e.g. `bug`, `enhancement`, `refactor`)
 - Do NOT encode type in commit messages or PR titles
+- Do NOT add "Generated with Claude Code" lines to pull requests

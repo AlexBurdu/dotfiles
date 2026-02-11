@@ -502,6 +502,14 @@ Config: [karabiner/karabiner.json](./karabiner/karabiner.json)
 
 ---
 
+## Gemini CLI
+
+Setup: [gemini/setup.sh](./gemini/setup.sh) | [Full docs](./gemini/README.md)
+
+Generates `~/.gemini/settings.json` from base settings + modular hook groups. Each hook group is prompted separately during setup, so you can pick which ones to install per machine.
+
+---
+
 ## Zoxide
 
 Config: [zsh/zshrc](./zsh/zshrc) (init line)

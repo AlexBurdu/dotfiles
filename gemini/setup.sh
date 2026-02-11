@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Symlinks and merges Gemini CLI configuration files
+# Generates and merges Gemini CLI configuration files
 # from this directory into ~/.gemini.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
-source "$(dirname "$0")/../bash/json_merge.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
+source "$SCRIPT_DIR/../bash/json_merge.sh"
 echo "=== Gemini CLI — settings and instructions → ~/.gemini ==="
 
 # Check for jq
@@ -30,9 +31,30 @@ fi
 # Create target directory
 mkdir -p "$TARGET_DIR"
 
-# Merge settings (deep merge preserves existing keys)
-merge_json "$(pwd)/settings.json" "$TARGET_DIR/settings.json" \
-  "Gemini CLI settings (editor, vim mode, checkpointing, UI theme)"
+# Build settings: start with base, then prompt for each hook group
+result=$(jq . "$SCRIPT_DIR/settings.json")
+
+for hook_file in "$SCRIPT_DIR"/hooks/*.json; do
+  [ -f "$hook_file" ] || continue
+  desc=$(jq -r '._description' "$hook_file")
+  echo ""
+  read -rp "Install hooks: ${desc}? (y/n) " ans
+  if [[ "$ans" == "y" ]]; then
+    hooks_json=$(jq 'del(._description) | .hooks' "$hook_file")
+    result=$(echo "$result" | jq --argjson new "$hooks_json" '
+      reduce ($new | keys[]) as $event (.;
+        .hooks[$event] = (.hooks[$event] // []) + $new[$event]
+      )
+    ')
+  fi
+done
+
+# Write generated settings to a temp file, then merge into target
+tmpfile=$(mktemp "${TMPDIR:-/tmp}/gemini-settings.XXXXXX.json")
+echo "$result" | jq . > "$tmpfile"
+merge_json "$tmpfile" "$TARGET_DIR/settings.json" \
+  "Gemini CLI settings (editor, vim mode, hooks, theme)"
+rm -f "$tmpfile"
 
 link "$(pwd)/GEMINI.md" "$TARGET_DIR/GEMINI.md" \
   "Global Gemini instructions (commit format, conventions)"

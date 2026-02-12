@@ -26,9 +26,20 @@ link "$(pwd)/settings.json" ~/.claude/settings.json \
 link "$(pwd)/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"
 
-# Install command groups
+# Install top-level commands
 mkdir -p ~/.claude/commands
+for cmd in commands/*.md; do
+  [ -f "$cmd" ] || continue
+  name=$(basename "$cmd")
+  # Extract first line as description
+  desc=$(head -1 "$cmd" | sed 's/^#* *//')
+  link "$(pwd)/$cmd" ~/.claude/commands/"$name" \
+    "/${name%.md} — $desc"
+done
+
+# Install command groups
 for group in commands/*/; do
+  [ -d "$group" ] || continue
   group_name=$(basename "$group")
   echo ""
   read -rp "Install $group_name commands? (y/n) " ans

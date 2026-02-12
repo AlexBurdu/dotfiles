@@ -59,9 +59,20 @@ rm -f "$tmpfile"
 link "$(pwd)/GEMINI.md" "$TARGET_DIR/GEMINI.md" \
   "Global Gemini instructions (commit format, conventions)"
 
-# Install command groups
+# Install top-level commands
 mkdir -p "$TARGET_DIR/commands"
+for cmd in commands/*.toml; do
+  [ -f "$cmd" ] || continue
+  name=$(basename "$cmd")
+  # Extract description from TOML
+  desc=$(grep '^description' "$cmd" | head -1 | sed 's/^description *= *"//;s/"$//')
+  link "$(pwd)/$cmd" "$TARGET_DIR/commands/$name" \
+    "/${name%.toml} — $desc"
+done
+
+# Install command groups
 for group in commands/*/; do
+  [ -d "$group" ] || continue
   group_name=$(basename "$group")
   echo ""
   read -rp "Install $group_name commands? (y/n) " ans

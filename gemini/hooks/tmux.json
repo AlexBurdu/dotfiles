@@ -23,6 +23,16 @@
             "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working; printf '{\"decision\":\"allow\"}'"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "pilot-desc",
+            "type": "command",
+            "command": "desc=$(jq -r '.prompt // empty' | head -c 80); [ ${#desc} -ge 20 ] && tmux set-option -p @pilot-desc \"$desc\" 2>/dev/null; printf '{\"decision\":\"allow\"}'"
+          }
+        ]
       }
     ],
     "AfterAgent": [

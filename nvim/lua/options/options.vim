@@ -14,6 +14,7 @@ set smartindent
 set number
 set relativenumber
 set nowrap
+set colorcolumn=80
 
 set scrolloff=8
 

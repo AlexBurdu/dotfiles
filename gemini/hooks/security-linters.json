@@ -1,0 +1,43 @@
+{
+  "_description": "AfterTool security linters (detekt, bandit, shellcheck, semgrep)",
+  "hooks": {
+    "AfterTool": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.kt|*.kts) detekt -i \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.py) bandit -q \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.sh|*.bash) shellcheck \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.js|*.ts|*.jsx|*.tsx|*.mjs|*.mts) semgrep --config auto --error \"$f\";; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

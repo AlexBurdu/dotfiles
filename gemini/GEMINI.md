@@ -1,3 +1,13 @@
+# Tmux Session Description
+
+When working inside tmux, update the pane description so the task is visible in the tmux-pilot deck. Run this early — once you understand the task — and again if the user changes direction:
+
+```bash
+tmux set-option -p @pilot-desc "SHORT DESCRIPTION" 2>/dev/null
+```
+
+Keep it under 80 characters. Include the issue/PR link or number if available (e.g. `Fix login redirect loop #42`). Focus on *what* and *why*, not implementation details.
+
 # Git Commits
 
 - Format: Description starting with uppercase (e.g. `Add portable worktree functions`)

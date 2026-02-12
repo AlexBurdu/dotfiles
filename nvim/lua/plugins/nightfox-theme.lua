@@ -74,11 +74,13 @@ return {
       groups = {
         -- Example: https://github.com/EdenEast/nightfox.nvim/blob/d3e8b1acc095baf57af81bb5e89fe7c4359eb619/lua/nightfox/group/editor.lua
         carbonfox = {
+          ColorColumn = { bg = "#353535" },
           -- Dropbar menu selection
           DropBarMenuCurrentContext = { bg = "#3d3d3d" },
           DropBarMenuHoverEntry = { bg = "#3d3d3d" },
         },
         dayfox = {
+          ColorColumn = { bg = "#e4e5eb" },
           -- Fix notification/message colors for accessibility
           WarningMsg = { fg = "#8a5700", bg = "#fff3cd" },
           ErrorMsg = { fg = "#842029", bg = "#f8d7da" },

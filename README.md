@@ -7,6 +7,23 @@ This directory contains apps configurations that can be used universally.
 Each directory with configuration contains a `setup.sh` script that can be used to setup the configuration.
 The root directory contains a `setup.sh` script that can be used to setup all configurations.
 
+# Prerequisites
+
+Security linter hooks (Claude Code & Gemini CLI) require:
+
+**macOS (Homebrew):**
+```
+brew install detekt shellcheck semgrep
+pipx install bandit
+```
+
+**Linux:**
+```
+sudo apt install shellcheck        # or: sudo dnf install ShellCheck
+pip install semgrep bandit
+# detekt: download from https://github.com/detekt/detekt/releases
+```
+
 # Theming
 
 Themes are synced across multiple apps based on OS dark/light mode setting.

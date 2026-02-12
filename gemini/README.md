@@ -44,6 +44,7 @@ During setup, each hook group is prompted independently. Selected hooks are merg
 |---|---|---|
 | `tmux.json` | Status bar indicator (working/waiting/ready) + `@pilot-workdir` tracking on file writes | tmux, [tmux-pilot](https://github.com/AlexBurdu/tmux-pilot) |
 | `formatters.json` | Auto-format `.bzl` and `.kt` files after Gemini writes them | `buildifier`, `ktfmt` |
+| `security-linters.json` | Security linters on file writes/edits (Kotlin, Python, Bash, JS/TS) | `detekt`, `bandit`, `shellcheck`, `semgrep` |
 
 ### Adding a new hook group
 

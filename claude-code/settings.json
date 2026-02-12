@@ -42,6 +42,42 @@
             "command": "jq -r '.tool_input.file_path // empty' | while IFS= read -r f; do [ -n \"$f\" ] && tmux set-option -p @pilot-workdir \"$(dirname \"$f\")\" 2>/dev/null; done; true"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.kt|*.kts) detekt -i \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.py) bandit -q \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.sh|*.bash) shellcheck \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.js|*.ts|*.jsx|*.tsx|*.mjs|*.mts) semgrep --config auto --error \"$f\";; esac"
+          }
+        ]
       }
     ],
     "SessionStart": [

@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(command tmux rename-window *)"
+      "Bash(command tmux rename-window *)",
+      "Bash(command tmux set-option *)"
     ]
   },
   "hooks": {
@@ -96,14 +97,6 @@
           {
             "type": "command",
             "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "desc=$(jq -r '.prompt // empty' | head -c 80); [ ${#desc} -ge 20 ] && tmux set-option -p @pilot-desc \"$desc\" 2>/dev/null; true"
           }
         ]
       }

@@ -13,8 +13,7 @@ Security linter hooks (Claude Code & Gemini CLI) require:
 
 **macOS (Homebrew):**
 ```
-brew install detekt shellcheck semgrep
-pipx install bandit
+brew install detekt shellcheck semgrep bandit
 ```
 
 **Linux:**

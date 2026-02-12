@@ -3,7 +3,7 @@
 When working inside tmux, update the pane description so the task is visible in the tmux-pilot deck. Run this early — once you understand the task — and again if the user changes direction:
 
 ```bash
-[ -n "$TMUX" ] && command tmux set-option -p @pilot-desc "SHORT DESCRIPTION"
+command tmux set-option -p @pilot-desc "SHORT DESCRIPTION" 2>/dev/null || true
 ```
 
 Keep it under 80 characters. Include the issue/PR link or number if available (e.g. `Fix login redirect loop #42`). Focus on *what* and *why*, not implementation details.

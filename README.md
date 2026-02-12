@@ -255,6 +255,8 @@ LSP bindings automatically fall back to grep-based search when no language serve
 |---|---|
 | `Space y` | Yank to system clipboard |
 | `Space Y` | Yank line to system clipboard |
+| `Space yp` | Yank file path (relative to cwd) to clipboard |
+| `Space yb` | Yank nearest BUILD.bazel path to clipboard |
 | `Space p` | Paste (without overwriting clipboard) |
 | `Space d` | Delete to void register |
 

@@ -49,6 +49,19 @@ for hook_file in "$SCRIPT_DIR"/hooks/*.json; do
   fi
 done
 
+for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
+  [ -f "$mcp_file" ] || continue
+  desc=$(jq -r '._description' "$mcp_file")
+  echo ""
+  read -rp "Install MCP server: ${desc}? (y/n) " ans
+  if [[ "$ans" == "y" ]]; then
+    mcp_json=$(jq 'del(._description) | .mcpServers' "$mcp_file")
+    result=$(echo "$result" | jq --argjson new "$mcp_json" '
+      .mcpServers = (.mcpServers // {}) + $new
+    ')
+  fi
+done
+
 # Write generated settings to a temp file, then merge into target
 tmpfile=$(mktemp "${TMPDIR:-/tmp}/gemini-settings.XXXXXX.json")
 echo "$result" | jq . > "$tmpfile"

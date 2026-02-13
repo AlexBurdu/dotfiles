@@ -8,6 +8,10 @@ command tmux set-option -p @pilot-desc "SHORT DESCRIPTION" 2>/dev/null || true
 
 Keep it under 80 characters. Include the issue/PR link or number if available (e.g. `Fix login redirect loop #42`). Focus on *what* and *why*, not implementation details.
 
+# Launching Agent Sessions
+
+When you need to spawn a new AI agent session (Claude, Gemini, Aider, etc.), prefer using the tmux-pilot MCP `spawn_agent` tool over raw shell commands. It handles session naming, worktree setup, and tmux metadata automatically.
+
 # Git Commits
 
 - Format: Description starting with uppercase (e.g. `Add portable worktree functions`)

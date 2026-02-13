@@ -1,4 +1,10 @@
 {
+  "mcpServers": {
+    "tmux-pilot": {
+      "command": "python3",
+      "args": ["~/.tmux/plugins/tmux-pilot/mcp/server.py"]
+    }
+  },
   "permissions": {
     "allow": [
       "Bash(command tmux rename-window *)",

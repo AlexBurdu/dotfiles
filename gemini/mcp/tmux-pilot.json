@@ -1,0 +1,9 @@
+{
+  "_description": "tmux-pilot — spawn, list, pause, resume, kill agent sessions",
+  "mcpServers": {
+    "tmux-pilot": {
+      "command": "python3",
+      "args": ["~/.tmux/plugins/tmux-pilot/mcp/server.py"]
+    }
+  }
+}

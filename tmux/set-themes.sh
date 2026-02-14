@@ -2,7 +2,15 @@
 # Set theme for tmux, nvim, mc, and gemini based on OS dark/light mode
 # Called from tmux.conf on reload
 
+MODE_FILE=~/.local/share/tmux/mode
+
 is_dark_mode() {
+  # Manual override (e.g. for SSH where OS detection isn't available)
+  if [ -f "$MODE_FILE" ]; then
+    [ "$(cat "$MODE_FILE")" = "dark" ]
+    return
+  fi
+
   case "$(uname)" in
     Darwin)
       # macOS: returns "Dark" if dark mode, errors if light mode
@@ -18,7 +26,7 @@ is_dark_mode() {
 
 if is_dark_mode; then
   # Dark theme
-  tmux set -g @catppuccin_flavor "mocha"
+  tmux set -g @catppuccin_flavour "mocha"
   tmux set -g @catppuccin_status_background "#000000"
   tmux set message-style "fg=#ffffff"
   tmux set message-command-style "fg=#ffffff"
@@ -33,7 +41,7 @@ if is_dark_mode; then
   nvim_theme=carbonfox
 else
   # Light theme
-  tmux set -g @catppuccin_flavor "latte"
+  tmux set -g @catppuccin_flavour "latte"
   tmux set -g @catppuccin_status_background "#eff1f5"
   tmux set message-style "fg=white,bg=black"
   tmux set pane-border-style fg=black

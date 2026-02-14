@@ -49,6 +49,7 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 ## Notes
 
 - Neovim detects OS appearance on startup; tmux syncs at runtime via `send-keys`
+- **SSH/headless**: OS detection doesn't work over SSH. Use `C-s T` to toggle, or write `dark`/`light` to `~/.local/share/tmux/mode`
 - MC requires restart to apply new skin
 - Nvim also has focus dimming (inactive splits get dimmed background)
 
@@ -68,8 +69,8 @@ All tools share consistent vim-style patterns. See full details in each section 
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
 | Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
 | Next tab/buffer | `C-s ]` | `S-l` | `S-l` | - | - |
-| Move tab/window left | `C-s {` / `C-{` | - | - | - | - |
-| Move tab/window right | `C-s }` / `C-}` | - | - | - | - |
+| Move tab/window left | `C-s {` | - | - | - | - |
+| Move tab/window right | `C-s }` | - | - | - | - |
 | Last window | `C-s Enter` | - | - | - | - |
 
 ### Find & Code Intelligence
@@ -125,8 +126,8 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `C-s l` | Split right |
 | `C-s ]` | Next window |
 | `C-s [` | Previous window |
-| `C-s {` / `C-{` | Move window left |
-| `C-s }` / `C-}` | Move window right |
+| `C-s {` | Move window left |
+| `C-s }` | Move window right |
 | `C-s Enter` | Switch to last window |
 | `C-s \` | Switch to last session |
 | `C-\` | Switch to last session (no prefix) |
@@ -180,6 +181,7 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 ### Misc
 | Shortcut | Action |
 |---|---|
+| `C-s T` | Toggle dark/light theme |
 | `C-s r` | Reload config |
 | `C-s o` | Open current directory in Finder |
 | Click status bar right | Open current directory in Finder |

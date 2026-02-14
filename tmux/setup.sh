@@ -10,6 +10,9 @@ link "$(pwd)/tmux.conf" ~/.config/tmux/tmux.conf \
 link "$(pwd)/set-themes.sh" ~/.config/tmux/set-themes.sh \
   "Theme switcher (syncs light/dark across apps based on OS appearance)"
 
+link "$(pwd)/theme-picker.sh" ~/.config/tmux/theme-picker.sh \
+  "Theme picker popup (dark/light/auto selection menu)"
+
 link "$(pwd)/hooks/tmux-status-hook.sh" ~/.config/tmux/hooks/tmux-status-hook.sh \
   "Agent hooks (tmux window name updates on agent state changes)"
 

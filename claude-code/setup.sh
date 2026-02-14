@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Symlinks Claude Code settings and global instructions into ~/.claude.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== Claude Code — settings, instructions → ~/.claude ==="
 
 # Backup existing config
@@ -26,29 +27,47 @@ link "$(pwd)/settings.json" ~/.claude/settings.json \
 link "$(pwd)/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"
 
-# Install top-level commands
-mkdir -p ~/.claude/commands
-for cmd in commands/*.md; do
-  [ -f "$cmd" ] || continue
-  name=$(basename "$cmd")
-  # Extract first line as description
-  desc=$(head -1 "$cmd" | sed 's/^#* *//')
-  link "$(pwd)/$cmd" ~/.claude/commands/"$name" \
-    "/${name%.md} — $desc"
+# Install top-level skills
+mkdir -p ~/.claude/skills
+for skill in skills/*/SKILL.md; do
+  [ -f "$skill" ] || continue
+  skill_dir=$(dirname "$skill")
+  name=$(basename "$skill_dir")
+  desc=$(sed -n '/^description:/{ s/^description: *//; p; q; }' "$skill")
+  link "$(pwd)/$skill_dir" ~/.claude/skills/"$name" \
+    "/$name — $desc"
 done
 
-# Install command groups
-for group in commands/*/; do
-  [ -d "$group" ] || continue
-  group_name=$(basename "$group")
+# Install skill groups
+for group_dir in skills/*/; do
+  [ -d "$group_dir" ] || continue
+  # Skip top-level skills (already handled above)
+  [ -f "$group_dir/SKILL.md" ] && continue
+  group_name=$(basename "$group_dir")
   echo ""
-  read -rp "Install $group_name commands? (y/n) " ans
+  read -rp "Install $group_name skills? (y/n) " ans
   if [[ "$ans" == "y" ]]; then
-    for cmd in "$group"*; do
-      name=$(basename "$cmd")
-      link "$(pwd)/$cmd" \
-        ~/.claude/commands/"$group_name"-"${name%.md}".md \
-        "Command /$group_name-${name%.md}"
+    for skill in "$group_dir"*/SKILL.md; do
+      [ -f "$skill" ] || continue
+      skill_dir=$(dirname "$skill")
+      name=$(basename "$skill_dir")
+      desc=$(sed -n '/^description:/{ s/^description: *//; p; q; }' "$skill")
+      link "$(pwd)/$skill_dir" ~/.claude/skills/"$group_name"-"$name" \
+        "/$group_name-$name — $desc"
     done
+  fi
+done
+
+# Install MCP servers (user scope, available across all projects)
+for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
+  [ -f "$mcp_file" ] || continue
+  name=$(basename "${mcp_file%.json}")
+  desc=$(jq -r '._description' "$mcp_file")
+  echo ""
+  read -rp "Install MCP server: ${desc}? (y/n) " ans
+  if [[ "$ans" == "y" ]]; then
+    cmd=$(jq -r '.command' "$mcp_file")
+    mapfile -t args_array < <(jq -r '.args[]' "$mcp_file")
+    claude mcp add --scope user "$name" -- "$cmd" "${args_array[@]}"
   fi
 done

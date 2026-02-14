@@ -3,6 +3,14 @@ set cursorline
 
 " Detect OS dark/light mode (consistent with tmux/set-themes.sh)
 function! s:IsDarkMode()
+  " Manual override (e.g. for SSH where OS detection isn't available)
+  if $TMUX !=# ''
+    let l:mode_file = expand('~/.local/share/tmux/mode')
+    if filereadable(l:mode_file)
+      return trim(readfile(l:mode_file, '', 1)[0]) ==# 'dark'
+    endif
+  endif
+
   if has('mac')
     " macOS: returns "Dark" if dark mode is enabled
     let l:result = system('defaults read -g AppleInterfaceStyle 2>/dev/null')

@@ -31,17 +31,19 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 
 ## How It Works
 
-1. The script detects OS appearance:
+1. The script checks `~/.local/share/tmux/mode` for a manual override (`dark`/`light`)
+2. If no override, detects OS appearance:
    - **macOS**: reads `AppleInterfaceStyle`
    - **Linux**: reads GNOME's `color-scheme` setting
-2. Sets consistent themes across all apps
-3. Triggered automatically on tmux config reload (`C-s r`)
+3. Sets consistent themes across all apps
+4. Triggered automatically on tmux config reload (`C-s r`)
+5. `C-s T` opens a theme picker popup (Dark / Light / Auto)
 
 ## Themes by App
 
 | App | Dark Theme | Light Theme |
 |---|---|---|
-| Tmux | catppuccin mocha | catppuccin latte |
+| Tmux | catppuccin mocha (dark bg) | catppuccin mocha (light bg) |
 | Neovim | carbonfox | dayfox |
 | Midnight Commander | nicedark | seasons-winter16M |
 | Gemini CLI | Shades Of Purple | Google Code |
@@ -49,7 +51,7 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 ## Notes
 
 - Neovim detects OS appearance on startup; tmux syncs at runtime via `send-keys`
-- **SSH/headless**: OS detection doesn't work over SSH. Use `C-s T` to toggle, or write `dark`/`light` to `~/.local/share/tmux/mode`
+- **SSH/headless**: OS detection doesn't work over SSH. Use `C-s T` to pick a theme, or write `dark`/`light` to `~/.local/share/tmux/mode`. Delete the file to return to auto (OS detection)
 - MC requires restart to apply new skin
 - Nvim also has focus dimming (inactive splits get dimmed background)
 
@@ -181,7 +183,7 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 ### Misc
 | Shortcut | Action |
 |---|---|
-| `C-s T` | Toggle dark/light theme |
+| `C-s T` | Theme picker (dark/light/auto) |
 | `C-s r` | Reload config |
 | `C-s o` | Open current directory in Finder |
 | Click status bar right | Open current directory in Finder |

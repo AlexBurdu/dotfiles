@@ -4,3 +4,6 @@
 # Midnight Commander
 mc/ini-e
 mc/panels.ini
+
+# Neovim
+nvim/lazy-lock.json

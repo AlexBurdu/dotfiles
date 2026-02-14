@@ -24,9 +24,12 @@ is_dark_mode() {
   esac
 }
 
+# Always use mocha accent colors (both spellings for plugin compatibility)
+tmux set -g @catppuccin_flavor "mocha"
+tmux set -g @catppuccin_flavour "mocha"
+
 if is_dark_mode; then
   # Dark theme
-  tmux set -g @catppuccin_flavour "mocha"
   tmux set -g @catppuccin_status_background "#000000"
   tmux set message-style "fg=#ffffff"
   tmux set message-command-style "fg=#ffffff"
@@ -41,7 +44,6 @@ if is_dark_mode; then
   nvim_theme=carbonfox
 else
   # Light theme
-  tmux set -g @catppuccin_flavour "latte"
   tmux set -g @catppuccin_status_background "#eff1f5"
   tmux set message-style "fg=white,bg=black"
   tmux set pane-border-style fg=black

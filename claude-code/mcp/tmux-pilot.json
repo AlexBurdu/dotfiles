@@ -1,0 +1,5 @@
+{
+  "_description": "tmux-pilot — spawn, list, pause, resume, kill agent sessions",
+  "command": "bash",
+  "args": ["-c", "exec uv run ~/.tmux/plugins/tmux-pilot/mcp/server.py"]
+}

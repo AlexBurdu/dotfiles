@@ -1,4 +1,7 @@
-Merge the current branch's PR and clean up the worktree.
+---
+description: Merge the current branch's PR and clean up the worktree
+disable-model-invocation: true
+---
 
 This command is for use inside a worktree created by a
 `git worktree add` workflow. It merges the PR, returns to

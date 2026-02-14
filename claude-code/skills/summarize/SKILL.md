@@ -1,4 +1,7 @@
-Print a structured summary of the work done in this session.
+---
+description: Print a structured summary of the work done in this session
+disable-model-invocation: true
+---
 
 Review the full conversation and produce a summary using the
 template below.

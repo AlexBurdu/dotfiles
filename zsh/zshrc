@@ -125,3 +125,4 @@ fi
 # zoxide - smarter cd command (tracks frequently used directories)
 eval "$(zoxide init zsh)"
 
+export PATH="$HOME/.local/bin:$PATH"

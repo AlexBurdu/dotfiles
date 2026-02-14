@@ -12,3 +12,24 @@ link "$(pwd)/set-themes.sh" ~/.config/tmux/set-themes.sh \
 
 link "$(pwd)/hooks/tmux-status-hook.sh" ~/.config/tmux/hooks/tmux-status-hook.sh \
   "Agent hooks (tmux window name updates on agent state changes)"
+
+# Install TPM (Tmux Plugin Manager)
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+  echo ""
+  echo "TPM (Tmux Plugin Manager) is not installed."
+  echo "It manages tmux plugins like catppuccin and tmux-pilot."
+  echo ""
+  read -rp "Install TPM? (y/n) " response
+  if [ "$response" = "y" ]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  fi
+fi
+
+# Install tmux plugins via TPM
+if [ -x ~/.tmux/plugins/tpm/bin/install_plugins ]; then
+  echo ""
+  read -rp "Install/update tmux plugins (catppuccin, tmux-pilot)? (y/n) " response
+  if [ "$response" = "y" ]; then
+    ~/.tmux/plugins/tpm/bin/install_plugins
+  fi
+fi

@@ -41,6 +41,9 @@ if [ "$1" = "init" ]; then
   done
   tmux set -gu @catppuccin_window_current_left_separator
   tmux set -gu @catppuccin_window_current_right_separator
+  # Clear legacy status-bg/fg so status-style takes full control
+  tmux set -gu status-bg
+  tmux set -gu status-fg
 
   # ── Window styling (shared across modes) ──────────────────────────
   tmux set -g @catppuccin_window_status_style "custom"

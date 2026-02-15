@@ -9,8 +9,9 @@ root_dir=$(pwd)
 for setup in */setup.sh; do
   dir=$(dirname "$setup")
   echo ""
-  read -rp "Run $dir/setup.sh? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Run $dir/setup.sh? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     cd "$dir"
     bash setup.sh
     cd "$root_dir"

@@ -38,8 +38,9 @@ for hook_file in "$SCRIPT_DIR"/hooks/*.json; do
   [ -f "$hook_file" ] || continue
   desc=$(jq -r '._description' "$hook_file")
   echo ""
-  read -rp "Install hooks: ${desc}? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Install hooks: ${desc}? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     hooks_json=$(jq 'del(._description) | .hooks' "$hook_file")
     result=$(echo "$result" | jq --argjson new "$hooks_json" '
       reduce ($new | keys[]) as $event (.;
@@ -53,8 +54,9 @@ for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
   [ -f "$mcp_file" ] || continue
   desc=$(jq -r '._description' "$mcp_file")
   echo ""
-  read -rp "Install MCP server: ${desc}? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Install MCP server: ${desc}? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     mcp_json=$(jq 'del(._description) | .mcpServers' "$mcp_file")
     result=$(echo "$result" | jq --argjson new "$mcp_json" '
       .mcpServers = (.mcpServers // {}) + $new
@@ -88,8 +90,9 @@ for group in commands/*/; do
   [ -d "$group" ] || continue
   group_name=$(basename "$group")
   echo ""
-  read -rp "Install $group_name commands? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Install $group_name commands? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     for cmd in "$group"*; do
       name=$(basename "$cmd")
       link "$(pwd)/$cmd" \

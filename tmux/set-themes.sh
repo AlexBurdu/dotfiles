@@ -79,6 +79,7 @@ if [ "$1" = "init" ]; then
     tmux set -g @catppuccin_flavor "mocha"
     tmux set -g @catppuccin_flavour "mocha"
     tmux set -g @catppuccin_status_background "#000000"
+    tmux set -g cursor-colour "#f5e0dc"
     tmux set -g prompt-cursor-colour "#cdd6f4"
     tmux set -g pane-border-style fg=grey
     tmux set -g pane-active-border-style fg=blue
@@ -108,6 +109,7 @@ if [ "$1" = "init" ]; then
     tmux set -g @catppuccin_flavor "latte"
     tmux set -g @catppuccin_flavour "latte"
     tmux set -g @catppuccin_status_background "#eff1f5"
+    tmux set -g cursor-colour "#000000"
     tmux set -g prompt-cursor-colour "#4c4f69"
     tmux set -g pane-border-style fg=black
     tmux set -g pane-active-border-style fg=blue

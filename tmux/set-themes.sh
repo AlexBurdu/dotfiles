@@ -100,7 +100,7 @@ if [ "$1" = "init" ]; then
     sed -i'' -e 's/"theme": ".*"/"theme": "Shades Of Purple"/' \
       ~/.gemini/settings.json 2>/dev/null
 
-    nvim_theme=carbonfox
+    resolved_mode=dark
   else
     tmux set -g @catppuccin_flavor "latte"
     tmux set -g @catppuccin_flavour "latte"
@@ -126,18 +126,24 @@ if [ "$1" = "init" ]; then
     sed -i'' -e 's/"theme": ".*"/"theme": "Google Code"/' \
       ~/.gemini/settings.json 2>/dev/null
 
-    nvim_theme=dayfox
+    resolved_mode=light
   fi
 
   # Save theme for reference (user-owned directory, not /tmp)
   mkdir -p ~/.local/share/tmux
-  echo "$nvim_theme" > ~/.local/share/tmux/theme
+  echo "$resolved_mode" > ~/.local/share/tmux/theme
+
+  # Map resolved mode to nvim colorscheme
+  case "$resolved_mode" in dark) nvim_cs=carbonfox;; light) nvim_cs=dayfox;; esac
 
   # Sync nvim theme in all vim panes
   for pane in $(tmux list-panes -a -F "#{pane_id}:#{pane_current_command}" \
     | grep -i vim | cut -d: -f1); do
-    tmux send-keys -t "$pane" Escape ":colorscheme ${nvim_theme}" Enter
+    tmux send-keys -t "$pane" Escape ":colorscheme ${nvim_cs}" Enter
   done
+
+  # Sync Claude Code theme
+  ~/.config/tmux/hooks/sync-claude-theme.sh
 fi
 
 # ── Styles that catppuccin overrides (always re-applied after TPM) ──

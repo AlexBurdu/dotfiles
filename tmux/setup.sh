@@ -16,6 +16,9 @@ link "$(pwd)/theme-picker.sh" ~/.config/tmux/theme-picker.sh \
 link "$(pwd)/hooks/tmux-status-hook.sh" ~/.config/tmux/hooks/tmux-status-hook.sh \
   "Agent hooks (tmux window name updates on agent state changes)"
 
+link "$(pwd)/hooks/sync-claude-theme.sh" ~/.config/tmux/hooks/sync-claude-theme.sh \
+  "Claude Code theme sync (matches dark/light mode on session start)"
+
 # Install TPM (Tmux Plugin Manager)
 if [ ! -d ~/.tmux/plugins/tpm ]; then
   echo ""

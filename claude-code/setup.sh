@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Symlinks Claude Code settings and global instructions into ~/.claude.
 set -euo pipefail
+
+if [[ -n "${CLAUDECODE:-}" ]]; then
+  echo "Error: This script cannot run inside a Claude Code session."
+  echo "Run it from a regular shell:  ./claude-code/setup.sh"
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== Claude Code — settings, instructions → ~/.claude ==="

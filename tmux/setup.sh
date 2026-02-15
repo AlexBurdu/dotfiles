@@ -22,8 +22,9 @@ if [ ! -d ~/.tmux/plugins/tpm ]; then
   echo "TPM (Tmux Plugin Manager) is not installed."
   echo "It manages tmux plugins like catppuccin and tmux-pilot."
   echo ""
-  read -rp "Install TPM? (y/n) " response
-  if [ "$response" = "y" ]; then
+  read -rp "Install TPM? (Y/n) " response
+  echo ""
+  if [ "$response" != "n" ]; then
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   fi
 fi
@@ -31,8 +32,9 @@ fi
 # Install tmux plugins via TPM
 if [ -x ~/.tmux/plugins/tpm/bin/install_plugins ]; then
   echo ""
-  read -rp "Install/update tmux plugins (catppuccin, tmux-pilot)? (y/n) " response
-  if [ "$response" = "y" ]; then
+  read -rp "Install/update tmux plugins (catppuccin, tmux-pilot)? (Y/n) " response
+  echo ""
+  if [ "$response" != "n" ]; then
     ~/.tmux/plugins/tpm/bin/install_plugins
   fi
 fi

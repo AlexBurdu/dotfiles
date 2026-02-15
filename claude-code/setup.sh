@@ -45,8 +45,9 @@ for group_dir in skills/*/; do
   [ -f "$group_dir/SKILL.md" ] && continue
   group_name=$(basename "$group_dir")
   echo ""
-  read -rp "Install $group_name skills? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Install $group_name skills? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     for skill in "$group_dir"*/SKILL.md; do
       [ -f "$skill" ] || continue
       skill_dir=$(dirname "$skill")
@@ -64,8 +65,9 @@ for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
   name=$(basename "${mcp_file%.json}")
   desc=$(jq -r '._description' "$mcp_file")
   echo ""
-  read -rp "Install MCP server: ${desc}? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Install MCP server: ${desc}? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     cmd=$(jq -r '.command' "$mcp_file")
     mapfile -t args_array < <(jq -r '.args[]' "$mcp_file")
     claude mcp add --scope user "$name" -- "$cmd" "${args_array[@]}"

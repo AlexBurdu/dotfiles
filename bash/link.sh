@@ -20,8 +20,9 @@
 link() {
   local src="$1" dst="$2" desc="$3"
   printf '%s\n  %s → %s\n' "$desc" "$src" "$dst"
-  read -rp "Symlink? (y/n) " ans
-  if [[ "$ans" == "y" ]]; then
+  read -rp "Symlink? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
     mkdir -p "$(dirname "$dst")"
     rm -rf "$dst"
     ln -s "$src" "$dst"

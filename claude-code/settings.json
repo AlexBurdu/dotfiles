@@ -89,6 +89,14 @@
             "command": "$HOME/.config/tmux/hooks/tmux-status-hook.sh working"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/tmux/hooks/sync-claude-theme.sh"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [

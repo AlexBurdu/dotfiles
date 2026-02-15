@@ -117,6 +117,8 @@ if [ "$1" = "init" ]; then
     tmux set -g @catppuccin_directory_color "#F0C8D2"
     tmux set -g @catppuccin_session_color \
       '#{?client_prefix,#{E:@thm_red},#a6e3a1}'
+    tmux set -g @catppuccin_status_session_icon_fg "#000000"
+    tmux set -g @catppuccin_status_directory_icon_fg "#000000"
     tmux set -g @catppuccin_status_session_text_fg "#000000"
     tmux set -g @catppuccin_status_directory_text_fg "#000000"
 

@@ -32,12 +32,13 @@ if [ ! -d ~/.tmux/plugins/tpm ]; then
   fi
 fi
 
-# Install tmux plugins via TPM
+# Install and update tmux plugins via TPM
 if [ -x ~/.tmux/plugins/tpm/bin/install_plugins ]; then
   echo ""
   read -rp "Install/update tmux plugins (catppuccin, tmux-pilot)? (Y/n) " response
   echo ""
   if [ "$response" != "n" ]; then
     ~/.tmux/plugins/tpm/bin/install_plugins
+    ~/.tmux/plugins/tpm/bin/update_plugins all
   fi
 fi

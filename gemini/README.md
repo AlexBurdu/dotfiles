@@ -17,7 +17,7 @@ gemini/
   settings.json          # Base settings (editor, theme, tools, privacy, etc.)
   GEMINI.md              # Global instructions (commit format, conventions)
   hooks/
-    tmux.json            # Tmux status indicator + workdir tracking
+    tmux.json            # Tmux workdir tracking for tmux-pilot
     formatters.json      # Buildifier (.bzl) + ktfmt (.kt) auto-formatting
   commands/
     ...                  # Slash command groups (prompted during setup)
@@ -42,7 +42,7 @@ During setup, each hook group is prompted independently. Selected hooks are merg
 
 | File | Description | Requirements |
 |---|---|---|
-| `tmux.json` | Status bar indicator (working/waiting/ready) + `@pilot-workdir` tracking on file writes | tmux, [tmux-pilot](https://github.com/AlexBurdu/tmux-pilot) |
+| `tmux.json` | `@pilot-workdir` tracking on file writes (tells tmux-pilot the agent's actual working directory) | tmux, [tmux-pilot](https://github.com/AlexBurdu/tmux-pilot) |
 | `formatters.json` | Auto-format `.bzl` and `.kt` files after Gemini writes them | `buildifier`, `ktfmt` |
 | `security-linters.json` | Security linters on file writes/edits (Kotlin, Python, Bash, JS/TS) | `detekt`, `bandit`, `shellcheck`, `semgrep` |
 

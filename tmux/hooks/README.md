@@ -1,85 +1,36 @@
 # Tmux Agent Hooks
 
-Scripts that update tmux window names based on AI agent
-state. Designed to complement
-[tmux-pilot](https://github.com/AlexBurdu/tmux-pilot),
-which manages **session** names (e.g., `claude-fix-42`).
-These hooks manage **window** names to show what the agent
-is currently doing.
-
 ## tmux-status-hook.sh
 
 Updates the tmux window name to reflect agent activity.
+Maps states like `activity`, `working`, `waiting`, `ready`
+to short window-name labels.
 
-### States
+> **Note**: This hook is no longer called by Claude Code or
+> Gemini CLI settings. The agent hooks were removed because
+> they couldn't reliably detect permission prompts (which
+> happen mid-turn with no hook event). Agent state tracking
+> is now intended to be handled by an external watchdog that
+> reads actual pane content via tmux-pilot's `monitor_agents`
+> tool and sets `@pilot-status` / `@pilot-needs-help` pane
+> variables.
 
-| State | Trigger | Window name | Purpose |
-|-------|---------|-------------|---------|
-| `activity` | PreToolUse | `reading`, `editing`, etc. | Show current tool activity |
-| `working` | SessionStart, UserPromptSubmit | `working` | Agent is processing |
-| `waiting` | Stop, AfterAgent | `✋22:55` | Waiting for user since HH:MM |
-| `ready` | SessionEnd | `ready` | Agent is done |
+The script remains available for manual use or custom
+integrations:
 
-### Activity Labels
-
-When `activity` is triggered, the tool name from stdin
-JSON is mapped to a human-readable label:
-
-| Tool | Label |
-|------|-------|
-| Read, Glob, Grep | `reading` |
-| Write, Edit, NotebookEdit | `editing` |
-| Bash | `running` |
-| Task | `delegating` |
-| WebFetch, WebSearch | `searching` |
-| (anything else) | `working` |
-
-### Integration
-
-**Claude Code** (`claude-code/settings.json`):
-- `PreToolUse` → `activity` (reads tool name from stdin)
-- `UserPromptSubmit` → `working`
-- `Stop` → `waiting`
-- `SessionStart` → `working`
-- `SessionEnd` → `ready`
-
-**Gemini CLI** (`gemini/settings.json`):
-- `BeforeAgent` → `working`
-- `AfterAgent` → `waiting`
-- `SessionStart` → `working`
-- `SessionEnd` → `ready`
-
-Gemini doesn't expose per-tool hooks, so it only shows
-`working`/`waiting` rather than specific activities.
-
-### How It Complements tmux-pilot
-
-tmux-pilot sets **session names** with task context:
+```bash
+tmux-status-hook.sh activity   # reads tool name from stdin JSON
+tmux-status-hook.sh working    # agent is processing
+tmux-status-hook.sh waiting    # waiting for user (shows ✋HH:MM)
+tmux-status-hook.sh ready      # agent is done
 ```
-claude-fix-42    gemini-review-17
-```
-
-This hook sets **window names** with agent state:
-```
-editing    ✋22:55    ready
-```
-
-Together, the tmux status bar shows both at a glance:
-```
-claude-fix-42:editing  gemini-review-17:✋22:55
-```
-
-No information is duplicated between session and window
-names.
 
 ### Setup
 
-The hook is symlinked by `tmux/setup.sh`:
+Symlinked by `tmux/setup.sh`:
 ```
 ~/.config/tmux/hooks/tmux-status-hook.sh
 ```
-
-Both Claude Code and Gemini settings reference this path.
 
 ### Dependencies
 

@@ -29,7 +29,7 @@ mkdir -p ~/.claude
 
 # Symlink settings and global instructions
 link "$(pwd)/settings.json" ~/.claude/settings.json \
-  "Claude Code global settings (permissions, hooks for tmux status)"
+  "Claude Code global settings (permissions, formatters, linters)"
 
 link "$(pwd)/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"

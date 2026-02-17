@@ -178,6 +178,9 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `M-p` | Pause agent (sends `/exit`) |
 | `M-r` | Resume agent (sends `claude --continue`) |
 | `M-n` | Launch new agent |
+| `M-e` | Edit session description |
+| `M-y` | Approve (send Enter to selected pane) |
+| `M-l` | View watchdog log |
 | `Esc` | Close deck |
 
 ### Misc

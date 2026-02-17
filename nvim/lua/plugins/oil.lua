@@ -43,9 +43,12 @@ return {
         -- Change cwd to current directory (also teaches zoxide)
         ["<Leader>."] = function()
           local dir = require('oil').get_current_dir()
-          vim.cmd("cd " .. vim.fn.fnameescape(dir))
-          vim.fn.system("zoxide add " .. vim.fn.shellescape(dir))
-          print("cwd: " .. dir)
+          if dir then
+            dir = vim.fn.fnamemodify(dir, ":p")
+            vim.cmd("cd " .. vim.fn.fnameescape(dir))
+            vim.fn.jobstart({"zoxide", "add", dir})
+            print("cwd: " .. dir)
+          end
         end,
       },
     })

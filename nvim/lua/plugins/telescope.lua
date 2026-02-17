@@ -29,6 +29,16 @@ return {
     require('telescope').setup({
       defaults = {
         path_display = { "filename_first" },
+        layout_strategy = "horizontal",
+        layout_config = {
+          horizontal = {
+            preview_width = 0.5,
+            width = 0.95,
+          },
+          vertical = {
+            preview_height = 0.5,
+          },
+        },
         mappings = {
           i = {
             ["<C-j>"] = require('telescope.actions').move_selection_next,

@@ -202,14 +202,42 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 ### Navigation
 | Shortcut | Action |
 |---|---|
-| `C-d` | Scroll down (centered) |
-| `C-u` | Scroll up (centered) |
+| `C-d` / `C-u` | Scroll half-page down/up (cursor follows) |
 | `C-f` | Page forward (centered) |
 | `C-b` | Page backward (centered) |
+| `C-e` / `C-y` | Scroll line down/up (cursor follows) |
 | `n` / `N` | Next/previous search match (centered) |
 | `S-h` | Previous buffer |
 | `S-l` | Next buffer |
 | `\` / `Alt-f` | Open file explorer (oil.nvim) |
+
+### Editing
+| Shortcut | Action |
+|---|---|
+| `Space w` | Save |
+| `Space q` | Quit |
+| `C-/` | Toggle comment |
+| `gcc` | Toggle comment line |
+| `gc{motion}` | Comment over motion |
+| `ys{motion}{char}` | Add surround (e.g. `ysiw"`) |
+| `cs{old}{new}` | Change surround (e.g. `cs"'`) |
+| `ds{char}` | Delete surround (e.g. `ds(`) |
+| `S{char}` | Surround visual selection |
+| `J` / `K` (visual) | Move selected lines down/up |
+| `Space r` | Replace word under cursor |
+| `Space Space f` | Format entire file |
+| `<` / `>` (visual) | Indent and keep selection |
+| `C-n` | Clear search highlighting |
+
+### Clipboard
+| Shortcut | Action |
+|---|---|
+| `Space y` | Yank to system clipboard |
+| `Space Y` | Yank line to system clipboard |
+| `Space yp` | Yank file path (relative to cwd) to clipboard |
+| `Space yb` | Yank nearest BUILD.bazel path to clipboard |
+| `Space p` | Paste (without overwriting clipboard) |
+| `Space d` | Delete to void register |
 
 ### File Explorer (oil.nvim)
 | Shortcut | Action |
@@ -258,30 +286,6 @@ Edit filenames and `:w` to rename/move/delete files. Deletes go to trash.
 | `Space fi` | Find implementations (LSP) | Grep word under cursor |
 
 LSP bindings automatically fall back to grep-based search when no language server is attached.
-
-### Editing
-| Shortcut | Action |
-|---|---|
-| `Space w` | Save |
-| `Space q` | Quit |
-| `C-/` | Toggle comment |
-| `gcc` | Toggle comment line |
-| `gc{motion}` | Comment over motion |
-| `J` / `K` (visual) | Move selected lines down/up |
-| `Space r` | Replace word under cursor |
-| `Space Space f` | Format entire file |
-| `<` / `>` (visual) | Indent and keep selection |
-| `C-n` | Clear search highlighting |
-
-### Clipboard
-| Shortcut | Action |
-|---|---|
-| `Space y` | Yank to system clipboard |
-| `Space Y` | Yank line to system clipboard |
-| `Space yp` | Yank file path (relative to cwd) to clipboard |
-| `Space yb` | Yank nearest BUILD.bazel path to clipboard |
-| `Space p` | Paste (without overwriting clipboard) |
-| `Space d` | Delete to void register |
 
 ### Git (Fugitive)
 | Shortcut | Action |

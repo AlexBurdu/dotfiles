@@ -7,10 +7,12 @@ nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
 
 " ### NAVIGATE ###
-nnoremap <C-d> <C-d>zz
 nnoremap <C-f> <C-f>zz
-nnoremap <C-u> <C-u>zz
 nnoremap <C-b> <C-b>zz
+
+" Scroll line-by-line with cursor following (for reading)
+nnoremap <C-e> <C-e>j
+nnoremap <C-y> <C-y>k
 
 if !has('ide')
   nnoremap <M-f> :lua require('oil').open()<CR>

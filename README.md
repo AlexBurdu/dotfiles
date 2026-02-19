@@ -305,6 +305,7 @@ no language server is attached.
 |---|---|
 | `Space vs` | Git status |
 | `Space vd` | Show hunk diff (signify) |
+| `Space vn` / `Space vN` | Next/previous change hunk |
 | `Space p` (fugitive) | Git push |
 | `Space P` (fugitive) | Git pull --rebase |
 | `gu` / `gh` | Get left/right side in merge conflict |

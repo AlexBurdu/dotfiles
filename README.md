@@ -1,11 +1,14 @@
 # Apps Config
 
-This directory contains apps configurations that can be used universally.
+This directory contains apps configurations that can be used
+universally.
 
 # Setup
 
-Each directory with configuration contains a `setup.sh` script that can be used to setup the configuration.
-The root directory contains a `setup.sh` script that can be used to setup all configurations.
+Each directory with configuration contains a `setup.sh` script
+that can be used to setup the configuration. The root directory
+contains a `setup.sh` script that can be used to setup all
+configurations.
 
 # Prerequisites
 
@@ -25,13 +28,15 @@ pip install semgrep bandit
 
 # Theming
 
-Themes are synced across multiple apps based on OS dark/light mode setting.
+Themes are synced across multiple apps based on OS dark/light
+mode setting.
 
 Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 
 ## How It Works
 
-1. The script checks `~/.local/share/tmux/mode` for a manual override (`dark`/`light`)
+1. The script checks `~/.local/share/tmux/mode` for a manual
+   override (`dark`/`light`)
 2. If no override, detects OS appearance:
    - **macOS**: reads `AppleInterfaceStyle`
    - **Linux**: reads GNOME's `color-scheme` setting
@@ -50,16 +55,22 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 
 ## Notes
 
-- Neovim detects OS appearance on startup; tmux syncs at runtime via `send-keys`
-- **SSH/headless**: OS detection doesn't work over SSH. Use `C-s T` to pick a theme, or write `dark`/`light` to `~/.local/share/tmux/mode`. Delete the file to return to auto (OS detection)
+- Neovim detects OS appearance on startup; tmux syncs at
+  runtime via `send-keys`
+- **SSH/headless**: OS detection doesn't work over SSH. Use
+  `C-s T` to pick a theme, or write `dark`/`light` to
+  `~/.local/share/tmux/mode`. Delete the file to return to
+  auto (OS detection)
 - MC requires restart to apply new skin
-- Nvim also has focus dimming (inactive splits get dimmed background)
+- Nvim also has focus dimming (inactive splits get dimmed
+  background)
 
 # Keyboard Shortcuts
 
 ## Cross-Tool Cheat Sheet
 
-All tools share consistent vim-style patterns. See full details in each section below.
+All tools share consistent vim-style patterns. See full details
+in each section below.
 
 ### Navigation
 
@@ -250,7 +261,8 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `Space .` | Set cwd to current directory (teaches zoxide) |
 | `q` | Close |
 
-Edit filenames and `:w` to rename/move/delete files. Deletes go to trash.
+Edit filenames and `:w` to rename/move/delete files. Deletes
+go to trash.
 
 ### Breadcrumb Navigation (dropbar.nvim)
 | Shortcut | Action |
@@ -285,7 +297,8 @@ Edit filenames and `:w` to rename/move/delete files. Deletes go to trash.
 | `Space fu` | Find references (LSP) | Grep word under cursor |
 | `Space fi` | Find implementations (LSP) | Grep word under cursor |
 
-LSP bindings automatically fall back to grep-based search when no language server is attached.
+LSP bindings automatically fall back to grep-based search when
+no language server is attached.
 
 ### Git (Fugitive)
 | Shortcut | Action |
@@ -533,9 +546,13 @@ Config: [karabiner/karabiner.json](./karabiner/karabiner.json)
 
 ## Gemini CLI
 
-Setup: [gemini/setup.sh](./gemini/setup.sh) | [Full docs](./gemini/README.md)
+Setup: [gemini/setup.sh](./gemini/setup.sh) |
+[Full docs](./gemini/README.md)
 
-Generates `~/.gemini/settings.json` from base settings + modular hook groups. Each hook group is prompted separately during setup, so you can pick which ones to install per machine.
+Generates `~/.gemini/settings.json` from base settings +
+modular hook groups. Each hook group is prompted separately
+during setup, so you can pick which ones to install per
+machine.
 
 ---
 
@@ -551,4 +568,5 @@ Smarter `cd` that learns your frequently used directories.
 | `zi` | Interactive directory picker |
 | `Space fw` (nvim) | Telescope picker for zoxide directories (sets cwd, opens oil) |
 
-Zoxide learns automatically as you `cd` around. In nvim, `Space .` in oil.nvim also teaches zoxide.
+Zoxide learns automatically as you `cd` around. In nvim,
+`Space .` in oil.nvim also teaches zoxide.

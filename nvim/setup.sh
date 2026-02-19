@@ -75,6 +75,7 @@ plugin_desc() {
     vim-signify.lua)      echo "vim-signify — git diff signs in the gutter" ;;
     wordmotion.lua)       echo "wordmotion — enhanced word-boundary navigation (camelCase, snake_case)" ;;
     zenmode.lua)          echo "zenmode — distraction-free focused editing mode" ;;
+    surround.lua)         echo "surround — add, change, delete surrounding pairs (quotes, brackets)" ;;
     *)                    echo "$1" ;;
   esac
 }

@@ -17,6 +17,8 @@
 " Configuring conflicting keys via .ideavimrc:
 " - https://github.com/JetBrains/ideavim/blob/master/doc/sethandler.md
 "
+set surround
+
 source ~/.config/nvim/lua/options/options.vim
 source ~/.config/nvim/lua/keymap/keymap.vim
 " copilot is loaded in the code completion section

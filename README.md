@@ -239,6 +239,8 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `Space Space f` | Format entire file |
 | `<` / `>` (visual) | Indent and keep selection |
 | `C-n` | Clear search highlighting |
+| `Space Space c` | Insert review comment `[>> ]` |
+| `Space Space c` (visual) | Wrap selection `[text >> ]` |
 
 ### Clipboard
 | Shortcut | Action |

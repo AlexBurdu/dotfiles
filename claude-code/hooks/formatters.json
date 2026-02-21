@@ -1,0 +1,25 @@
+{
+  "_description": "PostToolUse formatters (buildifier for .bzl, ktfmt for .kt)",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.bzl) buildifier \"$f\";; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.kt) ktfmt --kotlinlang-style \"$f\";; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

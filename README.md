@@ -3,21 +3,21 @@
 This directory contains apps configurations that can be used
 universally.
 
-# Setup
+## Setup
 
 Each directory with configuration contains a `setup.sh` script
 that can be used to setup the configuration. The root directory
 contains a `setup.sh` script that can be used to setup all
 configurations.
 
-# Theming
+## Theming
 
 Themes are synced across multiple apps based on OS dark/light
 mode setting.
 
 Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 
-## How It Works
+### How It Works
 
 1. The script checks `~/.local/share/tmux/mode` for a manual
    override (`dark`/`light`)
@@ -28,7 +28,7 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 4. Triggered automatically on tmux config reload (`C-s r`)
 5. `C-s T` opens a theme picker popup (Dark / Light / Auto)
 
-## Themes by App
+### Themes by App
 
 | App | Dark Theme | Light Theme |
 |---|---|---|
@@ -37,7 +37,7 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 | Midnight Commander | nicedark | seasons-winter16M |
 | Gemini CLI | Shades Of Purple | Google Code |
 
-## Notes
+### Notes
 
 - Neovim detects OS appearance on startup; tmux syncs at
   runtime via `send-keys`
@@ -49,7 +49,7 @@ Script: [tmux/set-themes.sh](./tmux/set-themes.sh)
 - Nvim also has focus dimming (inactive splits get dimmed
   background)
 
-# Keyboard Shortcuts
+## Keyboard Shortcuts
 
 ## Cross-Tool Cheat Sheet
 

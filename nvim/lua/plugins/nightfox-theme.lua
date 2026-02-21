@@ -76,9 +76,17 @@ return {
         carbonfox = {
           ["@markup.strong"] = { fg = "palette.fg1", style = "bold" },
           ColorColumn = { bg = "#353535" },
+          -- Floating windows (hover, diagnostics)
+          NormalFloat = { fg = "#d0d0d0", bg = "#000000" },
+          FloatBorder = { fg = "#5c5c5c", bg = "#1c1c1c" },
           -- Completion popup
           Pmenu = { bg = "#1c1c1c" },
           PmenuSel = { bg = "#3d3d3d", style = "bold" },
+          -- Rendered markdown code blocks
+          RenderMarkdownCode = { bg = "#000000" },
+          -- Comment warnings (e.g. WARNING, FIXME in doc comments)
+          ["@comment.warning"] = { fg = "#e554ba", bg = "NONE", style = "bold" },
+          Comment = { fg = "#9a9ea5" },
           -- Dropbar menu selection
           DropBarMenuCurrentContext = { bg = "#3d3d3d" },
           DropBarMenuHoverEntry = { bg = "#3d3d3d" },

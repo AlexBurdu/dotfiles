@@ -29,14 +29,19 @@ return {
     require('telescope').setup({
       defaults = {
         path_display = { "filename_first" },
-        layout_strategy = "horizontal",
+        layout_strategy = "flex",
         layout_config = {
+          flex = {
+            flip_columns = 140,
+          },
           horizontal = {
             preview_width = 0.5,
             width = 0.95,
           },
           vertical = {
             preview_height = 0.5,
+            preview_cutoff = 1,
+            width = 0.95,
           },
         },
         mappings = {

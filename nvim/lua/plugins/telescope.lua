@@ -127,7 +127,8 @@ return {
         local kind_names = vim.lsp.protocol.SymbolKind
         local function flatten(symbols, depth)
           for _, s in ipairs(symbols) do
-            local range = s.selectionRange or s.range
+            local range = s.selectionRange or s.range or (s.location and s.location.range)
+            if not range then goto continue end
             local display
             if is_md then
               display = string.rep('#', depth + 1) .. ' ' .. s.name
@@ -142,6 +143,7 @@ return {
               col = range.start.character + 1,
             })
             if s.children then flatten(s.children, depth + 1) end
+            ::continue::
           end
         end
         flatten(result, 0)

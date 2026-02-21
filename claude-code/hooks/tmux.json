@@ -1,0 +1,26 @@
+{
+  "_description": "Tmux pane workdir tracking and theme sync (requires tmux-pilot)",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | while IFS= read -r f; do [ -n \"$f\" ] && tmux set-option -p @pilot-workdir \"$(dirname \"$f\")\" 2>/dev/null; done; true"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/tmux/hooks/sync-claude-theme.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

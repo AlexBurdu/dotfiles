@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Symlinks Claude Code settings and global instructions into ~/.claude.
+# Generates and merges Claude Code settings from base + optional hooks,
+# then symlinks global instructions into ~/.claude.
 set -euo pipefail
 
 if [[ -n "${CLAUDECODE:-}" ]]; then
@@ -10,7 +11,14 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/../bash/link.sh"
+source "$SCRIPT_DIR/../bash/json_merge.sh"
 echo "=== Claude Code — settings, instructions → ~/.claude ==="
+
+# Check for jq
+if ! command -v jq &> /dev/null; then
+  echo "jq is required for JSON merging. Install it first."
+  exit 1
+fi
 
 # Backup existing config
 if [ -d ~/.claude ]; then
@@ -27,9 +35,38 @@ fi
 # Create target directory
 mkdir -p ~/.claude
 
-# Symlink settings and global instructions
-link "$(pwd)/settings.json" ~/.claude/settings.json \
-  "Claude Code global settings (permissions, formatters, linters)"
+# Build settings: start with base, then prompt for each hook group
+result=$(jq . "$SCRIPT_DIR/settings.json")
+
+for hook_file in "$SCRIPT_DIR"/hooks/*.json; do
+  [ -f "$hook_file" ] || continue
+  desc=$(jq -r '._description' "$hook_file")
+  echo ""
+  read -rp "Install hooks: ${desc}? (Y/n) " ans
+  echo ""
+  if [[ "$ans" != "n" ]]; then
+    hooks_json=$(jq 'del(._description) | .hooks' "$hook_file")
+    result=$(echo "$result" | jq --argjson new "$hooks_json" '
+      reduce ($new | keys[]) as $event (.;
+        .hooks[$event] = (.hooks[$event] // []) + $new[$event]
+      )
+    ')
+  fi
+done
+
+# Write generated settings to a temp file, then merge into target
+tmpfile=$(mktemp "${TMPDIR:-/tmp}/claude-settings.XXXXXX.json")
+echo "$result" | jq . > "$tmpfile"
+
+# Remove stale symlink if present (migrating from old setup)
+if [ -L ~/.claude/settings.json ]; then
+  echo "Removing old symlink at ~/.claude/settings.json..."
+  rm ~/.claude/settings.json
+fi
+
+merge_json "$tmpfile" ~/.claude/settings.json \
+  "Claude Code settings (permissions, hooks)"
+rm -f "$tmpfile"
 
 link "$(pwd)/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"

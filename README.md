@@ -105,16 +105,17 @@ in each section below.
 | VCS panel | `C-s d` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
 | Show hunk diff | - | `Space vd` | `Space vd` | `Space vd` |
 
-### AI Completion
+### Completion (Insert Mode)
 
-| Action | [Neovim](#copilot-insert-mode) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#ai-completion) |
-|---|---|---|---|
-| Trigger suggestion | `C-u` | `C-u` | `C-u` |
-| Dismiss | `C-d` | `C-d` | `C-d` |
-| Next suggestion | `C-n` | `C-n` | `C-n` |
-| Previous suggestion | `C-p` | `C-p` | `C-p` |
-| Accept word | `C-y` | `C-y` | `C-y` |
-| Accept line | `C-h` | `C-h` | `C-h` |
+| Action | [Neovim LSP Popup](#completion-insert-mode) | [Neovim AI Ghost Text](#completion-insert-mode) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#ai-completion) |
+|---|---|---|---|---|
+| Trigger | `C-j` / `C-k` | `C-n` / `C-p` | `C-u` | `C-u` |
+| Next / Previous | `C-n` `C-j` / `C-p` `C-k` | `C-n` / `C-p` | `C-n` / `C-p` | `C-n` / `C-p` |
+| Page down / up | `C-d` / `C-u` | - | - | - |
+| Accept / Confirm | `C-y` | `Tab` (full) `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) |
+| Dismiss | `C-e` | Auto | `C-d` | `C-d` |
+
+Neovim: LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or on `C-n`/`C-p`.
 
 ### [Karabiner](#karabiner) (Hardware-Level Remapping)
 
@@ -293,7 +294,7 @@ go to trash.
 | `Space fc` | LSP type definitions | Grep word under cursor |
 | `Space fw` | Find workspace (zoxide), set cwd, open oil | — |
 | `Space e` | Recent files (current directory) | — |
-| `Space t` | LSP document symbols | Fuzzy find in buffer |
+| `Space t` | LSP document symbols (with hierarchy) | Fuzzy find in buffer |
 | `C-t` | Pick from breadcrumb (dropbar.nvim) | — |
 | `gd` | Go to definition | Grep word under cursor |
 | `Space fu` | Find references (LSP) | Grep word under cursor |
@@ -301,6 +302,14 @@ go to trash.
 
 LSP bindings automatically fall back to grep-based search when
 no language server is attached.
+
+#### Telescope Navigation (inside picker)
+
+| Shortcut | Insert Mode | Normal Mode |
+|---|---|---|
+| `C-j` / `C-k` | Move selection down/up | Move selection down/up |
+| `C-e` / `C-y` | Scroll preview line by line | Scroll results list line by line |
+| `C-u` / `C-d` | Scroll preview (default) | Half-page jump in results list |
 
 ### Git (Fugitive)
 | Shortcut | Action |
@@ -318,21 +327,21 @@ no language server is attached.
 | `Space d` | Toggle diagnostics |
 | `[t` / `]t` | Next/previous diagnostic |
 
-### LSP Completion
-| Shortcut | Action |
-|---|---|
-| `C-Space` | Trigger completion |
-| `C-n` / `C-p` | Next/previous completion item |
-| `C-y` | Confirm selection |
+### Completion (Insert Mode)
 
-### Copilot (Insert Mode)
-| Shortcut | Action |
-|---|---|
-| `C-u` | Show suggestion |
-| `C-d` | Dismiss suggestion |
-| `C-n` / `C-p` | Next/previous suggestion |
-| `C-y` | Accept word |
-| `C-h` | Accept line |
+LSP popup and Minuet AI ghost text coexist. Keys are context-aware: some act on the popup when visible, ghost text otherwise.
+
+| Shortcut | LSP Popup | Minuet Ghost Text |
+|---|---|---|
+| `C-j` / `C-k` | Open popup / navigate | - |
+| `C-n` / `C-p` | Navigate (when popup visible) | Fetch fresh suggestion |
+| `C-d` / `C-u` | Page down / up | - |
+| `C-y` | Confirm selection | Accept word |
+| `C-h` | - | Accept line |
+| `Tab` | - | Accept full suggestion |
+| `C-e` | Dismiss | - |
+
+LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or on `C-n`/`C-p`. Switch AI provider with `:MinuetProvider <name>` (`claude`, `gemini`, `codestral`, `ollama`).
 
 ### Other
 | Shortcut | Action |
@@ -345,7 +354,7 @@ no language server is attached.
 ## IntelliJ IDEA (IdeaVim, Leader: Space)
 
 Config: [ideavim/ideavimrc.vim](./ideavim/ideavimrc.vim)
-Copilot: [ideavim/copilot.vim](./ideavim/copilot.vim)
+AI Completion: [ideavim/copilot.vim](./ideavim/copilot.vim)
 Gemini: [ideavim/gemini.vim](./ideavim/gemini.vim)
 Bazel: [ideavim/intellijbazel.vim](./ideavim/intellijbazel.vim)
 

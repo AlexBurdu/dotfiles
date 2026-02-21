@@ -14,6 +14,7 @@ return {
     "saadparwaiz1/cmp_luasnip",
     "j-hui/fidget.nvim",
     "onsails/lspkind.nvim",
+    "milanglacier/minuet-ai.nvim",
   },
 
   config = function()
@@ -29,7 +30,7 @@ return {
     require("mason").setup()
     require("mason-lspconfig").setup({
       automatic_installation = true,
-      -- See complete list of Mason supported serverrs: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
+      -- See complete list of Mason supported servers: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
       ensure_installed = {
         "ast_grep",
         "bashls",
@@ -67,7 +68,6 @@ return {
           })
           vim.g.zig_fmt_parse_errors = 0
           vim.g.zig_fmt_autosave = 0
-
         end,
         ["lua_ls"] = function()
           local lspconfig = require("lspconfig")
@@ -88,24 +88,94 @@ return {
 
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
+    -- Accept one word from minuet ghost text (not built into minuet)
+    local function accept_word()
+      local vt_mod = require('minuet.virtualtext')
+      if not vt_mod.action.is_visible() then return false end
+      local extmark = vim.api.nvim_buf_get_extmark_by_id(
+        0, vt_mod.ns_id, 1, { details = true }
+      )
+      if not extmark or not extmark[3] or not extmark[3].virt_text then return false end
+      local text = extmark[3].virt_text[1][1]
+      -- Match a word: non-space chars, or leading whitespace if at a boundary
+      local word = text:match('^([%w_]+)') or text:match('^(%S+)') or text:match('^(%s+)')
+      if not word or word == '' then return false end
+      local cursor = vim.api.nvim_win_get_cursor(0)
+      local line, col = cursor[1] - 1, cursor[2]
+      vim.api.nvim_buf_set_text(0, line, col, line, col, { word })
+      vim.api.nvim_win_set_cursor(0, { cursor[1], col + #word })
+      return true
+    end
+
     cmp.setup({
+      performance = {
+        fetching_timeout = 2000,
+      },
       snippet = {
         expand = function(args)
           require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
         end,
       },
+      formatting = {
+        format = require('lspkind').cmp_format({
+          mode = 'symbol_text',
+          menu = {
+            nvim_lsp = '[LSP]',
+            luasnip = '[Snip]',
+            buffer = '[Buf]',
+          },
+        }),
+      },
       mapping = cmp.mapping.preset.insert({
-        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-        ["<C-Space>"] = cmp.mapping.complete(),
+        ['<C-p>'] = cmp.mapping(function(fallback)
+          local vt = require('minuet.virtualtext').action
+          if cmp.visible() then cmp.select_prev_item(cmp_select)
+          else vt.dismiss(); vt.prev() end
+        end, { 'i' }),
+        ['<C-n>'] = cmp.mapping(function(fallback)
+          local vt = require('minuet.virtualtext').action
+          if cmp.visible() then cmp.select_next_item(cmp_select)
+          else vt.dismiss(); vt.next() end
+        end, { 'i' }),
+        ['<C-k>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then cmp.select_prev_item(cmp_select)
+          else cmp.complete() end
+        end, { 'i' }),
+        ['<C-j>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then cmp.select_next_item(cmp_select)
+          else cmp.complete() end
+        end, { 'i' }),
+        ['<C-y>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then cmp.confirm({ select = true })
+          elseif not accept_word() then fallback() end
+        end, { 'i' }),
+        ['<C-h>'] = cmp.mapping(function(fallback)
+          local vt = require('minuet.virtualtext').action
+          if vt.is_visible() then vt.accept_line()
+          else fallback() end
+        end, { 'i' }),
+        ['<C-u>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            for _ = 1, 10 do cmp.select_prev_item(cmp_select) end
+          else fallback() end
+        end, { 'i' }),
+        ['<C-d>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            for _ = 1, 10 do cmp.select_next_item(cmp_select) end
+          else fallback() end
+        end, { 'i' }),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+          local vt = require('minuet.virtualtext').action
+          if vt.is_visible() then vt.accept()
+          else fallback() end
+        end, { 'i' }),
       }),
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'luasnip' }, -- For luasnip users.
+        { name = 'luasnip' },
       }, {
-          { name = 'buffer' },
-        })
+        { name = 'buffer' },
+      })
     })
 
     vim.diagnostic.config({

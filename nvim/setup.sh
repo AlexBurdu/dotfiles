@@ -58,7 +58,7 @@ done
 plugin_desc() {
   case "$1" in
     comment.lua)          echo "comment — toggle code comments with Ctrl-/" ;;
-    copilot.lua)          echo "copilot — GitHub Copilot AI code completion" ;;
+    minuet.lua)           echo "minuet — AI completion via Claude/Gemini (minuet-ai.nvim)" ;;
     dropbar.lua)          echo "dropbar — breadcrumb navigation bar showing code context" ;;
     fugitive.lua)         echo "fugitive — Git integration (status, diff, blame)" ;;
     lawrencium.lua)       echo "lawrencium — Mercurial (hg) integration (status, diff, log)" ;;

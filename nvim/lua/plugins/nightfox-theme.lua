@@ -76,6 +76,9 @@ return {
         carbonfox = {
           ["@markup.strong"] = { fg = "palette.fg1", style = "bold" },
           ColorColumn = { bg = "#353535" },
+          -- Completion popup
+          Pmenu = { bg = "#1c1c1c" },
+          PmenuSel = { bg = "#3d3d3d", style = "bold" },
           -- Dropbar menu selection
           DropBarMenuCurrentContext = { bg = "#3d3d3d" },
           DropBarMenuHoverEntry = { bg = "#3d3d3d" },
@@ -83,6 +86,9 @@ return {
         dayfox = {
           ["@markup.strong"] = { fg = "palette.fg1", style = "bold" },
           ColorColumn = { bg = "#e4e5eb" },
+          -- Completion popup
+          Pmenu = { bg = "#e4e5eb" },
+          PmenuSel = { bg = "#d0d0d0", style = "bold" },
           -- Fix notification/message colors for accessibility
           WarningMsg = { fg = "#8a5700", bg = "#fff3cd" },
           ErrorMsg = { fg = "#842029", bg = "#f8d7da" },

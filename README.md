@@ -10,22 +10,6 @@ that can be used to setup the configuration. The root directory
 contains a `setup.sh` script that can be used to setup all
 configurations.
 
-# Prerequisites
-
-Security linter hooks (Claude Code & Gemini CLI) require:
-
-**macOS (Homebrew):**
-```
-brew install detekt shellcheck semgrep bandit
-```
-
-**Linux:**
-```
-sudo apt install shellcheck        # or: sudo dnf install ShellCheck
-pip install semgrep bandit
-# detekt: download from https://github.com/detekt/detekt/releases
-```
-
 # Theming
 
 Themes are synced across multiple apps based on OS dark/light
@@ -553,6 +537,17 @@ Config: [karabiner/karabiner.json](./karabiner/karabiner.json)
 |---|---|---|
 | `Return` | Return | Left Control |
 | `Left Command` | Delete/Backspace | Left Command |
+
+---
+
+## Claude Code
+
+Setup: [claude-code/setup.sh](./claude-code/setup.sh)
+
+Generates `~/.claude/settings.json` from base settings +
+modular hook groups. Each hook group is prompted separately
+during setup, so you can pick which ones to install per
+machine.
 
 ---
 

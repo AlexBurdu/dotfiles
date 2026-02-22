@@ -25,10 +25,26 @@ return {
   },
 
   config = function()
+    local function results_half_page_up()
+      local bufnr = vim.api.nvim_get_current_buf()
+      local actions = require('telescope.actions')
+      local results_win = require('telescope.state').get_status(bufnr).results_win
+      local step = math.min(math.floor(vim.api.nvim_win_get_height(results_win) / 2), 15)
+      for _ = 1, step do actions.move_selection_previous(bufnr) end
+    end
+    local function results_half_page_down()
+      local bufnr = vim.api.nvim_get_current_buf()
+      local actions = require('telescope.actions')
+      local results_win = require('telescope.state').get_status(bufnr).results_win
+      local step = math.min(math.floor(vim.api.nvim_win_get_height(results_win) / 2), 15)
+      for _ = 1, step do actions.move_selection_next(bufnr) end
+    end
+
     -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#pickers
     require('telescope').setup({
       defaults = {
         path_display = { "filename_first" },
+        scroll_strategy = "limit",
         layout_strategy = "flex",
         layout_config = {
           flex = {
@@ -76,16 +92,8 @@ return {
                 vim.api.nvim_win_call(results_win, function() vim.cmd([[execute "normal! \<C-e>"]]) end)
               end
             end,
-            ["<C-u>"] = function(prompt_bufnr)
-              local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-              local half = math.floor(vim.api.nvim_win_get_height(picker.results_win) / 2)
-              picker:move_selection(-half)
-            end,
-            ["<C-d>"] = function(prompt_bufnr)
-              local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-              local half = math.floor(vim.api.nvim_win_get_height(picker.results_win) / 2)
-              picker:move_selection(half)
-            end,
+            ["<C-u>"] = results_half_page_up,
+            ["<C-d>"] = results_half_page_down,
           },
         },
       },
@@ -194,13 +202,17 @@ return {
               picker:set_selection(best_idx - 1)
             end,
           },
-          attach_mappings = function(prompt_bufnr)
+          attach_mappings = function(prompt_bufnr, map)
             actions.select_default:replace(function()
               actions.close(prompt_bufnr)
               local sel = action_state.get_selected_entry()
               if sel then
                 vim.api.nvim_win_set_cursor(0, { sel.lnum, sel.col - 1 })
               end
+            end)
+            vim.schedule(function()
+              vim.keymap.set('n', '<C-u>', results_half_page_up, { buffer = prompt_bufnr })
+              vim.keymap.set('n', '<C-d>', results_half_page_down, { buffer = prompt_bufnr })
             end)
             return true
           end,

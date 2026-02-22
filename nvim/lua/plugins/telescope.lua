@@ -119,7 +119,10 @@ return {
     vim.keymap.set("n", "<Leader>t", function()
       local clients = vim.lsp.get_clients({ bufnr = 0 })
       if #clients == 0 then
-        builtin.current_buffer_fuzzy_find()
+        builtin.current_buffer_fuzzy_find({
+          sorting_strategy = 'ascending',
+          layout_config = { prompt_position = 'top' },
+        })
         return
       end
 

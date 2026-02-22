@@ -305,11 +305,14 @@ no language server is attached.
 | `Space P` (fugitive) | Git pull --rebase |
 | `gu` / `gh` | Get left/right side in merge conflict |
 
-### Diagnostics (Trouble)
+### LSP Info & Diagnostics
 | Shortcut | Action |
 |---|---|
-| `Space d` | Toggle diagnostics |
-| `[t` / `]t` | Next/previous diagnostic |
+| `Space sh` | Show hover documentation |
+| `Space se` | Show error/diagnostic description |
+| `Space n` / `Space N` | Next/previous diagnostic |
+| `Space d` | Toggle diagnostics (Trouble) |
+| `[t` / `]t` | Next/previous diagnostic (Trouble) |
 
 ### Completion (Insert Mode)
 

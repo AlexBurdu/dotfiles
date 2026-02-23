@@ -44,7 +44,7 @@ local provider_map = {
   claude = 'claude',
   gemini = 'gemini',
   codestral = 'codestral',
-  ollama = 'openai_fim_compatible',
+  ollama = 'openai_compatible',
 }
 
 local function resolve_provider(name)
@@ -100,10 +100,10 @@ return {
           end_point = 'https://api.mistral.ai/v1/fim/completions',
           stream = false,
         },
-        openai_fim_compatible = {
+        openai_compatible = {
           api_key = 'TERM', -- any set env var; ollama needs no auth
           name = 'Ollama',
-          end_point = 'http://localhost:11434/v1/completions',
+          end_point = 'http://localhost:11434/v1/chat/completions',
           model = 'codegemma:7b',
           optional = {
             max_tokens = 256,

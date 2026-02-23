@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+"""Wrap markdown prose at a given width, leaving structure intact.
+
+Reads markdown from stdin, wraps only prose paragraphs, and writes the
+result to stdout. Tables, code blocks, headings, lists, blockquotes,
+HTML tags, and link references are passed through unchanged.
+
+Usage:
+    cat README.md | mdwrap [-w WIDTH]
+    mdwrap -w 72 < README.md
+
+Options:
+    -w, --wrap WIDTH   Line width for prose wrapping (default: 80)
+    -h, --help         Show this help message
+"""
+
+import re
+import sys
+import textwrap
+
+# Patterns for lines that are structural (not prose)
+_STRUCTURAL = re.compile(
+    r"^\s*\|"           # table row
+    r"|^#{1,6}\s"       # heading
+    r"|^\s*[-*+]\s"     # unordered list item
+    r"|^\s*\d+[.)]\s"   # ordered list item
+    r"|^\s*>"           # blockquote
+    r"|^<"              # HTML tag
+    r"|^\[.*\]:"        # link reference definition
+    r"|^\s*$"           # blank line
+)
+
+_CODE_FENCE = re.compile(r"^(`{3,}|~{3,})")
+
+
+def mdwrap(text, width=80):
+    """Wrap prose paragraphs in markdown text to *width* columns.
+
+    Structural elements (tables, code blocks, headings, lists,
+    blockquotes, HTML, link references) are returned unchanged.
+    Consecutive prose lines are joined and reflowed with
+    ``textwrap.fill``.
+    """
+    lines = text.split("\n")
+    out = []
+    in_code = False
+    prose_buf = []
+
+    def flush_prose():
+        if not prose_buf:
+            return
+        joined = " ".join(prose_buf)
+        wrapped = textwrap.fill(
+            joined, width=width, break_long_words=False, break_on_hyphens=False
+        )
+        out.append(wrapped)
+        prose_buf.clear()
+
+    for line in lines:
+        if _CODE_FENCE.match(line):
+            flush_prose()
+            in_code = not in_code
+            out.append(line)
+            continue
+
+        if in_code:
+            out.append(line)
+            continue
+
+        if _STRUCTURAL.match(line):
+            flush_prose()
+            out.append(line)
+            continue
+
+        prose_buf.append(line.strip())
+
+    flush_prose()
+
+    result = "\n".join(out)
+    # Preserve trailing newline when the input had one
+    if lines and lines[-1] == "" and not result.endswith("\n"):
+        result += "\n"
+    return result
+
+
+def main():
+    width = 80
+    args = sys.argv[1:]
+    i = 0
+    while i < len(args):
+        if args[i] in ("-h", "--help"):
+            print(__doc__.strip())
+            sys.exit(0)
+        elif args[i] in ("-w", "--wrap") and i + 1 < len(args):
+            width = int(args[i + 1])
+            i += 2
+            continue
+        i += 1
+
+    sys.stdout.write(mdwrap(sys.stdin.read(), width=width))
+
+
+if __name__ == "__main__":
+    main()

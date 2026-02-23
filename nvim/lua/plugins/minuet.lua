@@ -4,11 +4,20 @@
 -- Switch providers with :MinuetProvider <name> (persisted across sessions).
 local state_file = vim.fn.stdpath('state') .. '/minuet-provider'
 
+local function ollama_available()
+  local h = io.popen('curl -sf http://localhost:11434/api/tags 2>/dev/null')
+  if not h then return false end
+  local out = h:read('*a')
+  h:close()
+  return out and out:find('codegemma') ~= nil
+end
+
 local function default_provider()
   if os.getenv('GEMINI_API_KEY') then return 'gemini' end
   if os.getenv('ANTHROPIC_API_KEY') then return 'claude' end
   if os.getenv('CODESTRAL_API_KEY') then return 'codestral' end
-  return 'ollama'
+  if ollama_available() then return 'ollama' end
+  return nil
 end
 
 local function read_provider()
@@ -49,6 +58,13 @@ return {
   config = function()
     local initial = read_provider()
 
+    if not initial then
+      vim.api.nvim_create_user_command('MinuetProvider', function(opts)
+        vim.notify('No AI provider available — set an API key or start Ollama', vim.log.levels.WARN)
+      end, { nargs = 1, complete = function() return vim.tbl_keys(provider_map) end })
+      return
+    end
+
     require('minuet').setup({
       provider = resolve_provider(initial),
       notify = 'warn',
@@ -88,7 +104,7 @@ return {
           api_key = 'TERM', -- any set env var; ollama needs no auth
           name = 'Ollama',
           end_point = 'http://localhost:11434/v1/completions',
-          model = 'qwen2.5-coder:7b',
+          model = 'codegemma:7b',
           optional = {
             max_tokens = 256,
           },

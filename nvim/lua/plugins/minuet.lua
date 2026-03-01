@@ -9,14 +9,14 @@ local function ollama_available()
   if not h then return false end
   local out = h:read('*a')
   h:close()
-  return out and out:find('codegemma') ~= nil
+  return out and #out > 10
 end
 
 local function default_provider()
+  if ollama_available() then return 'ollama' end
   if os.getenv('GEMINI_API_KEY') then return 'gemini' end
   if os.getenv('ANTHROPIC_API_KEY') then return 'claude' end
   if os.getenv('CODESTRAL_API_KEY') then return 'codestral' end
-  if ollama_available() then return 'ollama' end
   return nil
 end
 

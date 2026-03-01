@@ -224,8 +224,11 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `Space Space f` | Format entire file |
 | `<` / `>` (visual) | Indent and keep selection |
 | `C-n` | Clear search highlighting |
-| `Space Space c` | Insert review comment `[>> ]` |
-| `Space Space c` (visual) | Wrap selection `[text >> ]` |
+| `Space cc` | CriticMarkup: comment `{>> <<}` (n: on char, v: highlight+comment) |
+| `Space ch` | CriticMarkup: highlight `{== ==}` (n: on char, v: selection) |
+| `Space ci` | CriticMarkup: insertion `{++ ++}` (n: on char, v: selection) |
+| `Space cd` | CriticMarkup: deletion `{-- --}` (n: on char, v: selection) |
+| `Space cs` | CriticMarkup: substitute `{~~ ~> ~~}` (n: on char, v: selection) |
 
 ### Clipboard
 | Shortcut | Action |

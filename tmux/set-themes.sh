@@ -147,6 +147,13 @@ if [ "$1" = "init" ]; then
     tmux send-keys -t "$pane" Escape ":colorscheme ${nvim_cs}" Enter
   done
 
+  # Sync Nexus TUI theme (t = sync with OS)
+  for pane in $(tmux list-panes -a \
+    -F "#{pane_id}:#{window_name}" \
+    | grep ':nexus$' | cut -d: -f1); do
+    tmux send-keys -t "$pane" t
+  done
+
   # Sync Claude Code theme
   ~/.config/tmux/hooks/sync-claude-theme.sh
 fi

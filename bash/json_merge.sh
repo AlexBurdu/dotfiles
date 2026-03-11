@@ -40,7 +40,7 @@ merge_json() {
 
   if [[ ! -f "$dst" ]]; then
     echo "  Destination does not exist — will copy source."
-    read -rp "Copy? (y/n/e to edit) " ans
+    read -rp "Copy? (Y/n/e to edit) " ans
     if [[ "$ans" == "e" ]]; then
       local tmpfile
       tmpfile=$(mktemp "${TMPDIR:-/tmp}/merge_json.XXXXXX.json")
@@ -52,7 +52,7 @@ merge_json() {
         return 1
       fi
       jq . "$tmpfile" > "$dst" && rm -f "$tmpfile"
-    elif [[ "$ans" == "y" ]]; then
+    elif [[ "$ans" != "n" ]]; then
       cp "$src" "$dst"
     fi
     return 0
@@ -79,7 +79,7 @@ merge_json() {
     | sed 's/^/    /' || true
   echo ""
 
-  read -rp "Merge? (y/n/e to edit) " ans
+  read -rp "Merge? (Y/n/e to edit) " ans
   if [[ "$ans" == "e" ]]; then
     local tmpfile
     tmpfile=$(mktemp "${TMPDIR:-/tmp}/merge_json.XXXXXX.json")
@@ -92,7 +92,7 @@ merge_json() {
     fi
     jq . "$tmpfile" > "$dst.tmp" && mv "$dst.tmp" "$dst"
     rm -f "$tmpfile"
-  elif [[ "$ans" == "y" ]]; then
+  elif [[ "$ans" != "n" ]]; then
     echo "$merged" | jq . > "$dst.tmp" && mv "$dst.tmp" "$dst"
   fi
 }

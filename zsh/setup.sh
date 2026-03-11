@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Installs zsh plugins and symlinks zshrc into ~/.zshrc.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== Zsh — plugins, zshrc → ~/.zshrc ==="
 
 # Install zoxide (smarter cd that tracks frequently used directories)
@@ -40,5 +41,5 @@ if [ "$response" != "n" ]; then
 fi
 
 echo ""
-link "$(pwd)/zshrc" ~/.zshrc \
+link "$SCRIPT_DIR/zshrc" ~/.zshrc \
   "Zsh config (oh-my-zsh, powerlevel10k, vim-mode, fzf, aliases)"

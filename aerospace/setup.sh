@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Symlinks AeroSpace tiling window manager config into ~/.config/aerospace.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== AeroSpace — tiling window manager config → ~/.config/aerospace ==="
 
-link "$(pwd)/aerospace.toml" ~/.config/aerospace/aerospace.toml \
+link "$SCRIPT_DIR/aerospace.toml" ~/.config/aerospace/aerospace.toml \
   "AeroSpace tiling window manager configuration"

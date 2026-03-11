@@ -2,7 +2,8 @@
 # Symlinks IdeaVim config files into ~/.config/ideavim and
 # links ~/.ideavimrc for IntelliJ to pick up.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== IdeaVim — vim bindings for IntelliJ → ~/.config/ideavim ==="
 
 CONFIG_DIR=~/.config/ideavim
@@ -26,7 +27,7 @@ fi
 mkdir -p "$CONFIG_DIR"
 
 # Symlink all .vim files
-for file in "$(pwd)"/*.vim; do
+for file in "$SCRIPT_DIR"/*.vim; do
   name=$(basename "$file")
   desc=$(vim_desc "$name")
   link "$file" "$CONFIG_DIR/$name" "$desc"

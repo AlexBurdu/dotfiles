@@ -57,7 +57,11 @@ for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
   read -rp "Install MCP server: ${desc}? (Y/n) " ans
   echo ""
   if [[ "$ans" != "n" ]]; then
-    mcp_json=$(jq 'del(._description) | .mcpServers' "$mcp_file")
+    # Expand ~ and $HOME in MCP server args
+    # (Node cross-spawn uses shell:false, so
+    # tilde is NOT expanded at runtime)
+    mcp_json=$(jq 'del(._description) | .mcpServers' "$mcp_file" \
+      | sed "s|~/|$HOME/|g")
     result=$(echo "$result" | jq --argjson new "$mcp_json" '
       .mcpServers = (.mcpServers // {}) + $new
     ')
@@ -71,22 +75,22 @@ merge_json "$tmpfile" "$TARGET_DIR/settings.json" \
   "Gemini CLI settings (editor, vim mode, hooks, theme)"
 rm -f "$tmpfile"
 
-link "$(pwd)/GEMINI.md" "$TARGET_DIR/GEMINI.md" \
+link "$SCRIPT_DIR/GEMINI.md" "$TARGET_DIR/GEMINI.md" \
   "Global Gemini instructions (commit format, conventions)"
 
 # Install top-level commands
 mkdir -p "$TARGET_DIR/commands"
-for cmd in commands/*.toml; do
+for cmd in "$SCRIPT_DIR"/commands/*.toml; do
   [ -f "$cmd" ] || continue
   name=$(basename "$cmd")
   # Extract description from TOML
   desc=$(grep '^description' "$cmd" | head -1 | sed 's/^description *= *"//;s/"$//')
-  link "$(pwd)/$cmd" "$TARGET_DIR/commands/$name" \
+  link "$cmd" "$TARGET_DIR/commands/$name" \
     "/${name%.toml} — $desc"
 done
 
 # Install command groups
-for group in commands/*/; do
+for group in "$SCRIPT_DIR"/commands/*/; do
   [ -d "$group" ] || continue
   group_name=$(basename "$group")
   echo ""
@@ -95,7 +99,7 @@ for group in commands/*/; do
   if [[ "$ans" != "n" ]]; then
     for cmd in "$group"*; do
       name=$(basename "$cmd")
-      link "$(pwd)/$cmd" \
+      link "$cmd" \
         "$TARGET_DIR/commands/$group_name/${name}" \
         "Command /$group_name:${name%.toml}"
     done

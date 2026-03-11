@@ -68,22 +68,22 @@ merge_json "$tmpfile" ~/.claude/settings.json \
   "Claude Code settings (permissions, hooks)"
 rm -f "$tmpfile"
 
-link "$(pwd)/CLAUDE.md" ~/.claude/CLAUDE.md \
+link "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"
 
 # Install top-level skills
 mkdir -p ~/.claude/skills
-for skill in skills/*/SKILL.md; do
+for skill in "$SCRIPT_DIR"/skills/*/SKILL.md; do
   [ -f "$skill" ] || continue
   skill_dir=$(dirname "$skill")
   name=$(basename "$skill_dir")
   desc=$(sed -n '/^description:/{ s/^description: *//; p; q; }' "$skill")
-  link "$(pwd)/$skill_dir" ~/.claude/skills/"$name" \
+  link "$skill_dir" ~/.claude/skills/"$name" \
     "/$name — $desc"
 done
 
 # Install skill groups
-for group_dir in skills/*/; do
+for group_dir in "$SCRIPT_DIR"/skills/*/; do
   [ -d "$group_dir" ] || continue
   # Skip top-level skills (already handled above)
   [ -f "$group_dir/SKILL.md" ] && continue
@@ -97,7 +97,7 @@ for group_dir in skills/*/; do
       skill_dir=$(dirname "$skill")
       name=$(basename "$skill_dir")
       desc=$(sed -n '/^description:/{ s/^description: *//; p; q; }' "$skill")
-      link "$(pwd)/$skill_dir" ~/.claude/skills/"$group_name"-"$name" \
+      link "$skill_dir" ~/.claude/skills/"$group_name"-"$name" \
         "/$group_name-$name — $desc"
     done
   fi
@@ -114,6 +114,7 @@ for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
   if [[ "$ans" != "n" ]]; then
     cmd=$(jq -r '.command' "$mcp_file")
     mapfile -t args_array < <(jq -r '.args[]' "$mcp_file")
-    claude mcp add --scope user "$name" -- "$cmd" "${args_array[@]}"
+    claude mcp add --scope user "$name" -- "$cmd" "${args_array[@]}" 2>&1 \
+      || echo "  (already configured or failed — continuing)"
   fi
 done

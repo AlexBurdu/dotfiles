@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 # Symlinks tmux config and shared hooks into ~/.config/tmux.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== Tmux — config + hooks → ~/.config/tmux ==="
 
-link "$(pwd)/tmux.conf" ~/.config/tmux/tmux.conf \
+link "$SCRIPT_DIR/tmux.conf" ~/.config/tmux/tmux.conf \
   "Tmux configuration (keybindings, plugins, catppuccin theme)"
 
-link "$(pwd)/set-themes.sh" ~/.config/tmux/set-themes.sh \
+link "$SCRIPT_DIR/set-themes.sh" ~/.config/tmux/set-themes.sh \
   "Theme switcher (syncs light/dark across apps based on OS appearance)"
 
-link "$(pwd)/theme-picker.sh" ~/.config/tmux/theme-picker.sh \
+link "$SCRIPT_DIR/theme-picker.sh" ~/.config/tmux/theme-picker.sh \
   "Theme picker popup (dark/light/auto selection menu)"
 
-link "$(pwd)/hooks/tmux-status-hook.sh" ~/.config/tmux/hooks/tmux-status-hook.sh \
+link "$SCRIPT_DIR/hooks/tmux-status-hook.sh" ~/.config/tmux/hooks/tmux-status-hook.sh \
   "Agent hooks (tmux window name updates on agent state changes)"
 
-link "$(pwd)/hooks/sync-claude-theme.sh" ~/.config/tmux/hooks/sync-claude-theme.sh \
+link "$SCRIPT_DIR/hooks/sync-claude-theme.sh" ~/.config/tmux/hooks/sync-claude-theme.sh \
   "Claude Code theme sync (matches dark/light mode on session start)"
 
 # Install TPM (Tmux Plugin Manager)

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Symlinks Neovim config, plugins, and keymaps into ~/.config/nvim.
 set -euo pipefail
-source "$(dirname "$0")/../bash/link.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../bash/link.sh"
 echo "=== Neovim — config, plugins, keymaps → ~/.config/nvim ==="
 
 CONFIG_DIR=~/.config/nvim
@@ -17,34 +18,34 @@ mkdir -p "$CONFIG_DIR/lua/keymap" "$CONFIG_DIR/lua/plugins"
 # Batch mode — skip individual prompts
 all="n"
 echo "Symlink all nvim plugins and configuration files?"
-read -rp "If no (n), you will be prompted for each file. (y/n) " ans
-if [[ "$ans" == "y" ]]; then
+read -rp "If no, you will be prompted for each file. (Y/n) " ans
+if [[ "$ans" != "n" ]]; then
   all="a"
 fi
 
 # init.lua — offer copy vs symlink
 if [[ "$all" != "a" ]]; then
   echo "Main entry point — loads lazy.nvim, keymaps, colors, and options"
-  echo "  $(pwd)/init.lua → $CONFIG_DIR/init.lua"
-  read -rp "Copy (c), symlink (s) or don't change (n)? " ans
+  echo "  $SCRIPT_DIR/init.lua → $CONFIG_DIR/init.lua"
+  read -rp "Copy (c), symlink (S) or don't change (n)? " ans
 else
   ans="s"
 fi
 if [[ "$ans" == "c" ]]; then
   rm -rf "$CONFIG_DIR/init.lua"
-  cp "$(pwd)/init.lua" "$CONFIG_DIR/init.lua"
-elif [[ "$ans" == "s" || "$all" == "a" ]]; then
+  cp "$SCRIPT_DIR/init.lua" "$CONFIG_DIR/init.lua"
+elif [[ "$ans" == "s" || "$ans" == "" || "$all" == "a" ]]; then
   rm -rf "$CONFIG_DIR/init.lua"
-  ln -s "$(pwd)/init.lua" "$CONFIG_DIR/init.lua"
+  ln -s "$SCRIPT_DIR/init.lua" "$CONFIG_DIR/init.lua"
 fi
 
 # Core lua directories — always symlink in batch mode
 for entry in \
-  "$(pwd)/lua/config|$CONFIG_DIR/lua/config|Core config — autocommands, diagnostics, general settings" \
-  "$(pwd)/lua/color|$CONFIG_DIR/lua/color|Color scheme — sources and configures the active theme" \
-  "$(pwd)/lua/options|$CONFIG_DIR/lua/options|Editor options — tabs, line numbers, clipboard, filetype mappings" \
-  "$(pwd)/lua/lazy_nvim.lua|$CONFIG_DIR/lua/lazy_nvim.lua|Lazy.nvim — plugin manager bootstrap and loader" \
-  "$(pwd)/bin|$CONFIG_DIR/bin|Helper scripts — mdwrap (markdown prose formatter)"; do
+  "$SCRIPT_DIR/lua/config|$CONFIG_DIR/lua/config|Core config — autocommands, diagnostics, general settings" \
+  "$SCRIPT_DIR/lua/color|$CONFIG_DIR/lua/color|Color scheme — sources and configures the active theme" \
+  "$SCRIPT_DIR/lua/options|$CONFIG_DIR/lua/options|Editor options — tabs, line numbers, clipboard, filetype mappings" \
+  "$SCRIPT_DIR/lua/lazy_nvim.lua|$CONFIG_DIR/lua/lazy_nvim.lua|Lazy.nvim — plugin manager bootstrap and loader" \
+  "$SCRIPT_DIR/bin|$CONFIG_DIR/bin|Helper scripts — mdwrap (markdown prose formatter)"; do
   IFS='|' read -r src dst desc <<< "$entry"
   if [[ "$all" == "a" ]]; then
     mkdir -p "$(dirname "$dst")"
@@ -85,7 +86,7 @@ plugin_desc() {
 # Keymap modules
 echo ""
 echo "=== Keymap modules ==="
-for file in "$(pwd)"/lua/keymap/*; do
+for file in "$SCRIPT_DIR"/lua/keymap/*; do
   name=$(basename "$file")
   dst="$CONFIG_DIR/lua/keymap/$name"
   case "$name" in
@@ -103,7 +104,7 @@ done
 # Plugin modules
 echo ""
 echo "=== Plugin modules ==="
-for file in "$(pwd)"/lua/plugins/*; do
+for file in "$SCRIPT_DIR"/lua/plugins/*; do
   name=$(basename "$file")
   dst="$CONFIG_DIR/lua/plugins/$name"
   desc=$(plugin_desc "$name")

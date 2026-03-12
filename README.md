@@ -212,6 +212,7 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 |---|---|
 | `Space w` | Save |
 | `Space q` | Quit |
+| `Space Q` | Quit without saving |
 | `C-/` | Toggle comment |
 | `gcc` | Toggle comment line |
 | `gc{motion}` | Comment over motion |
@@ -239,7 +240,8 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 |---|---|
 | `Space y` | Yank to system clipboard |
 | `Space Y` | Yank line to system clipboard |
-| `Space yp` | Yank file path (relative to cwd) to clipboard |
+| `Space yp` | Yank file/entry path (relative to cwd) to clipboard |
+| `Space yP` | Yank file/entry absolute path to clipboard |
 | `Space yb` | Yank nearest BUILD.bazel path to clipboard |
 | `Space p` | Paste (without overwriting clipboard) |
 | `Space d` | Delete to void register |
@@ -278,7 +280,7 @@ go to trash.
 ### Telescope (Fuzzy Finder)
 | Shortcut | With LSP | Fallback (no LSP) |
 |---|---|---|
-| `Space ff` | Find files | Find files |
+| `Space ff` | Find files (fuzzy matches full path) | Find files (fuzzy matches full path) |
 | `Space fp` | Live grep (find in path) | Live grep |
 | `Space fr` | Replace in path (Spectre) | Replace in path |
 | `Space fs` | LSP workspace symbols | Live grep |

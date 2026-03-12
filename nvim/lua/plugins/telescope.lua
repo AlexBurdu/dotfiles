@@ -223,11 +223,19 @@ return {
       end)
     end, {})
 
-    -- Find Files
-    vim.keymap.set("n", "<Leader>ff", builtin.find_files, {})
+    -- Find Files (filename first, full path as ghost text, fuzzy matches full path)
+    local function find_files_path_display(_, path)
+      local tail = require('telescope.utils').path_tail(path)
+      return string.format('%s  %s', tail, path), {
+        { { #tail + 2, #tail + 2 + #path }, 'TelescopeResultsComment' },
+      }
+    end
+    vim.keymap.set("n", "<Leader>ff", function()
+      builtin.find_files({ path_display = find_files_path_display })
+    end, {})
     vim.keymap.set("v", "<Leader>ff", function ()
       local selection = vim.getVisualSelection()
-      builtin.find_files({default_text = selection})
+      builtin.find_files({ path_display = find_files_path_display, default_text = selection })
     end)
     -- Live Grep / Find in Path
     vim.keymap.set("n", "<Leader>fp", builtin.live_grep, {})

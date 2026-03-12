@@ -5,6 +5,7 @@ let mapleader = " " " Set leader to space
 " Save and Quit
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
+nnoremap <Leader>Q :q!<CR>
 
 " ### NAVIGATE ###
 nnoremap <C-f> <C-f>zz

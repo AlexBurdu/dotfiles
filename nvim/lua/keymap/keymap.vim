@@ -51,7 +51,9 @@ nnoremap <Leader>d "_d
 vnoremap <Leader>d "_yd
 
 " Yank file path (relative to cwd) to clipboard
-nnoremap <Leader>yp :let @+=expand('%:.')<CR>
+nnoremap <Leader>yp :lua (function() local oil = package.loaded['oil'] local path if oil and oil.get_current_dir() then local dir = oil.get_current_dir() local entry = oil.get_cursor_entry() if entry and entry.name ~= '..' then path = dir .. entry.name if entry.type == 'directory' then path = path .. '/' end else path = dir end path = vim.fn.fnamemodify(path, ':.') if path == '' then path = vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. '/' end else path = vim.fn.expand('%:.') end vim.fn.setreg('+', path) print('Yanked: ' .. path) end)()<CR>
+" Yank absolute file path to clipboard
+nnoremap <Leader>yP :lua (function() local oil = package.loaded['oil'] local path if oil and oil.get_current_dir() then local dir = oil.get_current_dir() local entry = oil.get_cursor_entry() if entry and entry.name ~= '..' then path = dir .. entry.name if entry.type == 'directory' then path = path .. '/' end else path = dir end else path = vim.fn.expand('%:p') end vim.fn.setreg('+', path) print('Yanked: ' .. path) end)()<CR>
 
 " Yank nearest BUILD.bazel path to clipboard
 if !has('ide')

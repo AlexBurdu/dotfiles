@@ -62,7 +62,8 @@ in each section below.
 |---|---|---|---|---|---|
 | Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` (lists) | `h/j/k/l` |
 | Breadcrumb/navbar | - | `C-t` | `C-t` | `C-t` | - |
-| Create split h/j/k/l | `C-s h/j/k/l` | `Space Space h/j/k/l` | - | - | - |
+| Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | - | - |
+| Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | - | - |
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
 | Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
 | Next tab/buffer | `C-s ]` | `S-l` | `S-l` | - | - |
@@ -271,10 +272,12 @@ go to trash.
 ### Splits
 | Shortcut | Action |
 |---|---|
-| `Space Space h` | Vertical split (left) |
-| `Space Space l` | Vertical split (right) |
-| `Space Space k` | Horizontal split (above) |
-| `Space Space j` | Horizontal split (below) |
+| `Space h` | Vertical split (left) |
+| `Space l` | Vertical split (right) |
+| `Space k` | Horizontal split (above) |
+| `Space j` | Horizontal split (below) |
+| `Space Space h/l` | Resize split narrower/wider (supports count) |
+| `Space Space k/j` | Resize split taller/shorter (supports count) |
 | `C-w H/J/K/L` | Move split directionally (nvim default) |
 
 ### Telescope (Fuzzy Finder)

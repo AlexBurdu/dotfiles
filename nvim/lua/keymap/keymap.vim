@@ -30,10 +30,16 @@ nnoremap <S-l> :bnext<CR>
 " Splits
 " Create splits
 " https://linuxhandbook.com/split-vim-workspace/#resizing-split-windows
-nnoremap <Leader><Leader>h :vsplit<CR>
-nnoremap <Leader><Leader>l :vsplit<CR><C-w>r
-nnoremap <Leader><Leader>k :split<CR>
-nnoremap <Leader><Leader>j :split<CR><C-w>r
+nnoremap <Leader>h :vsplit<CR>
+nnoremap <Leader>l :vsplit<CR><C-w>r
+nnoremap <Leader>k :split<CR>
+nnoremap <Leader>j :split<CR><C-w>r
+
+" Resize splits (prefix with count, e.g. 10<Leader><Leader>k)
+nnoremap <Leader><Leader>h :<C-u>execute 'vertical resize -' . v:count1<CR>
+nnoremap <Leader><Leader>l :<C-u>execute 'vertical resize +' . v:count1<CR>
+nnoremap <Leader><Leader>k :<C-u>execute 'resize +' . v:count1<CR>
+nnoremap <Leader><Leader>j :<C-u>execute 'resize -' . v:count1<CR>
 
 " ### Edit ###
 " Move selected lines while staying in visual mode

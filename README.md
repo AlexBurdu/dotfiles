@@ -88,6 +88,7 @@ in each section below.
 | Action | [Tmux](#ai-agent-management-tmux-pilot) | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) | [VS Code](#vs-code) |
 |---|---|---|---|---|
 | VCS panel | `C-s d` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
+| Blame/annotate | - | `Space vb` | `Space vb` | - |
 | Show hunk diff | - | `Space vd` | `Space vd` | `Space vd` |
 
 ### Completion (Insert Mode)
@@ -311,6 +312,7 @@ no language server is attached.
 | Shortcut | Action |
 |---|---|
 | `Space vs` | Git status |
+| `Space vb` | Git blame |
 | `Space vd` | Show hunk diff (signify) |
 | `Space vn` / `Space vN` | Next/previous change hunk |
 | `Space p` (fugitive) | Git push |

@@ -9,6 +9,9 @@ return {
   config = function()
     vim.keymap.set("n", "<leader>vs", vim.cmd.Git)
     vim.keymap.set("n", "<M-v>", vim.cmd.Git)
+    vim.keymap.set("n", "<leader>vb", function()
+      vim.cmd("Git blame")
+    end, { desc = "Git blame" })
 
     local ThePrimeagen_Fugitive = vim.api.nvim_create_augroup("ThePrimeagen_Fugitive", {})
 

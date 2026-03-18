@@ -181,6 +181,15 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `M-l` | View watchdog log |
 | `Esc` | Close deck |
 
+### Session Persistence ([tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) + [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum))
+| Shortcut | Action |
+|---|---|
+| `C-s S` | Save session (windows, panes, layout, pane contents) |
+| `C-s R` | Restore last saved session |
+
+Sessions auto-restore when tmux starts (continuum). Pane
+contents are captured on save.
+
 ### Misc
 | Shortcut | Action |
 |---|---|

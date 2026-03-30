@@ -152,6 +152,29 @@ class TestListsPreserved(unittest.TestCase):
         text = "1) First\n2) Second"
         self.assertEqual(mdwrap(text, width=80), text)
 
+    def test_continuation_lines_preserved(self):
+        text = "- Item that\n  continues here\n- Second item"
+        self.assertEqual(mdwrap(text, width=80), text)
+
+    def test_nested_continuation_preserved(self):
+        text = "  - Nested item with\n    continuation line"
+        self.assertEqual(mdwrap(text, width=80), text)
+
+    def test_ordered_continuation_preserved(self):
+        text = "1. Ordered item\n   with continuation"
+        self.assertEqual(mdwrap(text, width=80), text)
+
+    def test_prose_after_list_wraps(self):
+        text = (
+            "- Item one\n- Item two\n\n"
+            "This prose after a list should be wrapped properly "
+            "when it exceeds the configured width limit."
+        )
+        result = mdwrap(text, width=60)
+        prose_lines = result.split("\n\n")[1].splitlines()
+        for line in prose_lines:
+            self.assertLessEqual(len(line), 60)
+
 
 class TestBlockquotesPreserved(unittest.TestCase):
     """Blockquotes must pass through unchanged."""
@@ -193,6 +216,40 @@ class TestTrailingNewline(unittest.TestCase):
         text = "Some text."
         result = mdwrap(text, width=80)
         self.assertFalse(result.endswith("\n"))
+
+
+class TestEditorconfig(unittest.TestCase):
+    """Width should be read from .editorconfig when --path is given."""
+
+    def setUp(self):
+        import tempfile
+        self.tmpdir = tempfile.mkdtemp()
+        ec = os.path.join(self.tmpdir, ".editorconfig")
+        with open(ec, "w") as f:
+            f.write("root = true\n\n[*.md]\nmax_line_length = 40\n")
+
+    def tearDown(self):
+        import shutil
+        shutil.rmtree(self.tmpdir)
+
+    def test_reads_width_from_editorconfig(self):
+        width = _mod._editorconfig_width(os.path.join(self.tmpdir, "test.md"))
+        self.assertEqual(width, 40)
+
+    def test_returns_none_without_path(self):
+        self.assertIsNone(_mod._editorconfig_width(None))
+
+    def test_returns_none_when_no_editorconfig(self):
+        import tempfile
+        empty = tempfile.mkdtemp()
+        # Write a root editorconfig with no md section
+        ec = os.path.join(empty, ".editorconfig")
+        with open(ec, "w") as f:
+            f.write("root = true\n")
+        result = _mod._editorconfig_width(os.path.join(empty, "test.md"))
+        import shutil
+        shutil.rmtree(empty)
+        self.assertIsNone(result)
 
 
 if __name__ == "__main__":

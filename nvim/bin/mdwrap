@@ -6,14 +6,22 @@ result to stdout. Tables, code blocks, headings, lists, blockquotes,
 HTML tags, and link references are passed through unchanged.
 
 Usage:
-    cat README.md | mdwrap [-w WIDTH]
+    cat README.md | mdwrap [-w WIDTH] [-p PATH]
     mdwrap -w 72 < README.md
+    mdwrap -p README.md < README.md
 
 Options:
     -w, --wrap WIDTH   Line width for prose wrapping (default: 80)
+    -p, --path PATH    File path for .editorconfig lookup
     -h, --help         Show this help message
+
+When -w is not given, mdwrap reads max_line_length for markdown from
+.editorconfig files found by walking up from -p PATH. Falls back to 80.
 """
 
+import configparser
+import fnmatch
+import os
 import re
 import sys
 import textwrap
@@ -22,15 +30,58 @@ import textwrap
 _STRUCTURAL = re.compile(
     r"^\s*\|"           # table row
     r"|^#{1,6}\s"       # heading
-    r"|^\s*[-*+]\s"     # unordered list item
-    r"|^\s*\d+[.)]\s"   # ordered list item
     r"|^\s*>"           # blockquote
     r"|^<"              # HTML tag
     r"|^\[.*\]:"        # link reference definition
     r"|^\s*$"           # blank line
 )
 
+_LIST_ITEM = re.compile(r"^(\s*)([-*+]|\d+[.)]) ")
 _CODE_FENCE = re.compile(r"^(`{3,}|~{3,})")
+
+
+def _parse_editorconfig(path):
+    """Parse an .editorconfig file, handling the root preamble."""
+    cfg = configparser.ConfigParser()
+    with open(path) as f:
+        content = f.read()
+    # configparser needs a section header; prepend a fake one for the preamble
+    cfg.read_string("[__preamble__]\n" + content, source=path)
+    return cfg
+
+
+def _editorconfig_width(path):
+    """Read max_line_length for markdown from .editorconfig files."""
+    if not path:
+        return None
+    path = os.path.abspath(path)
+    directory = os.path.dirname(path) if os.path.isfile(path) else path
+    while True:
+        ec = os.path.join(directory, ".editorconfig")
+        if os.path.isfile(ec):
+            try:
+                cfg = _parse_editorconfig(ec)
+            except (configparser.Error, OSError):
+                pass
+            else:
+                for section in cfg.sections():
+                    if section == "__preamble__":
+                        continue
+                    if fnmatch.fnmatch("file.md", section) or fnmatch.fnmatch("README.md", section):
+                        val = cfg.get(section, "max_line_length", fallback=None)
+                        if val and val != "off":
+                            try:
+                                return int(val)
+                            except ValueError:
+                                pass
+                is_root = cfg.getboolean("__preamble__", "root", fallback=False)
+                if is_root:
+                    break
+        parent = os.path.dirname(directory)
+        if parent == directory:
+            break
+        directory = parent
+    return None
 
 
 def mdwrap(text, width=80):
@@ -44,6 +95,7 @@ def mdwrap(text, width=80):
     lines = text.split("\n")
     out = []
     in_code = False
+    in_list = False
     prose_buf = []
 
     def flush_prose():
@@ -59,6 +111,7 @@ def mdwrap(text, width=80):
     for line in lines:
         if _CODE_FENCE.match(line):
             flush_prose()
+            in_list = False
             in_code = not in_code
             out.append(line)
             continue
@@ -67,11 +120,35 @@ def mdwrap(text, width=80):
             out.append(line)
             continue
 
-        if _STRUCTURAL.match(line):
+        # Blank line: structural, ends list context
+        if re.match(r"^\s*$", line):
+            flush_prose()
+            in_list = False
+            out.append(line)
+            continue
+
+        # List item
+        if _LIST_ITEM.match(line):
+            flush_prose()
+            in_list = True
+            out.append(line)
+            continue
+
+        # List continuation: indented line while in a list
+        if in_list and line[:1] == " ":
             flush_prose()
             out.append(line)
             continue
 
+        # Other structural elements
+        if _STRUCTURAL.match(line):
+            flush_prose()
+            in_list = False
+            out.append(line)
+            continue
+
+        # Prose
+        in_list = False
         prose_buf.append(line.strip())
 
     flush_prose()
@@ -84,7 +161,8 @@ def mdwrap(text, width=80):
 
 
 def main():
-    width = 80
+    width = None
+    filepath = None
     args = sys.argv[1:]
     i = 0
     while i < len(args):
@@ -95,7 +173,14 @@ def main():
             width = int(args[i + 1])
             i += 2
             continue
+        elif args[i] in ("-p", "--path") and i + 1 < len(args):
+            filepath = args[i + 1]
+            i += 2
+            continue
         i += 1
+
+    if width is None:
+        width = _editorconfig_width(filepath) or 80
 
     sys.stdout.write(mdwrap(sys.stdin.read(), width=width))
 

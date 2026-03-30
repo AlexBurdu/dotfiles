@@ -23,6 +23,7 @@ return {
         },
         mdwrap = {
           command = mdwrap,
+          args = { "--path", "$FILENAME" },
           stdin = true,
         },
       },

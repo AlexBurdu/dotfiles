@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Wrap markdown prose at a given width, leaving structure intact.
 
-Reads markdown from stdin, wraps only prose paragraphs, and writes the
-result to stdout. Tables, code blocks, headings, lists, blockquotes,
-HTML tags, and link references are passed through unchanged.
+Reads markdown from stdin, wraps prose paragraphs, list items, and blockquotes,
+while keeping headings, tables, and code blocks verbatim.
 
 Usage:
     cat README.md | mdwrap [-w WIDTH] [-p PATH]
@@ -26,18 +25,15 @@ import re
 import sys
 import textwrap
 
-# Patterns for lines that are structural (not prose)
-_STRUCTURAL = re.compile(
-    r"^\s*\|"           # table row
-    r"|^#{1,6}\s"       # heading
-    r"|^\s*>"           # blockquote
-    r"|^<"              # HTML tag
-    r"|^\[.*\]:"        # link reference definition
-    r"|^\s*$"           # blank line
-)
-
-_LIST_ITEM = re.compile(r"^(\s*)([-*+]|\d+[.)]) ")
-_CODE_FENCE = re.compile(r"^(`{3,}|~{3,})")
+# Patterns
+_CODE_FENCE = re.compile(r"^(\s*)(`{3,}|~{3,})")
+_HEADING = re.compile(r"^\s{0,3}#{1,6}\s")
+_TABLE = re.compile(r"^\s*\|")
+_LINK_REF = re.compile(r"^\[.*\]:")
+_BLANK = re.compile(r"^\s*$")
+_LIST_ITEM = re.compile(r"^(\s*)([-*+]|\d+[.)])(\s+)")
+_BLOCKQUOTE = re.compile(r"^(\s*(?:> ?)+)")
+_HTML_TAG = re.compile(r"^\s*<")
 
 
 def _parse_editorconfig(path):
@@ -85,76 +81,156 @@ def _editorconfig_width(path):
 
 
 def mdwrap(text, width=80):
-    """Wrap prose paragraphs in markdown text to *width* columns.
+    """Wrap markdown prose, lists, and blockquotes to *width* columns.
 
-    Structural elements (tables, code blocks, headings, lists,
-    blockquotes, HTML, link references) are returned unchanged.
-    Consecutive prose lines are joined and reflowed with
-    ``textwrap.fill``.
+    Structural elements (tables, code blocks, headings, HTML, link references)
+    are returned unchanged.
     """
     lines = text.split("\n")
     out = []
-    in_code = False
-    in_list = False
-    prose_buf = []
 
-    def flush_prose():
-        if not prose_buf:
+    in_code = False
+    code_fence_marker = None
+    code_fence_indent = ""
+
+    buffer = []
+    block_type = None  # 'prose', 'list', 'blockquote'
+
+    # Block specific state
+    list_indent = ""
+    list_marker = ""
+    bq_prefix = ""
+    prose_indent = ""
+
+    def flush():
+        nonlocal buffer, block_type, list_indent, list_marker, bq_prefix, prose_indent
+        if not buffer:
             return
-        joined = " ".join(prose_buf)
-        wrapped = textwrap.fill(
-            joined, width=width, break_long_words=False, break_on_hyphens=False
-        )
-        out.append(wrapped)
-        prose_buf.clear()
+
+        joined_text = " ".join(buffer)
+
+        if block_type == "prose":
+            wrapped = textwrap.fill(
+                joined_text,
+                width=width,
+                initial_indent=prose_indent,
+                subsequent_indent=prose_indent,
+                break_long_words=False,
+                break_on_hyphens=False,
+            )
+            out.append(wrapped)
+        elif block_type == "list":
+            initial = list_indent + list_marker
+            subsequent = " " * len(initial)
+            wrapped = textwrap.fill(
+                joined_text,
+                width=width,
+                initial_indent=initial,
+                subsequent_indent=subsequent,
+                break_long_words=False,
+                break_on_hyphens=False,
+            )
+            out.append(wrapped)
+        elif block_type == "blockquote":
+            wrapped = textwrap.fill(
+                joined_text,
+                width=width,
+                initial_indent=bq_prefix,
+                subsequent_indent=bq_prefix,
+                break_long_words=False,
+                break_on_hyphens=False,
+            )
+            out.append(wrapped)
+
+        buffer = []
+        block_type = None
 
     for line in lines:
-        if _CODE_FENCE.match(line):
-            flush_prose()
-            in_list = False
-            in_code = not in_code
-            out.append(line)
-            continue
-
         if in_code:
+            # Check for closing fence with same indentation
+            if line.strip() == code_fence_marker and line.startswith(code_fence_indent):
+                in_code = False
+                out.append(line)
+            else:
+                out.append(line)
+            continue
+
+        # Code fence start
+        m = _CODE_FENCE.match(line)
+        if m:
+            flush()
+            in_code = True
+            code_fence_indent = m.group(1)
+            code_fence_marker = m.group(2)
             out.append(line)
             continue
 
-        # Blank line: structural, ends list context
-        if re.match(r"^\s*$", line):
-            flush_prose()
-            in_list = False
+        # Structural / Verbatim / Blank
+        if _BLANK.match(line):
+            flush()
             out.append(line)
             continue
 
-        # List item
-        if _LIST_ITEM.match(line):
-            flush_prose()
-            in_list = True
+        if (
+            _HEADING.match(line)
+            or _TABLE.match(line)
+            or _LINK_REF.match(line)
+            or _HTML_TAG.match(line)
+        ):
+            flush()
             out.append(line)
             continue
 
-        # List continuation: indented line while in a list
-        if in_list and line[:1] == " ":
-            flush_prose()
-            out.append(line)
+        # List Item
+        m = _LIST_ITEM.match(line)
+        if m:
+            flush()
+            block_type = "list"
+            list_indent = m.group(1)
+            list_marker = m.group(2) + m.group(3)
+            buffer.append(line[len(list_indent) + len(list_marker) :].strip())
             continue
 
-        # Other structural elements
-        if _STRUCTURAL.match(line):
-            flush_prose()
-            in_list = False
-            out.append(line)
+        # Blockquote
+        m = _BLOCKQUOTE.match(line)
+        if m:
+            new_prefix = m.group(1)
+            content = line[len(new_prefix) :].strip()
+            if not content:
+                flush()
+                out.append(line.rstrip())
+                continue
+
+            if block_type == "blockquote" and new_prefix == bq_prefix:
+                buffer.append(content)
+            else:
+                flush()
+                block_type = "blockquote"
+                bq_prefix = new_prefix
+                buffer.append(content)
             continue
+
+        # Continuation of list?
+        if block_type == "list":
+            threshold = len(list_indent) + len(list_marker)
+            if line.startswith(" " * threshold):
+                buffer.append(line.strip())
+                continue
+            # Else fall through to prose
 
         # Prose
-        in_list = False
-        prose_buf.append(line.strip())
+        if block_type != "prose":
+            flush()
+            block_type = "prose"
+            m_ind = re.match(r"^(\s*)", line)
+            prose_indent = m_ind.group(1)
+            buffer.append(line.strip())
+        else:
+            buffer.append(line.strip())
 
-    flush_prose()
+    flush()
 
     result = "\n".join(out)
-    # Preserve trailing newline when the input had one
     if lines and lines[-1] == "" and not result.endswith("\n"):
         result += "\n"
     return result

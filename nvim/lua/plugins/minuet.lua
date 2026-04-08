@@ -1,8 +1,12 @@
--- AI code completion via Claude, Gemini, Codestral, or Ollama
+-- AI code completion via MLX, Ollama, Claude, Gemini, or Codestral
 -- https://github.com/milanglacier/minuet-ai.nvim
 -- Shows inline ghost text; accept with Tab/C-y/C-h, cycle with C-n/C-p.
 -- Switch providers with :MinuetProvider <name> (persisted across sessions).
 local state_file = vim.fn.stdpath('state') .. '/minuet-provider'
+
+local function mlx_base_url()
+  return os.getenv('MLX_API_BASE')
+end
 
 local function ollama_available()
   local h = io.popen('curl -sf http://localhost:11434/api/tags 2>/dev/null')
@@ -13,6 +17,7 @@ local function ollama_available()
 end
 
 local function default_provider()
+  if mlx_base_url() then return 'mlx' end
   if ollama_available() then return 'ollama' end
   if os.getenv('GEMINI_API_KEY') then return 'gemini' end
   if os.getenv('ANTHROPIC_API_KEY') then return 'claude' end
@@ -44,11 +49,38 @@ local provider_map = {
   claude = 'claude',
   gemini = 'gemini',
   codestral = 'codestral',
+  mlx = 'openai_compatible',
   ollama = 'openai_compatible',
 }
 
 local function resolve_provider(name)
   return provider_map[name] or name
+end
+
+local openai_compatible_presets = {
+  mlx = {
+    api_key = 'TERM',
+    name = 'MLX',
+    end_point = (mlx_base_url() or '') .. '/v1/chat/completions',
+    model = 'mlx-community/gemma-4-26b-a4b-it-4bit',
+    optional = { max_tokens = 256 },
+  },
+  ollama = {
+    api_key = 'TERM',
+    name = 'Ollama',
+    end_point = 'http://localhost:11434/v1/chat/completions',
+    model = 'codegemma:7b',
+    optional = { max_tokens = 256 },
+  },
+}
+
+local function apply_openai_preset(name)
+  local preset = openai_compatible_presets[name]
+  if not preset then return end
+  local cfg = require('minuet').config.provider_options.openai_compatible
+  for k, v in pairs(preset) do
+    cfg[k] = v
+  end
 end
 
 return {
@@ -60,7 +92,7 @@ return {
 
     if not initial then
       vim.api.nvim_create_user_command('MinuetProvider', function(opts)
-        vim.notify('No AI provider available — set an API key or start Ollama', vim.log.levels.WARN)
+        vim.notify('No AI provider available — set an API key or start a local server', vim.log.levels.WARN)
       end, { nargs = 1, complete = function() return vim.tbl_keys(provider_map) end })
       return
     end
@@ -100,27 +132,19 @@ return {
           end_point = 'https://api.mistral.ai/v1/fim/completions',
           stream = false,
         },
-        openai_compatible = {
-          api_key = 'TERM', -- any set env var; ollama needs no auth
-          name = 'Ollama',
-          end_point = 'http://localhost:11434/v1/chat/completions',
-          model = 'codegemma:7b',
-          optional = {
-            max_tokens = 256,
-          },
-        },
+        openai_compatible = openai_compatible_presets[initial] or openai_compatible_presets.ollama,
       },
     })
 
     -- :MinuetProvider <name> — switch and persist
     vim.api.nvim_create_user_command('MinuetProvider', function(opts)
       local name = opts.args
-      local key = resolve_provider(name)
-      if not provider_map[name] and not vim.tbl_contains(vim.tbl_values(provider_map), name) then
+      if not provider_map[name] then
         vim.notify('Unknown provider: ' .. name, vim.log.levels.ERROR)
         return
       end
-      require('minuet').config.provider = key
+      require('minuet').config.provider = resolve_provider(name)
+      apply_openai_preset(name)
       write_provider(name)
       vim.notify('Minuet provider: ' .. name, vim.log.levels.INFO)
     end, {

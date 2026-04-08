@@ -1,0 +1,50 @@
+source ~/alexlibraria/dotfiles/alex.profile
+
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+export PATH=$PATH:/opt/local/bin
+export PATH=$PATH:/opt/homebrew/bin
+export MANPATH=$MANPATH:/opt/local/share/man
+export INFOPATH=$INFOPATH:/opt/local/share/info
+
+# use sdkman
+# use a version bundled in android studio and set it in sdk man using like they say here:
+# https://stackoverflow.com/questions/51140625/customizing-sdk-list-sdk-use-in-sdkman
+
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export FLUTTER_HOME="$HOME/development/flutter"
+
+export PATH="/opt/homebrew/opt/grep/libexec/gnubin:${PATH}"
+export MANPATH="/opt/homebrew/opt/grep/libexec/gnuman:${PATH}"
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+export MANPATH="/opt/homebrew/opt/coreutils/libexec/gnuman:${MANPATH}"
+
+# FIXME: this path parser is temporary while the mc-wrapper fix is not released
+# It will need to be replaced afterwards if no longer pointing to HEAD
+# brew install --HEAD midnight-commander
+# https://midnight-commander.org/ticket/4575
+# https://github.com/MidnightCommander/mc/commit/7a3a763f0ea07a825ca2af4642e31f9e358a9fd0#diff-4ef08c90c9497312f76d4cc2b1d106a6e3f4d32bf1b40dac56543b5d02523912R5
+export MC_PATH=$(brew info midnight-commander | grep -Eo '/opt/homebrew/Cellar/midnight-commander/HEAD-[0-9a-z]+' | head -n 1)
+alias mc-wrapper='source ${MC_PATH}/libexec/mc/mc-wrapper.sh'
+alias mc="COLORTERM=truecolor mc-wrapper --nosubshell"
+
+alias dc='open -a "Double Commander" --args -path $(pwd)'
+
+export CLAUDE_CODE_DISABLE_1M_CONTEXT=1
+
+# MLX / Aider inference (local)
+export MLX_API_BASE=http://localhost:18081
+export OLLAMA_API_BASE=http://localhost:18081
+export OPENAI_API_KEY=not-needed
+export OPENAI_API_BASE=http://localhost:18081/v1
+
+source $HOME/keys/env_variable_passwords.sh
+
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+export BACKUP_ROOT="/Users/alex/Library/CloudStorage/GoogleDrive-alexandru.burdusel@gmail.com/My Drive/Backup"
+
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

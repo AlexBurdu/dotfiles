@@ -63,14 +63,16 @@ local openai_compatible_presets = {
     name = 'MLX',
     end_point = (mlx_base_url() or '') .. '/v1/chat/completions',
     model = 'mlx-community/gemma-4-26b-a4b-it-4bit',
-    optional = { max_tokens = 256 },
+    stream = true,
+    optional = { max_tokens = 100, thinking = { type = 'disabled' } },
   },
   ollama = {
     api_key = 'TERM',
     name = 'Ollama',
     end_point = 'http://localhost:11434/v1/chat/completions',
     model = 'codegemma:7b',
-    optional = { max_tokens = 256 },
+    stream = true,
+    optional = { max_tokens = 100 },
   },
 }
 
@@ -101,7 +103,7 @@ return {
       provider = resolve_provider(initial),
       notify = 'warn',
       request_timeout = 4,
-      n_completions = 1,
+      n_completions = 3,
       virtualtext = {
         auto_trigger_ft = { '*' },
         -- Keymaps set in lsp.lua alongside cmp mappings for context-aware behavior
@@ -113,7 +115,7 @@ return {
       provider_options = {
         claude = {
           model = 'claude-haiku-4-5-20251001',
-          max_tokens = 256,
+          max_tokens = 100,
           api_key = 'ANTHROPIC_API_KEY',
         },
         gemini = {

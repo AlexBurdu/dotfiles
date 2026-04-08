@@ -130,13 +130,13 @@ return {
         ['<C-p>'] = cmp.mapping(function(fallback)
           local vt = require('minuet.virtualtext').action
           if cmp.visible() then cmp.select_prev_item(cmp_select)
-          elseif require('minuet').config then vt.dismiss(); vt.prev()
+          elseif require('minuet').config then vt.prev()
           else fallback() end
         end, { 'i' }),
         ['<C-n>'] = cmp.mapping(function(fallback)
           local vt = require('minuet.virtualtext').action
           if cmp.visible() then cmp.select_next_item(cmp_select)
-          elseif require('minuet').config then vt.dismiss(); vt.next()
+          elseif require('minuet').config then vt.next()
           else fallback() end
         end, { 'i' }),
         ['<C-k>'] = cmp.mapping(function(fallback)

@@ -101,7 +101,7 @@ alt-j = 'move down'
 alt-k = 'move up'
 alt-l = 'move right'
 
-# 
+#
 alt-shift-h = ['join-with left']
 alt-shift-j = ['join-with down']
 alt-shift-k = ['join-with up']
@@ -132,7 +132,7 @@ ctrl-shift-backspace = 'focus-monitor next --wrap-around'
 
 # In your config, you can drop workspace bindings that you don't need
 ctrl-shift-1 = 'workspace 1'
-ctrl-shift-p = 'workspace 1' 
+ctrl-shift-p = 'workspace 1'
 ctrl-shift-2 = 'workspace 2'
 ctrl-shift-o = 'workspace 2'
 ctrl-shift-3 = 'workspace 3'
@@ -263,7 +263,7 @@ run = 'move-node-to-workspace 1' # P
 # run = 'move-node-to-workspace 2' # O
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'Android Studio|Intellij|iTerm|Code|Cider'
+if.app-name-regex-substring = 'Android Studio|Intellij|iTerm|Code|Cider|Ghostty'
 run = 'move-node-to-workspace 3' # I
 
 [[on-window-detected]]

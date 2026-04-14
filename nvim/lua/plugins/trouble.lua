@@ -10,9 +10,9 @@ return {
         icons = true,
       })
 
-      vim.keymap.set("n", "<leader>d", function()
+      vim.keymap.set("n", "<leader>sd", function()
         require("trouble").toggle()
-      end)
+      end, { desc = "Toggle diagnostics (Trouble)" })
 
       vim.keymap.set("n", "[t", function()
         require("trouble").next({skip_groups = true, jump = true});

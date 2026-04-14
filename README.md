@@ -152,7 +152,8 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | Shortcut | Action |
 |---|---|
 | `C-s n` | Enter copy mode |
-| `C-s v` | Open scrollback in nvim (read-only) |
+| `C-s v` | Open nvim in a split pane |
+| `C-s V` | Open scrollback in nvim split (read-only) |
 | `v` | Begin selection (in copy mode) |
 | `y` | Copy to system clipboard (in copy mode) |
 | `C-s p` | Paste from system clipboard |
@@ -255,7 +256,8 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `Space yP` | Yank file/entry absolute path to clipboard |
 | `Space yb` | Yank nearest BUILD.bazel path to clipboard |
 | `Space p` | Paste (without overwriting clipboard) |
-| `Space d` | Delete to void register |
+| `dD` | Delete to void register |
+| `yD` | Yank + delete to void register (visual) |
 
 ### File Explorer (oil.nvim)
 | Shortcut | Action |
@@ -333,8 +335,8 @@ no language server is attached.
 |---|---|
 | `Space sh` | Show hover documentation |
 | `Space se` | Show error/diagnostic description |
+| `Space sd` | Toggle diagnostics list (Trouble) |
 | `Space n` / `Space N` | Next/previous diagnostic |
-| `Space d` | Toggle diagnostics (Trouble) |
 | `[t` / `]t` | Next/previous diagnostic (Trouble) |
 
 ### Completion (Insert Mode)
@@ -352,6 +354,24 @@ LSP popup and Minuet AI ghost text coexist. Keys are context-aware: some act on 
 | `C-e` | Dismiss | - |
 
 LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or on `C-n`/`C-p`. Switch AI provider with `:MinuetProvider <name>` (`claude`, `gemini`, `codestral`, `ollama`).
+
+### Debug (DAP)
+| Shortcut | Action |
+|---|---|
+| `Space da` | Attach debugger (language-aware: Android/Python) |
+| `Space db` | Toggle breakpoint |
+| `Space dB` | Conditional breakpoint |
+| `Space dc` | Continue / start debugging |
+| `Space do` | Step over |
+| `Space di` | Step into |
+| `Space dO` | Step out |
+| `Space df` | Focus current frame (jump to paused line) |
+| `Space dr` | Restart |
+| `Space dx` | Disconnect and close UI |
+| `Space du` | Toggle DAP UI |
+| `Space de` | Evaluate expression (normal/visual) |
+| `Space dl` | Open Android logcat |
+
 
 ### Other
 | Shortcut | Action |

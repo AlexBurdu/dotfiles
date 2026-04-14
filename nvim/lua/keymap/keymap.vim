@@ -54,8 +54,8 @@ vnoremap <Leader>y "+y
 nnoremap <Leader>Y "+Y
 xnoremap <Leader>p "_dP
 vnoremap <Leader>p "_dP
-nnoremap <Leader>d "_d
-vnoremap <Leader>d "_yd
+nnoremap dD "_d
+vnoremap yD "_yd
 
 " Yank file path (relative to cwd) to clipboard
 nnoremap <Leader>yp :lua (function() local oil = package.loaded['oil'] local path if oil and oil.get_current_dir() then local dir = oil.get_current_dir() local entry = oil.get_cursor_entry() if entry and entry.name ~= '..' then path = dir .. entry.name if entry.type == 'directory' then path = path .. '/' end else path = dir end path = vim.fn.fnamemodify(path, ':.') if path == '' then path = vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. '/' end else path = vim.fn.expand('%:.') end vim.fn.setreg('+', path) print('Yanked: ' .. path) end)()<CR>

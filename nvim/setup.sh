@@ -45,6 +45,7 @@ for entry in \
   "$SCRIPT_DIR/lua/color|$CONFIG_DIR/lua/color|Color scheme — sources and configures the active theme" \
   "$SCRIPT_DIR/lua/options|$CONFIG_DIR/lua/options|Editor options — tabs, line numbers, clipboard, filetype mappings" \
   "$SCRIPT_DIR/lua/lazy_nvim.lua|$CONFIG_DIR/lua/lazy_nvim.lua|Lazy.nvim — plugin manager bootstrap and loader" \
+  "$SCRIPT_DIR/lua/util|$CONFIG_DIR/lua/util|Utility modules — repeatable keymaps, shared helpers" \
   "$SCRIPT_DIR/bin|$CONFIG_DIR/bin|Helper scripts — mdwrap (markdown prose formatter)"; do
   IFS='|' read -r src dst desc <<< "$entry"
   if [[ "$all" == "a" ]]; then
@@ -59,6 +60,8 @@ done
 # Plugin descriptions — used for per-file prompts
 plugin_desc() {
   case "$1" in
+    android.lua)          echo "android — Android dev tools (logcat, adb, gradle)" ;;
+    dap.lua)              echo "dap — debugger (DAP) for Kotlin/Android with ADB attach" ;;
     conform.lua)          echo "conform — code formatting via prettier, stylua, shfmt, etc." ;;
     comment.lua)          echo "comment — toggle code comments with Ctrl-/" ;;
     minuet.lua)           echo "minuet — AI completion via Claude/Gemini (minuet-ai.nvim)" ;;

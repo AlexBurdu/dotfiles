@@ -55,6 +55,12 @@ unbindurl ^https://mail.google.com/* --mode=normal a
 unbindurl ^https://mail.google.com/* --mode=normal u
 unbindurl ^https://calendar.google.com/* --mode=normal j
 unbindurl ^https://calendar.google.com/* --mode=normal k
+unbindurl ^https://www.youtube.com/* --mode=normal j # Rewind 10 seconds
+unbindurl ^https://www.youtube.com/* --mode=normal k # play/stop
+unbindurl ^https://www.youtube.com/* --mode=normal l # Fast forward 10 seconds
+unbindurl ^https://www.youtube.com/* --mode=normal m # mute
+unbindurl ^https://www.youtube.com/* --mode=normal > # Increase playback rate
+unbindurl ^https://www.youtube.com/* --mode=normal < # Decrease playback rate
 
 # Whatsapp
 # https://github.com/tridactyl/tridactyl/issues/3070

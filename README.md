@@ -389,8 +389,20 @@ Gradle debug tests inject `-Xdebug` via init script to make coroutine locals ins
 | `Space dr` | Restart debug session |
 | `Space dx` | Disconnect debugger and close UI |
 | `Space du` | Toggle DAP UI |
-| `Space dl` | Open Android logcat |
 
+### Android
+
+Logcat and device selection work outside a Gradle project (falls back to cwd).
+Build/run still require a Gradle workspace.
+
+| Shortcut | Action |
+|---|---|
+| `Space al` | Open Android logcat |
+| `Space am` | Android menu |
+| `Space aa` | Android actions |
+| `Space ab` | Android build |
+| `Space ar` | Android run |
+| `Space ad` | Select adb device |
 
 ### Other
 | Shortcut | Action |

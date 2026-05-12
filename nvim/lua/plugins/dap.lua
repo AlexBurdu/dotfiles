@@ -1,24 +1,23 @@
--- Debug Adapter Protocol support
+-- Debug Adapter Protocol (DAP) configuration.
 --
--- Kotlin/Java (Android):
---   Prerequisites: :MasonInstall kotlin-debug-adapter
---   1. Build & run app in debug mode: ./gradlew installDebug
---   2. Set breakpoints with <Leader>db
---   3. Attach with <Leader>da (prompts for package, handles ADB port forwarding)
+-- Supported languages:
+--   Kotlin/Java — kotlin-debug-adapter (built from fork via lazy.nvim)
+--   Python      — debugpy (pip install debugpy in your project venv)
 --
--- Python:
---   Prerequisites: pip install debugpy (in your project venv)
---   1. Set breakpoints with <Leader>db
---   2. Launch with <Leader>dc (runs current file) or <Leader>da (attach to running process)
---
--- All languages:
---   Step through code: <Leader>do (over), di (into), dO (out)
---   ; repeats the last step command
+-- Workflows:
+--   <Leader>dt/dT  debug test under cursor / all tests (see keymap/build.lua)
+--   <Leader>da      attach to running process (Android via ADB, Python via port)
+--   <Leader>dc      continue (or start debug test if no session)
+--   <Leader>db/dB   toggle / conditional breakpoint
+--   <Leader>do/di/dO step over / into / out (;  repeats last step)
+--   <Leader>dh      eval expression under cursor or selection
+--   <Leader>de      add expression to watches (word or selection)
 return {
   "mfussenegger/nvim-dap",
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "nvim-neotest/nvim-nio",
+    { "AlexBurdu/kotlin-debug-adapter", branch = "custom", build = "./build.sh" },
   },
 
   lazy = false,
@@ -27,8 +26,7 @@ return {
     local dap = require("dap")
     local dapui = require("dapui")
 
-    -- Fix source path resolution for non-standard project layouts
-    -- (reads package declaration from source files instead of deriving from path)
+    -- Fix KDA source path resolution for non-standard layouts (KMP, deep nesting)
     require("util.dap_kotlin_proxy").install_interceptor()
 
     dapui.setup({
@@ -37,18 +35,21 @@ return {
       },
     })
 
-    -- Auto open/close DAP UI
+    vim.fn.sign_define("DapBreakpoint",          { text = "●", texthl = "DiagnosticError" })
+    vim.fn.sign_define("DapBreakpointCondition",  { text = "◆", texthl = "DiagnosticWarn" })
+    vim.fn.sign_define("DapBreakpointRejected",   { text = "○", texthl = "DiagnosticHint" })
+    vim.fn.sign_define("DapStopped",              { text = "▶", texthl = "DiagnosticOk", linehl = "CursorLine", numhl = "DiagnosticOk" })
+    vim.fn.sign_define("DapLogPoint",             { text = "◈", texthl = "DiagnosticInfo" })
+
     dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
     dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
     dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
-    -- Kotlin debug adapter (connects to JVM debug port via ADB)
-    -- Works for both Kotlin and Java (same JDWP protocol)
-    -- Installed via Mason (:MasonInstall kotlin-debug-adapter)
-    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
+    -- ── Kotlin/Java adapter (JDWP) ─────────────────────────────────────────
+    local kda_dir = vim.fn.stdpath("data") .. "/lazy/kotlin-debug-adapter"
     dap.adapters.kotlin = {
       type = "executable",
-      command = mason_bin .. "kotlin-debug-adapter",
+      command = kda_dir .. "/adapter/build/install/adapter/bin/kotlin-debug-adapter",
       options = {
         auto_continue_if_many_stopped = false,
         initialize_timeout_sec = 30,
@@ -56,7 +57,7 @@ return {
       },
     }
 
-    -- Suppress "exited with 130" (SIGINT on disconnect) — expected for kotlin adapter
+    -- Suppress "exited with 130" (SIGINT on disconnect) — expected behavior
     local dap_notify = require("dap.utils").notify
     require("dap.utils").notify = function(msg, level, ...)
       if type(msg) == "string" and msg:match("exited with 130") then return end
@@ -73,11 +74,11 @@ return {
       projectRoot = "${workspaceFolder}",
     }
 
-    -- Register for both Kotlin and Java filetypes
     dap.configurations.kotlin = { android_attach_config }
     dap.configurations.java = { android_attach_config }
 
-    -- Python debug adapter (debugpy)
+    -- ── Python adapter (debugpy) ───────────────────────────────────────────
+
     dap.adapters.python = {
       type = "executable",
       command = "python3",
@@ -102,13 +103,13 @@ return {
       },
     }
 
-    -- Mason package names (nil = not available via Mason)
+    -- ── Prerequisite checks ──────────────────────────────────────────────────
+
     local mason_packages = {
-      ["kotlin-debug-adapter"] = "kotlin-debug-adapter",
+      ["kotlin-debug-adapter"] = nil, -- built from fork via lazy.nvim
       ["debugpy"] = "debugpy",
     }
 
-    -- Fallback install instructions for tools not in Mason
     local is_mac = vim.fn.has("mac") == 1
     local manual_hints = {
       ["adb"] = is_mac
@@ -116,7 +117,6 @@ return {
         or "sudo apt install android-tools-adb",
     }
 
-    -- Install a tool via Mason, then run callback on success
     local function mason_install(tool, on_success)
       local pkg_name = mason_packages[tool]
       local registry = require("mason-registry")
@@ -132,8 +132,6 @@ return {
       end))
     end
 
-    -- Check prerequisites, return true if all present.
-    -- If a Mason-installable tool is missing, prompt to install and retry.
     local function check_tools(tools, on_ready)
       for _, tool in ipairs(tools) do
         local found = vim.fn.executable(tool) == 1
@@ -162,7 +160,8 @@ return {
       return true
     end
 
-    -- Find project root by walking up from the current buffer
+    -- ── Android attach flow ──────────────────────────────────────────────────
+
     local function find_project_root()
       local markers = { "settings.gradle.kts", "settings.gradle", "gradlew", ".git" }
       local path = vim.fn.expand("%:p:h")
@@ -178,8 +177,7 @@ return {
       return vim.fn.getcwd()
     end
 
-    -- Detect Android app package names (async)
-    -- Searches both gradle applicationId and manifests with LAUNCHER activity
+    -- Detect Android package names: gradle applicationId + LAUNCHER manifests.
     local function detect_packages(callback)
       local found = {}
       local seen = {}
@@ -236,11 +234,10 @@ return {
       )
     end
 
-    -- Attach: language-aware, checks prerequisites per filetype
     local recent_packages = {}
 
     local function do_attach_kotlin(package)
-      -- Update recents (move to front, deduplicate)
+      -- Move to front of recents
       for i, p in ipairs(recent_packages) do
         if p == package then table.remove(recent_packages, i) break end
       end
@@ -252,7 +249,6 @@ return {
         lsp_client = { name = "dap" },
       })
 
-      -- Run all ADB commands async to never block the UI
       vim.fn.jobstart({ "adb", "forward", "--remove-all" }, {
         on_exit = function()
           vim.fn.jobstart({ "adb", "shell", "pidof", package }, {
@@ -269,7 +265,6 @@ return {
 
               vim.fn.jobstart({ "adb", "forward", "tcp:5005", "jdwp:" .. pid }, {
                 on_exit = function()
-                  -- Wait for JDWP tunnel to stabilize, then attach
                   vim.defer_fn(function()
                     handle:finish()
                     vim.notify("Forwarding port 5005 → JDWP pid " .. pid)
@@ -380,13 +375,23 @@ return {
       end
     end
 
-    -- Keymaps (Leader+d prefix for debug)
+    -- ── Keymaps ─────────────────────────────────────────────────────────────
+
     vim.keymap.set("n", "<Leader>da", smart_attach, { desc = "Attach debugger (language-aware)" })
     vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
     vim.keymap.set("n", "<Leader>dB", function()
       dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
     end, { desc = "Conditional breakpoint" })
-    vim.keymap.set("n", "<Leader>dc", dap.continue, { desc = "Continue / start debugging" })
+    vim.keymap.set("n", "<Leader>dc", function()
+      if dap.session() then
+        dap.continue()
+      else
+        -- No active session — launch debug test (same as <Leader>dt)
+        -- Re-uses the build keybinding which handles detection + overseer + DAP attach
+        local keys = vim.api.nvim_replace_termcodes("<Leader>dt", true, false, true)
+        vim.api.nvim_feedkeys(keys, "m", false)
+      end
+    end, { desc = "Continue / start debugging" })
     vim.keymap.set("n", "<Leader>do", dap.step_over, { desc = "Step over" })
     vim.keymap.set("n", "<Leader>di", dap.step_into, { desc = "Step into" })
     vim.keymap.set("n", "<Leader>dO", dap.step_out, { desc = "Step out" })
@@ -397,7 +402,21 @@ return {
       dapui.close()
     end, { desc = "Disconnect and close UI" })
     vim.keymap.set("n", "<Leader>du", dapui.toggle, { desc = "Toggle DAP UI" })
-    vim.keymap.set("n", "<Leader>de", dapui.eval, { desc = "Evaluate expression" })
-    vim.keymap.set("v", "<Leader>de", dapui.eval, { desc = "Evaluate selection" })
+    vim.keymap.set({ "n", "v" }, "<Leader>dh", function() dapui.eval() end, { desc = "Eval under cursor (repeat to focus)" })
+    vim.keymap.set("n", "<Leader>de", function()
+      local expr = vim.fn.expand("<cword>")
+      if expr ~= "" then
+        dapui.elements.watches.add(expr)
+      end
+    end, { desc = "Add word to watches" })
+    vim.keymap.set("v", "<Leader>de", function()
+      local start = vim.fn.getpos("v")
+      local finish = vim.fn.getpos(".")
+      local lines = vim.fn.getregion(start, finish)
+      local expr = table.concat(lines, "\n")
+      if expr ~= "" then
+        dapui.elements.watches.add(expr)
+      end
+    end, { desc = "Add selection to watches" })
   end,
 }

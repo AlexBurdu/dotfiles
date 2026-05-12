@@ -1,0 +1,34 @@
+// Gradle init script injected by nvim for debug test runs.
+//
+// Two things happen here:
+//   1. KotlinCompile tasks get -Xdebug (compiler flag) — disables coroutine
+//      variable spilling (nullOutSpilledVariable) so locals stay inspectable
+//      across suspend points.
+//   2. Test tasks get JDWP jvmArgs with suspend=y — makes the forked test JVM
+//      bind on port 5005 and wait until nvim's DAP attaches before running
+//      tests.
+//
+// We hook via gradle.taskGraph.beforeTask instead of afterEvaluate +
+// configureEach because the Kotlin Multiplatform plugin can overwrite
+// jvmArgs in its own afterEvaluate hook (running after ours), which would
+// silently drop our JDWP flags. beforeTask fires immediately before the
+// task executes, after all plugin configuration is finalized.
+allprojects {
+    afterEvaluate {
+        tasks.matching { task ->
+            task.class.name.contains("KotlinCompile")
+        }.configureEach {
+            compilerOptions.freeCompilerArgs.add("-Xdebug")
+        }
+    }
+}
+
+gradle.taskGraph.beforeTask { task ->
+    if (task instanceof org.gradle.api.tasks.testing.Test) {
+        task.jvmArgs += "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+        // One fork at a time, otherwise multiple JVMs fight over port 5005.
+        task.maxParallelForks = 1
+        task.forkEvery = 0
+        logger.lifecycle "[nvim-dap] JDWP suspend=y on :5005 attached to ${task.path} (${task.class.name})"
+    }
+}

@@ -1,53 +1,44 @@
--- DAP proxy for kotlin-debug-adapter that fixes source path resolution.
+-- DAP proxy for kotlin-debug-adapter (KDA) source path resolution.
 --
--- The kotlin-debug-adapter derives JVM class names from file paths by looking
--- for a "kotlin" or "java" directory segment and using everything after it as
--- the package. This breaks with non-standard project layouts where extra
--- directories (e.g. module names, source sets like "commonMain") appear in the
--- path between the language root and the source file.
+-- Problem: KDA derives JVM class names from file paths by looking for a
+-- "kotlin" or "java" segment and using everything after it as the package.
+-- This breaks in non-standard layouts (KMP, deep module nesting) where extra
+-- directories appear between the language root and the source file.
 --
--- This proxy reads the actual `package` declaration from Kotlin/Java source
--- files and rewrites the path in setBreakpoints requests so the adapter
--- resolves the correct JVM class name.
+-- Solution: Two-way path fixup:
+--   1. setBreakpoints → rewrite paths using the actual `package` declaration
+--      so KDA resolves the correct JVM class.
+--   2. stackTrace responses → resolve source names back to real file paths
+--      so nvim can open the files when stepping through code.
 
 local M = {}
 
---- Read the package declaration from a source file.
---- Returns the package string or nil if not found.
 local function read_package(path)
   local f = io.open(path, "r")
   if not f then return nil end
   for line in f:lines() do
     local pkg = line:match("^%s*package%s+([%w%.]+)")
-    if pkg then
-      f:close()
-      return pkg
-    end
-    -- Stop after first 30 lines to avoid scanning entire file
-    -- (package must be near the top)
+    if pkg then f:close(); return pkg end
   end
   f:close()
   return nil
 end
 
---- Build a synthetic path that toJVMClassNames will parse correctly.
---- Given package "a.b.c" and filename "Foo.kt", produces:
----   /synthetic/kotlin/a/b/c/Foo.kt
+-- Build a path KDA's toJVMClassNames will parse correctly:
+-- "a.b.c" + "Foo.kt" → "/synthetic/kotlin/a/b/c/Foo.kt"
 local function make_synthetic_path(pkg, filename)
   local pkg_path = pkg:gsub("%.", "/")
   return "/synthetic/kotlin/" .. pkg_path .. "/" .. filename
 end
 
---- Rewrite source paths in a setBreakpoints request body.
+-- Rewrite source path in setBreakpoints so KDA maps to the right JVM class.
+-- No-op if the path already ends with /kotlin/{package}/{file}.
 local function rewrite_request(body)
   local source = body and body.source
   if not source or not source.path then return body end
 
   local path = source.path
-  -- Only rewrite Kotlin and Java files
-  if not (path:match("%.kt$") or path:match("%.java$")) then
-    return body
-  end
+  if not (path:match("%.kt$") or path:match("%.java$")) then return body end
 
   local pkg = read_package(path)
   if not pkg then return body end
@@ -55,21 +46,13 @@ local function rewrite_request(body)
   local filename = path:match("([^/]+)$")
   if not filename then return body end
 
-  -- Check if the path already matches the package structure
-  local pkg_as_path = pkg:gsub("%.", "/")
-  -- Pattern: /kotlin/{pkg_path}/{filename} with nothing extra between
-  local expected_suffix = "/kotlin/" .. pkg_as_path .. "/" .. filename
-  if path:sub(-#expected_suffix) == expected_suffix then
-    return body -- path already correct, no rewrite needed
-  end
+  local expected_suffix = "/kotlin/" .. pkg:gsub("%.", "/") .. "/" .. filename
+  if path:sub(-#expected_suffix) == expected_suffix then return body end
 
-  local synthetic = make_synthetic_path(pkg, filename)
-  source.path = synthetic
+  source.path = make_synthetic_path(pkg, filename)
   return body
 end
 
---- Create an adapter config that wraps kotlin-debug-adapter with path rewriting.
---- Uses nvim-dap's "server" adapter type with a pipe to the real adapter process.
 function M.make_adapter(real_command, opts)
   local options = opts or {}
   return {
@@ -84,20 +67,16 @@ function M.make_adapter(real_command, opts)
   }
 end
 
---- Build a lookup of source file name → real file path from open buffers and
---- recently used breakpoint files.
+-- filename → real path cache for stackTrace source resolution
 local path_cache = {}
 
 local function cache_real_path(path)
   if not path then return end
   local filename = path:match("([^/]+)$")
-  if filename then
-    path_cache[filename] = path
-  end
+  if filename then path_cache[filename] = path end
 end
 
---- Try to find the real file path for a source name.
---- Checks the cache first, then searches open buffers.
+-- Resolve a source filename to a real path: cache → buffers → fd/find.
 local function resolve_real_path(source_name)
   if not source_name then return nil end
 
@@ -116,10 +95,35 @@ local function resolve_real_path(source_name)
     end
   end
 
+  -- Fallback: fd/find. Pass arguments as a list (no shell) so a source name
+  -- containing shell metacharacters or regex/glob metas can't be misinterpreted.
+  -- fd's --fixed-strings forces literal matching; find's -name uses glob, which
+  -- treats * and ? specially — JVM source names shouldn't contain them, but if
+  -- they do the search just won't match (no security impact).
+  local cwd = vim.fn.getcwd()
+  local argv
+  if vim.fn.executable("fd") == 1 then
+    argv = { "fd", "--type", "f", "--fixed-strings",
+             "--exclude", "build", "--exclude", ".gradle", "--exclude", "bazel-*",
+             "--max-results", "1", source_name, cwd }
+  else
+    argv = { "find", cwd, "-name", source_name,
+             "-not", "-path", "*/build/*",
+             "-not", "-path", "*/.gradle/*",
+             "-not", "-path", "*/bazel-*/*",
+             "-print", "-quit" }
+  end
+  local lines = vim.fn.systemlist(argv)
+  local result = lines and lines[1] and lines[1]:gsub("%s+$", "") or ""
+  if result ~= "" and vim.fn.filereadable(result) == 1 then
+    path_cache[source_name] = result
+    return result
+  end
+
   return nil
 end
 
---- Fix source paths in a stackTrace response so nvim-dap can open the files.
+-- Replace missing/synthetic source paths with real paths in stack frames.
 local function fix_stack_frame_sources(response)
   if not response or not response.stackFrames then return end
   for _, frame in ipairs(response.stackFrames) do
@@ -127,7 +131,7 @@ local function fix_stack_frame_sources(response)
     if source then
       -- If the source has no path or has a synthetic/missing path, try to resolve
       local name = source.name
-      if name and (not source.path or source.path == "" or not vim.fn.filereadable(source.path) == 1) then
+      if name and (not source.path or source.path == "" or vim.fn.filereadable(source.path) ~= 1) then
         local real = resolve_real_path(name)
         if real then
           source.path = real
@@ -137,36 +141,35 @@ local function fix_stack_frame_sources(response)
   end
 end
 
---- Install a request interceptor on the DAP session that rewrites setBreakpoints paths.
+-- Install request/response interceptors on DAP sessions for path fixup.
+-- Hooks into event_initialized (before set_breakpoints is called).
 function M.install_interceptor()
   local dap = require("dap")
 
-  -- Must use before.event_initialized because event_initialized calls
-  -- set_breakpoints directly inside the handler
   dap.listeners.before["event_initialized"]["kotlin_path_fix"] = function(session)
     if session.config.type ~= "kotlin" then return end
     if session._kotlin_path_fix then return end
     session._kotlin_path_fix = true
 
-    -- rawget bypasses metatable to get the instance method (if set) or nil
-    -- Session:request is defined on the metatable, so we call it via the
-    -- original metatable lookup
+    -- Session:request lives on the metatable; grab it before overriding
     local Session = getmetatable(session).__index
     local orig = Session.request
 
-    -- Override on the instance so it takes precedence over the metatable
+    -- Pre-cache buffer paths for stack frame resolution
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(buf) then
+        cache_real_path(vim.api.nvim_buf_get_name(buf))
+      end
+    end
+
     session.request = function(self, command, arguments, callback)
       if command == "setBreakpoints" then
-        -- Cache the real path before rewriting
         local source = arguments and arguments.source
-        if source and source.path then
-          cache_real_path(source.path)
-        end
+        if source and source.path then cache_real_path(source.path) end
         arguments = rewrite_request(vim.deepcopy(arguments))
       end
 
-      -- Wrap stackTrace to catch adapter errors (IncompatibleThreadStateException)
-      -- and return an empty result instead of propagating the error
+      -- stackTrace: fix source paths + swallow IncompatibleThreadStateException
       if command == "stackTrace" then
         local orig_cb = callback
         if orig_cb then
@@ -175,6 +178,7 @@ function M.install_interceptor()
               orig_cb(nil, { stackFrames = {}, totalFrames = 0 })
               return
             end
+            fix_stack_frame_sources(response)
             orig_cb(err, response)
           end)
         else
@@ -183,6 +187,7 @@ function M.install_interceptor()
           if err then
             return nil, { stackFrames = {}, totalFrames = 0 }
           end
+          fix_stack_frame_sources(response)
           return err, response
         end
       end
@@ -191,17 +196,12 @@ function M.install_interceptor()
     end
   end
 
-  -- Fix source paths in stackTrace responses so nvim can open the files
+  -- Also fix paths via the listener (covers cases not going through our override)
   dap.listeners.before["stackTrace"]["kotlin_path_fix"] = function(session, err, response)
     if err then return end
     if session.config.type ~= "kotlin" then return end
     fix_stack_frame_sources(response)
   end
 end
-
--- Expose for testing
-M._read_package = read_package
-M._make_synthetic_path = make_synthetic_path
-M._rewrite_request = rewrite_request
 
 return M

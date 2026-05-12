@@ -368,20 +368,27 @@ LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or o
 | `gd`/`gf` (gradle.kts) | Go to source file quoted on current line |
 
 ### Debug (DAP)
+
+Supported: Kotlin/Java (Android via ADB, tests via JDWP), Python (debugpy).
+Gradle debug tests inject `-Xdebug` via init script to make coroutine locals inspectable.
+
 | Shortcut | Action |
 |---|---|
-| `Space da` | Attach debugger (language-aware: Android/Python) |
+| `Space dt` | Debug test under cursor (same targeting as `bt`) |
+| `Space dT` | Debug all tests (same targeting as `bT`) |
+| `Space da` | Attach to running process (Android: ADB package picker, Python: port) |
 | `Space db` | Toggle breakpoint |
-| `Space dB` | Conditional breakpoint |
-| `Space dc` | Continue / start debugging |
+| `Space dB` | Set conditional breakpoint (prompts for expression) |
+| `Space dc` | Continue (or start debug test if no active session) |
 | `Space do` | Step over |
 | `Space di` | Step into |
 | `Space dO` | Step out |
 | `Space df` | Focus current frame (jump to paused line) |
-| `Space dr` | Restart |
-| `Space dx` | Disconnect and close UI |
+| `Space dh` | Eval expression under cursor or visual selection (repeat to focus float) |
+| `Space de` | Add to watches (normal: word under cursor, visual: selection) |
+| `Space dr` | Restart debug session |
+| `Space dx` | Disconnect debugger and close UI |
 | `Space du` | Toggle DAP UI |
-| `Space de` | Evaluate expression (normal/visual) |
 | `Space dl` | Open Android logcat |
 
 

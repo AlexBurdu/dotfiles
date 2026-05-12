@@ -54,6 +54,10 @@ return {
           }
         end,
 
+        -- Suppress auto-start: JetBrains kotlin_lsp is registered manually as
+        -- kotlin_lsp_jb with autostart=false, started on demand via <leader>bJ
+        kotlin_lsp = function() end,
+
         zls = function()
           local lspconfig = require("lspconfig")
           lspconfig.zls.setup({
@@ -85,6 +89,43 @@ return {
         end,
       }
     })
+
+    -- Hessesian/kotlin-lsp: fast Rust-based LSP (no JVM), replaces JetBrains kotlin_lsp
+    local configs = require('lspconfig.configs')
+    configs.kotlin_lsp = {
+      default_config = {
+        cmd       = { vim.fn.expand('~/.cargo/bin/kotlin-lsp') },
+        filetypes = { 'kotlin', 'java', 'swift' },
+        root_dir  = require('lspconfig').util.root_pattern(
+          'build.gradle', 'build.gradle.kts', 'pom.xml', 'settings.gradle', 'Package.swift', '.git'
+        ),
+        settings  = {},
+      },
+    }
+    require('lspconfig').kotlin_lsp.setup { capabilities = capabilities }
+
+    -- JetBrains kotlin_lsp: full type-checking, started on demand via <leader>lJ
+    local lspconfig = require('lspconfig')
+    configs.kotlin_lsp_jb = {
+      default_config = {
+        cmd       = { vim.fn.stdpath('data') .. '/mason/bin/kotlin-lsp' },
+        filetypes = { 'kotlin', 'java' },
+        root_dir  = lspconfig.util.root_pattern(
+          'build.gradle', 'build.gradle.kts', 'pom.xml', 'settings.gradle', '.git'
+        ),
+        settings  = {},
+      },
+    }
+    lspconfig.kotlin_lsp_jb.setup {
+      capabilities = capabilities,
+      autostart    = false,
+      -- Record exit time so ensure_jetbrains_lsp() won't immediately restart
+      -- while the JVM process is still holding its TCP port.
+      on_exit = function(_, _, _)
+        -- Expose via a global so keymap/build.lua can read it without a shared module.
+        vim.g._kotlin_lsp_jb_exited_at = vim.uv.now()
+      end,
+    }
 
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 

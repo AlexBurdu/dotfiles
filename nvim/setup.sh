@@ -46,6 +46,7 @@ for entry in \
   "$SCRIPT_DIR/lua/options|$CONFIG_DIR/lua/options|Editor options — tabs, line numbers, clipboard, filetype mappings" \
   "$SCRIPT_DIR/lua/lazy_nvim.lua|$CONFIG_DIR/lua/lazy_nvim.lua|Lazy.nvim — plugin manager bootstrap and loader" \
   "$SCRIPT_DIR/lua/util|$CONFIG_DIR/lua/util|Utility modules — repeatable keymaps, shared helpers" \
+  "$SCRIPT_DIR/lua/overseer|$CONFIG_DIR/lua/overseer|Overseer templates — Bazel and Gradle task generators" \
   "$SCRIPT_DIR/bin|$CONFIG_DIR/bin|Helper scripts — mdwrap (markdown prose formatter)"; do
   IFS='|' read -r src dst desc <<< "$entry"
   if [[ "$all" == "a" ]]; then

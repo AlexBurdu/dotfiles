@@ -355,6 +355,18 @@ LSP popup and Minuet AI ghost text coexist. Keys are context-aware: some act on 
 
 LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or on `C-n`/`C-p`. Switch AI provider with `:MinuetProvider <name>` (`claude`, `gemini`, `codestral`, `ollama`).
 
+### Build & Test (Bazel/Gradle auto-detect)
+| Shortcut | Action |
+|---|---|
+| `Space bb` | Build project |
+| `Space bt` | Test under cursor (source file: method, BUILD/gradle.kts: source file on current line) |
+| `Space bT` | All tests (source file: class, BUILD: all test targets, gradle.kts: all) |
+| `Space br` | Rerun last build task |
+| `Space bl` | Toggle build task list (Overseer) |
+| `Space gb` | Go to owning BUILD file |
+| `Space bJ` | Toggle JetBrains Kotlin LSP |
+| `gd`/`gf` (gradle.kts) | Go to source file quoted on current line |
+
 ### Debug (DAP)
 | Shortcut | Action |
 |---|---|

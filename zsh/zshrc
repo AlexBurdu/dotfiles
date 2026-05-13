@@ -99,6 +99,19 @@ v() {
     nvim "$@"
   fi
 }
+unalias mc 2>/dev/null
+# cwd to the last mc directory when exiting back to shell
+mc() {
+  local tmp="$(mktemp -t mc.XXXXXX)"
+  command mc -P "$tmp" "$@"
+  if [ -s "$tmp" ]; then
+    local mc_pwd="$(cat "$tmp")"
+    if [ -d "$mc_pwd" ]; then
+      cd "$mc_pwd"
+    fi
+  fi
+  rm -f "$tmp"
+}
 alias m='mc'
 
 # autosuggestions bindings
@@ -131,4 +144,5 @@ fi
 # zoxide - smarter cd command (tracks frequently used directories)
 eval "$(zoxide init zsh)"
 
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+

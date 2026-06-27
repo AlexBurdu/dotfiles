@@ -25,7 +25,9 @@ export MANPATH="/opt/homebrew/opt/coreutils/libexec/gnuman:${MANPATH}"
 # brew install --HEAD midnight-commander
 # https://midnight-commander.org/ticket/4575
 # https://github.com/MidnightCommander/mc/commit/7a3a763f0ea07a825ca2af4642e31f9e358a9fd0#diff-4ef08c90c9497312f76d4cc2b1d106a6e3f4d32bf1b40dac56543b5d02523912R5
-export MC_PATH=$(brew info midnight-commander | grep -Eo '/opt/homebrew/Cellar/midnight-commander/HEAD-[0-9a-z]+' | head -n 1)
+# Ask brew for the linked keg's prefix instead of scraping the
+# `brew info` display text (its format changed and broke the old regex).
+export MC_PATH=$(brew --prefix midnight-commander 2>/dev/null)
 alias mc-wrapper='source ${MC_PATH}/libexec/mc/mc-wrapper.sh'
 alias mc="COLORTERM=truecolor mc-wrapper --nosubshell"
 

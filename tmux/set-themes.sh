@@ -162,14 +162,17 @@ fi
 # Clear stale session-level overrides (from older configs that lacked -g)
 tmux set -su message-style 2>/dev/null
 tmux set -su message-command-style 2>/dev/null
+# "fill" makes prompts/messages repaint the whole status row (tmux >= 3.8
+# overlays them on the status line instead of replacing it; without fill the
+# session chip shows through under the prompt)
 if is_dark_mode; then
-  tmux set -g message-style "fg=#000000,bg=#89b4fa"
-  tmux set -g message-command-style "fg=white,bg=#313244"
+  tmux set -g message-style "fg=#000000,bg=#89b4fa,fill=#89b4fa"
+  tmux set -g message-command-style "fg=white,bg=#313244,fill=#313244"
   tmux set -g popup-style "bg=#000000,fg=#cdd6f4"
   tmux set -g popup-border-style "fg=#45475a"
 else
-  tmux set -g message-style "fg=black,bg=#B0C9ED"
-  tmux set -g message-command-style "fg=black,bg=#ccd0da"
+  tmux set -g message-style "fg=black,bg=#B0C9ED,fill=#B0C9ED"
+  tmux set -g message-command-style "fg=black,bg=#ccd0da,fill=#ccd0da"
   tmux set -g popup-style "bg=#eff1f5,fg=#4c4f69"
   tmux set -g popup-border-style "fg=#9ca0b0"
 fi

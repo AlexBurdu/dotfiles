@@ -12,12 +12,22 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- Plugin specs. `plugins/local` is a machine-local, gitignored
+-- overlay: specs placed there load like any other but are never
+-- committed. The import is added only when the directory exists,
+-- so fresh checkouts work with no extra setup.
+local spec = {
+  -- import your plugins
+  { import = "plugins" },
+}
+local local_overlay = vim.fn.stdpath("config") .. "/lua/plugins/local"
+if (vim.uv or vim.loop).fs_stat(local_overlay) then
+  table.insert(spec, { import = "plugins.local" })
+end
+
 -- Setup lazy.nvim
 require("lazy").setup({
-  spec = {
-    -- import your plugins
-    { import = "plugins" },
-  },
+  spec = spec,
   change_detection = {
     -- automatically check for config file changes and reload the ui
     enabled = true,

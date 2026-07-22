@@ -8,3 +8,6 @@ mc/panels.ini
 # Neovim
 nvim/lazy-lock.json
 __pycache__/
+
+# Machine-local nvim plugin overlay (never committed)
+nvim/lua/plugins/local/

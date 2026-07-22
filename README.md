@@ -131,6 +131,7 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `C-s Enter` | Switch to last window |
 | `C-s \` | Switch to last session |
 | `C-\` | Switch to last session (no prefix) |
+| `C-s g` | Go to session by name (creates it if missing) |
 
 ### Pane Navigation (vim-aware, no prefix needed)
 | Shortcut | Action |

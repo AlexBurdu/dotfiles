@@ -238,6 +238,7 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `Space cD` | CriticMarkup: delete (no comment) |
 | `Space cs` | CriticMarkup: substitute + comment |
 | `Space cS` | CriticMarkup: substitute (no comment) |
+| `Space cy` | CriticMarkup: harvest annotations |
 
 ### Clipboard
 | Shortcut | Action |

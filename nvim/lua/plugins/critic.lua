@@ -11,6 +11,7 @@ return {
     { '<Leader>cD', desc = 'CriticMarkup: delete' },
     { '<Leader>cs', desc = 'CriticMarkup: substitute + comment' },
     { '<Leader>cS', desc = 'CriticMarkup: substitute' },
+    { '<Leader>cy', desc = 'CriticMarkup: harvest annotations' },
   },
   config = function()
     require('critic').setup({

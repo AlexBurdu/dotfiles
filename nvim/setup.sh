@@ -66,6 +66,7 @@ plugin_desc() {
     conform.lua)          echo "conform — code formatting via prettier, stylua, shfmt, etc." ;;
     comment.lua)          echo "comment — toggle code comments with Ctrl-/" ;;
     minuet.lua)           echo "minuet — AI completion via Claude/Gemini (minuet-ai.nvim)" ;;
+    designate.lua)        echo "designate — out-of-band code review annotations (nothing written into the buffer)" ;;
     dropbar.lua)          echo "dropbar — breadcrumb navigation bar showing code context" ;;
     fugitive.lua)         echo "fugitive — Git integration (status, diff, blame)" ;;
     lawrencium.lua)       echo "lawrencium — Mercurial (hg) integration (status, diff, log)" ;;

@@ -67,8 +67,8 @@ if !has('ide')
   nnoremap <Leader>yb :lua (function() local dir = vim.fn.expand('%:p:h') while dir ~= '/' do for _, name in ipairs({'BUILD.bazel', 'BUILD'}) do local path = dir .. '/' .. name if vim.fn.filereadable(path) == 1 then local rel = vim.fn.fnamemodify(path, ':.' ) vim.fn.setreg('+', rel) print('Yanked: ' .. rel) return end end dir = vim.fn.fnamemodify(dir, ':h') end print('No BUILD file found') end)()<CR>
 endif
 
-" Replace the word under cursor
-nnoremap <Leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
+" Replace the word under cursor, in this file (<Leader>fr replaces across the project)
+nnoremap <Leader>sr :%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
 
 " ### FORMAT ###
 " Format the entire file

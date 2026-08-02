@@ -6,21 +6,22 @@ return {
   event = 'VeryLazy',
   cmd = { 'DesignateReview', 'DesignatePanel', 'DesignateHarvest', 'DesignateClear' },
   keys = {
-    { '<Leader>Rc', mode = { 'n', 'v' }, desc = 'Designate: comment' },
-    { '<Leader>Rh', mode = { 'n', 'v' }, desc = 'Designate: highlight' },
-    { '<Leader>Ri', mode = { 'n', 'v' }, desc = 'Designate: propose insertion' },
-    { '<Leader>Rd', mode = { 'n', 'v' }, desc = 'Designate: propose deletion' },
-    { '<Leader>Rs', mode = { 'n', 'v' }, desc = 'Designate: propose substitution' },
-    { '<Leader>Re', desc = 'Designate: edit annotation' },
-    { '<Leader>Rx', desc = 'Designate: remove annotation' },
-    { '<Leader>Rl', desc = 'Designate: toggle panel' },
-    { '<Leader>Ry', desc = 'Designate: harvest annotations' },
+    { '<Leader>rc', mode = { 'n', 'v' }, desc = 'Designate: comment' },
+    { '<Leader>rh', mode = { 'n', 'v' }, desc = 'Designate: highlight' },
+    { '<Leader>ri', mode = { 'n', 'v' }, desc = 'Designate: propose insertion' },
+    { '<Leader>rd', mode = { 'n', 'v' }, desc = 'Designate: propose deletion' },
+    { '<Leader>rs', mode = { 'n', 'v' }, desc = 'Designate: propose substitution' },
+    { '<Leader>re', desc = 'Designate: edit annotation' },
+    { '<Leader>rx', desc = 'Designate: remove annotation' },
+    { '<Leader>rl', desc = 'Designate: toggle panel' },
+    { '<Leader>ry', desc = 'Designate: harvest annotations' },
   },
   config = function()
     require('designate').setup({
-      -- Capital R: <Leader>r is the word-rename mapping in keymap.vim, and a
-      -- shared prefix would make both of them wait on timeoutlen.
-      prefix = '<Leader>R',
+      -- The word-rename mapping that used to sit on <Leader>r moved to
+      -- <Leader>sr: a terminal mapping sharing a prefix with these would have
+      -- made every rename wait out timeoutlen first.
+      prefix = '<Leader>r',
     })
   end,
 }

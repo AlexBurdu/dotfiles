@@ -225,7 +225,7 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `ds{char}` | Delete surround (e.g. `ds(`) |
 | `S{char}` | Surround visual selection |
 | `J` / `K` (visual) | Move selected lines down/up |
-| `Space r` | Replace word under cursor |
+| `Space sr` | Replace word under cursor |
 | `Space Space f` | Format entire file |
 | `<` / `>` (visual) | Indent and keep selection |
 | `C-n` | Clear search highlighting |
@@ -239,6 +239,38 @@ File Explorer: [oil.nvim](./nvim/lua/plugins/oil.lua)
 | `Space cs` | CriticMarkup: substitute + comment |
 | `Space cS` | CriticMarkup: substitute (no comment) |
 | `Space cy` | CriticMarkup: harvest annotations |
+
+### Review Annotations ([designate.nvim](https://github.com/AlexBurdu/designate.nvim))
+
+Review comments held out-of-band: anchored to extmarks, never written into the
+buffer, so annotated source still compiles and `git diff` stays empty. The
+`Space c*` CriticMarkup keys above do the same job for prose, by writing markup
+into the text.
+
+| Shortcut | Action |
+|---|---|
+| `Space rc` | Comment on the line or selection |
+| `Space rh` | Highlight |
+| `Space ri` | Propose an insertion |
+| `Space rd` | Propose a deletion |
+| `Space rs` | Propose a substitution |
+| `Space re` | Edit the annotation under the cursor |
+| `Space rx` | Remove the annotation under the cursor |
+| `Space rl` | Toggle the annotation panel |
+| `Space ry` | Harvest annotations (clipboard by default) |
+
+| Command | Action |
+|---|---|
+| `:DesignateReview [source] [arg]` | Review a changelist: `git HEAD~3`, `github 42`, or bare for open buffers |
+| `:DesignatePanel` | Toggle the side panel |
+| `:DesignateHarvest[!] [sink]` | Send annotations to a sink (`!` = current buffer only) |
+| `:DesignatePaths [relative\|absolute]` | Path style in the panel and in harvested output (no argument toggles) |
+| `:DesignateClear` | Drop every annotation in the session |
+
+In the panel: `Enter` jump, `o` preview, `Tab` switch between the annotation
+list and the changelist's files, `e` edit, `d`/`x` remove, `p` toggle path
+style, `q` close. In the annotation editor: `C-s` save, `Tab` switch between the
+note and the proposed text, `q` discard, `:q` closes only with nothing unsaved.
 
 ### Clipboard
 | Shortcut | Action |

@@ -70,19 +70,3 @@ rm -f "$tmpfile"
 
 link "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"
-
-# Install MCP servers (user scope, available across all projects)
-for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
-  [ -f "$mcp_file" ] || continue
-  name=$(basename "${mcp_file%.json}")
-  desc=$(jq -r '._description' "$mcp_file")
-  echo ""
-  read -rp "Install MCP server: ${desc}? (Y/n) " ans
-  echo ""
-  if [[ "$ans" != "n" ]]; then
-    cmd=$(jq -r '.command' "$mcp_file")
-    mapfile -t args_array < <(jq -r '.args[]' "$mcp_file")
-    claude mcp add --scope user "$name" -- "$cmd" "${args_array[@]}" 2>&1 \
-      || echo "  (already configured or failed — continuing)"
-  fi
-done

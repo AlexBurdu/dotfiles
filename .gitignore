@@ -13,3 +13,6 @@ __pycache__/
 
 # Machine-local nvim plugin overlay (never committed)
 nvim/lua/plugins/local/
+
+# Machine-local commit-guard terms — the names are the thing being protected
+.githooks/blocked-terms

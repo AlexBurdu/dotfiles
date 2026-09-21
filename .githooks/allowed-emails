@@ -1,0 +1,7 @@
+# Addresses this repo is allowed to contain or commit as.
+# One per line, case-insensitive; '#' comments and blank lines ignored.
+# Anything @gmail.com is allowed without being listed here.
+#
+# Upstream Midnight Commander authors, credited in mc/mc.ext.ini.
+aborodin@vmail.ru
+szepe@pinerecords.com

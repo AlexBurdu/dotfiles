@@ -1,0 +1,9 @@
+# Terms the pre-commit hook refuses to let into this public repo.
+# One extended-regex pattern per line; '#' comments and blank lines ignored.
+#
+# setup.sh copies this file to .githooks/blocked-terms, which is untracked —
+# the names themselves (private repos, internal hosts, project codenames) are
+# exactly what should not be committed here. Uncomment and edit locally.
+#
+# my-private-repo
+# internal\.example\.com

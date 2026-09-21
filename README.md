@@ -10,6 +10,25 @@ that can be used to setup the configuration. The root directory
 contains a `setup.sh` script that can be used to setup all
 configurations.
 
+### Commit Guard
+
+The root `setup.sh` points `core.hooksPath` at [.githooks](./.githooks), so
+every clone gets a pre-commit check. This is a public repo, and the check
+refuses a commit whose staged diff contains an absolute home directory
+(`/home/<user>`, `/Users/<user>`), a credential-shaped string, or an email
+address that is neither `@gmail.com` nor listed in
+[.githooks/allowed-emails](./.githooks/allowed-emails). It also refuses to
+commit under a non-personal `user.email`.
+
+`.githooks/blocked-terms` adds machine-local patterns — private repo names,
+internal hosts — and is untracked, since those names are themselves the thing
+being kept out. `setup.sh` seeds it from
+[blocked-terms.example](./.githooks/blocked-terms.example).
+
+Config that needs a real absolute path is generated into the target directory
+at setup time rather than stored here — see [mc/README.md](./mc/README.md) for
+the pattern. Bypass a false positive with `git commit --no-verify`.
+
 ## Theming
 
 Themes are synced across multiple apps based on OS dark/light

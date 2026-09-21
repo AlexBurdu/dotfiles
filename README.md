@@ -65,6 +65,7 @@ in each section below.
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | - | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | - | - |
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
+| Cycle layout / orientation | `C-s Space` | - | `C-w C-r` | - | - |
 | Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
 | Next tab/buffer | `C-s ]` | `S-l` | `S-l` | - | - |
 | Move tab/window left | `C-s {` | - | - | - | - |
@@ -124,6 +125,7 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 | `C-s j` | Split below |
 | `C-s k` | Split above |
 | `C-s l` | Split right |
+| `C-s Space` | Cycle layout presets (flips 2 panes) |
 | `C-s ]` | Next window |
 | `C-s [` | Previous window |
 | `C-s {` | Move window left |
@@ -144,10 +146,14 @@ Config: [tmux/tmux.conf](./tmux/tmux.conf)
 ### Pane Movement
 | Shortcut | Action |
 |---|---|
-| `C-s H` | Swap pane left |
-| `C-s J` | Swap pane down |
-| `C-s K` | Swap pane up |
-| `C-s L` | Swap pane right |
+| `C-s H` | Move pane to far left, full height |
+| `C-s J` | Move pane to bottom, full width |
+| `C-s K` | Move pane to top, full width |
+| `C-s L` | Move pane to far right, full height |
+
+Like nvim's `C-w H/J/K/L`, these reflow the layout: moving a pane to
+the left or right makes the window side-by-side, top or bottom makes
+it stacked.
 
 ### Copy Mode & Clipboard
 | Shortcut | Action |

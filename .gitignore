@@ -16,3 +16,9 @@ nvim/lua/plugins/local/
 
 # Machine-local commit-guard terms — the names are the thing being protected
 .githooks/blocked-terms
+
+# Claude Code per-machine permission grants. These accumulate absolute paths,
+# private repo and branch names as you approve tool calls. Ignored globally in
+# ~/.config/git/ignore too, but that is machine-local — a fresh clone
+# elsewhere would not have it, and this is a public repo.
+**/.claude/settings.local.json

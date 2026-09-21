@@ -71,38 +71,6 @@ rm -f "$tmpfile"
 link "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md \
   "Global Claude Code instructions (commit format, conventions)"
 
-# Install top-level skills
-mkdir -p ~/.claude/skills
-for skill in "$SCRIPT_DIR"/skills/*/SKILL.md; do
-  [ -f "$skill" ] || continue
-  skill_dir=$(dirname "$skill")
-  name=$(basename "$skill_dir")
-  desc=$(sed -n '/^description:/{ s/^description: *//; p; q; }' "$skill")
-  link "$skill_dir" ~/.claude/skills/"$name" \
-    "/$name — $desc"
-done
-
-# Install skill groups
-for group_dir in "$SCRIPT_DIR"/skills/*/; do
-  [ -d "$group_dir" ] || continue
-  # Skip top-level skills (already handled above)
-  [ -f "$group_dir/SKILL.md" ] && continue
-  group_name=$(basename "$group_dir")
-  echo ""
-  read -rp "Install $group_name skills? (Y/n) " ans
-  echo ""
-  if [[ "$ans" != "n" ]]; then
-    for skill in "$group_dir"*/SKILL.md; do
-      [ -f "$skill" ] || continue
-      skill_dir=$(dirname "$skill")
-      name=$(basename "$skill_dir")
-      desc=$(sed -n '/^description:/{ s/^description: *//; p; q; }' "$skill")
-      link "$skill_dir" ~/.claude/skills/"$group_name"-"$name" \
-        "/$group_name-$name — $desc"
-    done
-  fi
-done
-
 # Install MCP servers (user scope, available across all projects)
 for mcp_file in "$SCRIPT_DIR"/mcp/*.json; do
   [ -f "$mcp_file" ] || continue

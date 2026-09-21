@@ -29,22 +29,8 @@ export MC_PATH=$(brew --prefix midnight-commander 2>/dev/null)
 alias mc-wrapper='source ${MC_PATH}/libexec/mc/mc-wrapper.sh'
 alias mc="COLORTERM=truecolor mc-wrapper --nosubshell"
 
-alias dc='open -a "Double Commander" --args -path $(pwd)'
-
-export CLAUDE_CODE_DISABLE_1M_CONTEXT=1
-
-# MLX / Aider inference (local)
-export MLX_API_BASE=http://localhost:18081
-export OLLAMA_API_BASE=http://localhost:18081
-export OPENAI_API_KEY=not-needed
-export OPENAI_API_BASE=http://localhost:18081/v1
-
-source $HOME/keys/env_variable_passwords.sh
-
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-export BACKUP_ROOT="$HOME/Library/CloudStorage/GoogleDrive-alexandru.burdusel@gmail.com/My Drive/Backup"
 
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

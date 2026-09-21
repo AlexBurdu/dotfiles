@@ -1,7 +1,9 @@
 /.DS_Store
 .DS_Store
 
-# Midnight Commander
+# Midnight Commander runtime state — MC rewrites these on exit and
+# set-themes.sh seds the skin into ini. Seeded from mc/ini.template.
+mc/ini
 mc/ini-e
 mc/panels.ini
 

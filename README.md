@@ -667,17 +667,6 @@ Config: [karabiner/karabiner.json](./karabiner/karabiner.json)
 
 ---
 
-## Claude Code
-
-Setup: [claude-code/setup.sh](./claude-code/setup.sh)
-
-Generates `~/.claude/settings.json` from base settings +
-modular hook groups. Each hook group is prompted separately
-during setup, so you can pick which ones to install per
-machine.
-
----
-
 ## Gemini CLI
 
 Setup: [gemini/setup.sh](./gemini/setup.sh) |

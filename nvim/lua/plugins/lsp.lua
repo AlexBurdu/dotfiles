@@ -1,5 +1,13 @@
 -- nvim-lspconfig is a Neovim plugin that provides configurations for various
 -- language servers.
+--
+-- The servers are data in `opts`, so an optional spec can add to them
+-- without replacing `config` (plugins/jvm.lua does):
+--   ensure_installed  Mason servers to install, name = true
+--   handlers          per-server setup, function(capabilities)
+--   servers           servers Mason does not manage, function(capabilities)
+-- All three are maps rather than lists: lazy.nvim merges maps from every
+-- spec, whichever order it loads them in, but replaces lists.
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
@@ -14,10 +22,64 @@ return {
     "saadparwaiz1/cmp_luasnip",
     "j-hui/fidget.nvim",
     "onsails/lspkind.nvim",
-    "milanglacier/minuet-ai.nvim",
   },
 
-  config = function()
+  opts = {
+    -- See complete list of Mason supported servers: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
+    ensure_installed = {
+      ast_grep = true,
+      bashls = true,
+      buf_ls = true,
+      clangd = true,
+      docker_compose_language_service = true,
+      dockerls = true,
+      gopls = true,
+      gradle_ls = true,
+      jsonls = true,
+      lua_ls = true,
+      marksman = true,
+      pyright = true,
+      starpls = true,
+    },
+    handlers = {
+      zls = function()
+        local lspconfig = require("lspconfig")
+        lspconfig.zls.setup({
+          root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
+          settings = {
+            zls = {
+              enable_inlay_hints = true,
+              enable_snippets = true,
+              warn_style = true,
+            },
+          },
+        })
+        vim.g.zig_fmt_parse_errors = 0
+        vim.g.zig_fmt_autosave = 0
+      end,
+      -- Mason's kotlin_lsp is JetBrains' JVM server. Never auto-start it:
+      -- optional `jvm` registers it as kotlin_lsp_jb, started on demand,
+      -- and a machine without `jvm` may still have it installed from
+      -- before.
+      kotlin_lsp = function() end,
+      lua_ls = function(capabilities)
+        require("lspconfig").lua_ls.setup {
+          capabilities = capabilities,
+          settings = {
+            Lua = {
+              runtime = { version = "Lua 5.1" },
+              diagnostics = {
+                globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+              }
+            }
+          }
+        }
+      end,
+    },
+    servers = {},
+  },
+
+  config = function(_, opts)
     local cmp = require('cmp')
     local cmp_lsp = require("cmp_nvim_lsp")
     local capabilities = vim.tbl_deep_extend(
@@ -28,111 +90,41 @@ return {
 
     require("fidget").setup({})
     require("mason").setup()
-    require("mason-lspconfig").setup({
-      automatic_installation = true,
-      -- See complete list of Mason supported servers: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/server-mapping.md
-      ensure_installed = {
-        "ast_grep",
-        "bashls",
-        "buf_ls",
-        "clangd",
-        "docker_compose_language_service",
-        "dockerls",
-        "gopls",
-        "gradle_ls",
-        "jsonls",
-        "kotlin_lsp",
-        "lua_ls",
-        "marksman",
-        "pyright",
-        "starpls",
-      },
-      handlers = {
-        function(server_name) -- default handler (optional)
-          require("lspconfig")[server_name].setup {
-            capabilities = capabilities
-          }
-        end,
-
-        -- Suppress auto-start: JetBrains kotlin_lsp is registered manually as
-        -- kotlin_lsp_jb with autostart=false, started on demand via <leader>bJ
-        kotlin_lsp = function() end,
-
-        zls = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.zls.setup({
-            root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
-            settings = {
-              zls = {
-                enable_inlay_hints = true,
-                enable_snippets = true,
-                warn_style = true,
-              },
-            },
-          })
-          vim.g.zig_fmt_parse_errors = 0
-          vim.g.zig_fmt_autosave = 0
-        end,
-        ["lua_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.lua_ls.setup {
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                runtime = { version = "Lua 5.1" },
-                diagnostics = {
-                  globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                }
-              }
-            }
-          }
-        end,
-      }
-    })
-
-    -- Hessesian/kotlin-lsp: fast Rust-based LSP (no JVM), replaces JetBrains kotlin_lsp
-    local configs = require('lspconfig.configs')
-    configs.kotlin_lsp = {
-      default_config = {
-        cmd       = { vim.fn.expand('~/.cargo/bin/kotlin-lsp') },
-        filetypes = { 'kotlin', 'java', 'swift' },
-        root_dir  = require('lspconfig').util.root_pattern(
-          'build.gradle', 'build.gradle.kts', 'pom.xml', 'settings.gradle', 'Package.swift', '.git'
-        ),
-        settings  = {},
-      },
-    }
-    require('lspconfig').kotlin_lsp.setup { capabilities = capabilities }
-
-    -- JetBrains kotlin_lsp: full type-checking, started on demand via <leader>lJ
-    local lspconfig = require('lspconfig')
-    configs.kotlin_lsp_jb = {
-      default_config = {
-        cmd       = { vim.fn.stdpath('data') .. '/mason/bin/kotlin-lsp' },
-        filetypes = { 'kotlin', 'java' },
-        root_dir  = lspconfig.util.root_pattern(
-          'build.gradle', 'build.gradle.kts', 'pom.xml', 'settings.gradle', '.git'
-        ),
-        settings  = {},
-      },
-    }
-    lspconfig.kotlin_lsp_jb.setup {
-      capabilities = capabilities,
-      autostart    = false,
-      -- Record exit time so ensure_jetbrains_lsp() won't immediately restart
-      -- while the JVM process is still holding its TCP port.
-      on_exit = function(_, _, _)
-        -- Expose via a global so keymap/build.lua can read it without a shared module.
-        vim.g._kotlin_lsp_jb_exited_at = vim.uv.now()
+    local handlers = {
+      function(server_name) -- default handler (optional)
+        require("lspconfig")[server_name].setup {
+          capabilities = capabilities
+        }
       end,
     }
+    for name, setup in pairs(opts.handlers) do
+      handlers[name] = function() setup(capabilities) end
+    end
+    require("mason-lspconfig").setup({
+      automatic_installation = true,
+      ensure_installed = vim.tbl_keys(opts.ensure_installed),
+      handlers = handlers,
+    })
+    for _, setup in pairs(opts.servers) do
+      setup(capabilities)
+    end
 
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
+    -- Minuet ghost text is optional (plugins/minuet.lua). Every key
+    -- below that drives it asks for it here first, and falls through to
+    -- its popup or default behaviour on a machine without it, or while
+    -- minuet has no provider configured.
+    local function minuet_vt()
+      local ok, minuet = pcall(require, 'minuet')
+      if not ok or not minuet.config then return nil end
+      return require('minuet.virtualtext')
+    end
+
     -- Accept one word from minuet ghost text (not built into minuet)
     local function accept_word()
-      local vt_mod = require('minuet.virtualtext')
-      if not vt_mod.action.is_visible() then return false end
+      local vt_mod = minuet_vt()
+      if not vt_mod or not vt_mod.action.is_visible() then return false end
       local extmark = vim.api.nvim_buf_get_extmark_by_id(
         0, vt_mod.ns_id, 1, { details = true }
       )
@@ -169,15 +161,15 @@ return {
       },
       mapping = cmp.mapping.preset.insert({
         ['<C-p>'] = cmp.mapping(function(fallback)
-          local vt = require('minuet.virtualtext').action
+          local vt = minuet_vt()
           if cmp.visible() then cmp.select_prev_item(cmp_select)
-          elseif require('minuet').config then vt.prev()
+          elseif vt then vt.action.prev()
           else fallback() end
         end, { 'i' }),
         ['<C-n>'] = cmp.mapping(function(fallback)
-          local vt = require('minuet.virtualtext').action
+          local vt = minuet_vt()
           if cmp.visible() then cmp.select_next_item(cmp_select)
-          elseif require('minuet').config then vt.next()
+          elseif vt then vt.action.next()
           else fallback() end
         end, { 'i' }),
         ['<C-k>'] = cmp.mapping(function(fallback)
@@ -193,8 +185,8 @@ return {
           elseif not accept_word() then fallback() end
         end, { 'i' }),
         ['<C-h>'] = cmp.mapping(function(fallback)
-          local vt = require('minuet.virtualtext').action
-          if vt.is_visible() then vt.accept_line()
+          local vt = minuet_vt()
+          if vt and vt.action.is_visible() then vt.action.accept_line()
           else fallback() end
         end, { 'i' }),
         ['<C-u>'] = cmp.mapping(function(fallback)
@@ -208,8 +200,8 @@ return {
           else fallback() end
         end, { 'i' }),
         ['<Tab>'] = cmp.mapping(function(fallback)
-          local vt = require('minuet.virtualtext').action
-          if vt.is_visible() then vt.accept()
+          local vt = minuet_vt()
+          if vt and vt.action.is_visible() then vt.action.accept()
           else fallback() end
         end, { 'i' }),
       }),

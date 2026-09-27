@@ -458,17 +458,3 @@ vim.keymap.set("n", "<leader>br", rerun_last,           { desc = "Rerun last bui
 vim.keymap.set("n", "<leader>dt", dispatch("debug_test"),     { desc = "Debug test under cursor" })
 vim.keymap.set("n", "<leader>dT", dispatch("debug_test_all"), { desc = "Debug all tests in file/target" })
 vim.keymap.set("n", "<leader>bl", "<cmd>OverseerToggle<cr>", { desc = "Toggle build task list" })
-
-vim.keymap.set("n", "<leader>bJ", function()
-  local clients = vim.lsp.get_clients({ bufnr = 0, name = "kotlin_lsp_jb" })
-  if #clients > 0 then
-    for _, c in ipairs(clients) do c.stop() end
-    vim.notify("JetBrains Kotlin LSP stopped", vim.log.levels.INFO)
-  else
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if ok and lspconfig.kotlin_lsp_jb and lspconfig.kotlin_lsp_jb.manager then
-      lspconfig.kotlin_lsp_jb.manager:try_add(vim.api.nvim_get_current_buf())
-      vim.notify("JetBrains Kotlin LSP starting…", vim.log.levels.INFO)
-    end
-  end
-end, { desc = "Toggle JetBrains Kotlin LSP (full type-checking)" })

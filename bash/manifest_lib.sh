@@ -322,14 +322,18 @@ feature_enabled() {
   esac
 }
 
-# Reject a feature name a machine file could not plausibly contain.
+# Reject a feature name a machine file could not plausibly contain:
+# a module, a dot, and a name within it -- `nvim.jvm`.  A name with no
+# module is let through, because that is how names were written before
+# they had one, and the runner can say which names replaced it.
 # Arguments:
 #   $1 - feature name
 #   $2 - where it came from, for the message
 assert_feature_name() {
   case "$1" in
-    '' | *[!a-z0-9-]*)
-      printf '%s: %s is not a feature name (a-z, 0-9, -)\n' "$2" "$1" >&2
+    '' | .* | *. | *.*.* | *[!a-z0-9.-]*)
+      printf '%s: %s is not a feature name (module.name: a-z, 0-9, -)\n' \
+        "$2" "$1" >&2
       return 1
       ;;
   esac
@@ -343,22 +347,33 @@ assert_feature_name() {
 # repo.  Off by default, because the failure then is a binding you have
 # to enable rather than one that turned up somewhere it was not wanted.
 #
-# One name may be claimed by several modules on purpose: a feature is a
-# capability, not a file, so `enable copilot` reaches every module that
-# declares it.
+# The machine names it with its module in front -- `optional jvm` in
+# nvim/manifest.sh is `enable nvim.jvm` -- so that machine.sh says
+# which application each answer is for.  Two modules may use the same
+# name and are still answered apart: Copilot in VS Code is not Copilot
+# in IdeaVim.  An overlay's module of the same name shares the prefix,
+# since it is config for the same application.
 # Arguments:
-#   $1 - feature name, as written after `enable` in machine.sh
+#   $1 - name within the module
 #   $2 - link or merge
 #   $@ - that verb's arguments
 optional() {
-  local feature="$1" verb="${2:-}"
-  assert_feature_name "$feature" "$(basename "$MODULE_DIR")/manifest.sh" \
-    || exit 1
+  local name="$1" verb="${2:-}" module feature
+  module=$(basename "$MODULE_DIR")
+  case "$name" in
+    '' | *[!a-z0-9-]*)
+      printf '%s/manifest.sh: %s is not an optional name (a-z, 0-9, -)\n' \
+        "$module" "$name" >&2
+      exit 1
+      ;;
+  esac
+  feature="$module.$name"
+  assert_feature_name "$feature" "$module/manifest.sh" || exit 1
   case "$verb" in
     link | merge) ;;
     *)
       printf '%s/manifest.sh: optional %s must be followed by link or merge\n' \
-        "$(basename "$MODULE_DIR")" "$feature" >&2
+        "$module" "$name" >&2
       exit 1
       ;;
   esac

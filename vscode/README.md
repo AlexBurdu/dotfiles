@@ -33,14 +33,14 @@ comments and trailing commas are fine.
 | Fragment | Used on |
 | --- | --- |
 | `settings.d/base.jsonc` — general, theming, Vim | every machine |
-| `settings.d/copilot.jsonc` — Copilot languages, MCP gallery | `enable copilot` |
-| `settings.d/bazel.jsonc` | `enable bazel` |
-| `settings.d/dart.jsonc` | `enable dart` |
-| `settings.d/jvm.jsonc` — Spring Boot, Eclipse files hidden | `enable jvm` |
-| `settings.d/database.jsonc` | `enable database` |
+| `settings.d/copilot.jsonc` — Copilot languages, MCP gallery | `enable vscode.copilot` |
+| `settings.d/bazel.jsonc` | `enable vscode.bazel` |
+| `settings.d/dart.jsonc` | `enable vscode.dart` |
+| `settings.d/jvm.jsonc` — Spring Boot, Eclipse files hidden | `enable vscode.jvm` |
+| `settings.d/database.jsonc` | `enable vscode.database` |
 | `keybindings.d/base.jsonc` — AI, navigation | every machine |
-| `keybindings.d/gemini.jsonc` | `enable gemini` |
-| `keybindings.d/copilot.jsonc` | `enable copilot` |
+| `keybindings.d/gemini.jsonc` | `enable vscode.gemini` |
+| `keybindings.d/copilot.jsonc` | `enable vscode.copilot` |
 
 The `enable` lines go in the gitignored `machine.sh` at the repo root;
 the first setup run asks about each name. An overlay repo can add its

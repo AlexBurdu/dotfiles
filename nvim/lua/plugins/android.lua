@@ -1,7 +1,7 @@
 -- Android development tools (logcat, adb, gradle)
 -- https://github.com/iamironz/android-nvim-plugin
 --
--- Optional: linked only where machine.sh has `enable android` (see
+-- Optional: linked only where machine.sh has `enable nvim.android` (see
 -- nvim/manifest.sh). Attaching the debugger to a
 -- running app is part of optional `jvm`, not this.
 return {

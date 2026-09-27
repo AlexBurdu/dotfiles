@@ -12,9 +12,9 @@
 # public repo.  The first setup run asks for these.
 # overlay ~/corp/dotfiles
 
-# Optional config, by name.  setup.sh asks about each name no line here
+# Optional config, by name: the module it is for, a dot, and the name
+# its manifest gives it.  setup.sh asks about each name no line here
 # answers, and writes the answer below; ./setup.sh --doctor lists them
-# all.  A name may be claimed by several modules -- `enable copilot`
-# turns on Copilot in every editor that has config for it.
-# enable copilot
-# disable gemini
+# all.
+# enable vscode.copilot
+# disable ideavim.gemini

@@ -21,8 +21,8 @@ again unless you run `--reset`:
    before anything else, on the first run. Enter on a machine with
    none.
 2. **Optional config** — for each name a manifest declares with
-   `optional`, whether this machine wants it. Asked with the first
-   module that declares the name. Every name is off until answered
+   `optional`, whether this machine wants it. Asked under the banner of
+   the module that declares the name. Every name is off until answered
    yes.
 
 Everything else is common and set up everywhere. `machine.sh` is
@@ -31,9 +31,10 @@ gitignored, so each machine's answers stay on that machine:
 ```sh
 # ~/dotfiles/machine.sh on a work laptop
 overlay ~/corp/dotfiles
-enable bazel
-disable copilot
-disable gemini
+enable vscode.bazel
+disable vscode.copilot
+disable ideavim.copilot
+disable vscode.gemini
 ```
 
 Change a line and run `./setup.sh` again. A name that a later
@@ -100,7 +101,7 @@ letters are in brackets, and the capital letter is what Enter gives:
 ```
 === Neovim — editor config, plugins, keymaps ===
   Set up nvim? [Y/n]
-  Enable jvm on this machine? [y/N]
+  Enable nvim.jvm on this machine? [y/N]
   Remove it, keep it and stop asking, or skip for now? [r/k/S]
 ```
 
@@ -160,8 +161,14 @@ optional copilot link copilot.vim ~/.config/ideavim/copilot.vim
 optional copilot merge keybindings.d/copilot.jsonc "$config/keybindings.json"
 ```
 
-A name is a capability, not a file: one `enable copilot` in
-`machine.sh` turns on every declaration that names it, in every module.
+`machine.sh` names it with the module in front: `enable
+ideavim.copilot` turns on the first line and `enable vscode.copilot`
+the second, so every answer says which application it is for. A
+module's lines that share a name are one answer — `vscode.copilot`
+brings both the settings and the keybindings. An overlay's module of
+the same name shares the prefix too: an overlay's `nvim/manifest.sh`
+declares `nvim.<name>`, config for the same editor.
+
 Three rules keep the names answerable:
 
 - **A name is a feature** — a language, a tool, an AI assistant — never
@@ -169,17 +176,25 @@ Three rules keep the names answerable:
   without opening the files; a machine's role is what `machine.sh` and
   its overlays already are.
 - **One feature, one name, in every module.** Kotlin in Neovim and Java
-  in VS Code are both `jvm`, so one answer sets up the language
-  everywhere.
+  in VS Code are both `jvm`, so the questions read alike: `nvim.jvm`,
+  `vscode.jvm`.
 - **Every `optional` line has a description.** The question is built
-  from them, one line per module:
+  from them:
 
   ```
-    copilot:
-      ideavim  Copilot keys
-      vscode   Which languages Copilot completes, MCP server gallery; Copilot chat keys
-    Enable copilot on this machine? [y/N]
+    vscode.copilot:
+      Which languages Copilot completes, MCP server gallery; Copilot chat keys
+    Enable vscode.copilot on this machine? [y/N]
   ```
+
+A name written without its module — how names were written before they
+had one — matches nothing. The end of a run lists it with the names
+that replaced it:
+
+```
+  enable jvm: no manifest declares this name
+    names now start with their module: nvim.jvm, vscode.jvm
+```
 
 Settings that are only preferences, wanted wherever the tool is, go in
 the common files rather than behind a name.
@@ -188,14 +203,17 @@ Today's names:
 
 | Name | Brings |
 | --- | --- |
-| `copilot` | IdeaVim bindings, VS Code settings and keybindings |
-| `jvm` | Neovim Kotlin/Java LSP, debugger and Android attach; VS Code Java settings |
-| `android` | Neovim Android plugin: logcat, devices, build, run |
-| `minuet` | Neovim Minuet AI ghost-text completion |
-| `gemini` | IdeaVim actions, VS Code keybindings |
-| `bazel` | VS Code Bazel settings |
-| `dart` | VS Code Dart settings |
-| `database` | VS Code database client settings |
+| `nvim.jvm` | Kotlin/Java LSP, debugger and Android attach |
+| `nvim.android` | Android plugin: logcat, devices, build, run |
+| `nvim.minuet` | Minuet AI ghost-text completion |
+| `vscode.copilot` | Copilot settings and keybindings |
+| `vscode.gemini` | Gemini keybindings |
+| `vscode.jvm` | Java settings |
+| `vscode.bazel` | Bazel settings |
+| `vscode.dart` | Dart settings |
+| `vscode.database` | Database client settings |
+| `ideavim.copilot` | Copilot bindings |
+| `ideavim.gemini` | Gemini actions |
 
 `./setup.sh --doctor` prints the live list, with this machine's answer
 to each.
@@ -289,7 +307,7 @@ optional jvm link lua/plugins/jvm.lua \
 ```
 
 Every spec in `lua/plugins/` is linked, save `jvm.lua`, which is
-linked only where `machine.sh` has `enable jvm`; `lua/plugins/`
+linked only where `machine.sh` has `enable nvim.jvm`; `lua/plugins/`
 itself is left to its own `link_each`, so it becomes a real directory
 too, one an overlay or a hand-placed file can join. The price is the
 one any per-file link pays: a file added or deleted upstream needs a
@@ -839,7 +857,7 @@ no language server is attached.
 LSP popup and Minuet AI ghost text coexist. Keys are context-aware:
 some act on the popup when visible, ghost text otherwise.
 
-Ghost text is optional: `enable minuet` in `machine.sh`. Without it the
+Ghost text is optional: `enable nvim.minuet` in `machine.sh`. Without it the
 ghost-text column does nothing, and `Tab`, `C-y` and `C-h` behave as
 plain insert-mode keys outside the popup.
 
@@ -897,10 +915,10 @@ via init script to make coroutine locals inspectable.
 
 ### Android
 
-Optional: `enable android` in `machine.sh`. Logcat and device selection
+Optional: `enable nvim.android` in `machine.sh`. Logcat and device selection
 work outside a Gradle project (falls back to cwd). Build/run still
 require a Gradle workspace. Attaching the debugger is `Space da`, part of
-optional `jvm`.
+optional `nvim.jvm`.
 
 | Shortcut | Action |
 |---|---|

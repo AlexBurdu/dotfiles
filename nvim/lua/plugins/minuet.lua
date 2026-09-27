@@ -3,7 +3,7 @@
 -- Shows inline ghost text; accept with Tab/C-y/C-h, cycle with C-n/C-p.
 -- Switch providers with :MinuetProvider <name> (persisted across sessions).
 --
--- Optional: linked only where machine.sh has `enable minuet` (see
+-- Optional: linked only where machine.sh has `enable nvim.minuet` (see
 -- nvim/manifest.sh). The completion keys in
 -- lua/plugins/lsp.lua drive it when it is present.
 local state_file = vim.fn.stdpath('state') .. '/minuet-provider'

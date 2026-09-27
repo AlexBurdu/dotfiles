@@ -18,7 +18,7 @@ what is in it differs by machine:
 | Put there by | What | Decided by |
 | --- | --- | --- |
 | `nvim/manifest.sh` | every spec in `lua/plugins/` not named below | nothing; every machine |
-| `nvim/manifest.sh` | the optional specs below | `enable <name>` in `machine.sh` |
+| `nvim/manifest.sh` | the optional specs below | `enable nvim.<name>` in `machine.sh` |
 | an overlay repo's manifest | its own specs | the `overlay` line in `machine.sh` |
 | you, by hand | a real file for this machine alone | nothing; setup ignores it |
 
@@ -27,9 +27,9 @@ This repo's optional specs, each declared by an `optional` line in
 
 | Name | File | Brings |
 | --- | --- | --- |
-| `jvm` | `lua/plugins/jvm.lua` | Kotlin/Java LSP (fast `kotlin_lsp`, on-demand JetBrains `kotlin_lsp_jb` via `Space bJ`), kotlin-debug-adapter, Android attach on `Space da` |
-| `android` | `lua/plugins/android.lua` | Android plugin: logcat, device picker, build, run (`Space a…`) |
-| `minuet` | `lua/plugins/minuet.lua` | Minuet AI ghost text (`Tab`, `C-y`, `C-h`, `C-n`/`C-p`) |
+| `nvim.jvm` | `lua/plugins/jvm.lua` | Kotlin/Java LSP (fast `kotlin_lsp`, on-demand JetBrains `kotlin_lsp_jb` via `Space bJ`), kotlin-debug-adapter, Android attach on `Space da` |
+| `nvim.android` | `lua/plugins/android.lua` | Android plugin: logcat, device picker, build, run (`Space a…`) |
+| `nvim.minuet` | `lua/plugins/minuet.lua` | Minuet AI ghost text (`Tab`, `C-y`, `C-h`, `C-n`/`C-p`) |
 
 The other directories under `lua/` are linked one link each, and the
 files in them come and go with a `git pull`. A spec added to or deleted

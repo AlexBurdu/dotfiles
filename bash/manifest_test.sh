@@ -58,9 +58,10 @@ answer() { # answer <home> <letter> [args...]
 
 sandbox() { mktemp -d "${TMPDIR:-/tmp}/manifest-test.XXXXXX"; }
 
-# Every optional name this repo declares.
-FEATURES=$(sed -n 's/^optional \([a-z0-9-]*\) .*/\1/p' "$ROOT"/*/manifest.sh \
-  | sort -u)
+# Every optional name this repo declares, module first.
+FEATURES=$(for m in "$ROOT"/*/manifest.sh; do
+  sed -n "s/^optional \([a-z0-9-]*\) .*/$(basename "$(dirname "$m")").\1/p" "$m"
+done | sort -u)
 
 # Answer for a sandbox machine.  Every name the lines do not mention is
 # answered "off", so that no test meets a feature question it did not
@@ -70,7 +71,7 @@ machine() { # machine <home> <line>...
   local home="$1" f; shift
   printf '%s\n' "$@" > "$home/machine.sh"
   for f in $FEATURES; do
-    if ! grep -qE "^(enable|disable) $f\$" "$home/machine.sh"; then
+    if ! grep -qxF -e "enable $f" -e "disable $f" "$home/machine.sh"; then
       echo "disable $f" >> "$home/machine.sh"
     fi
   done
@@ -156,7 +157,7 @@ check "and the link is created in its place" \
 rm -rf "$SB"
 
 # ── link_each ──────────────────────────────────────────────────────────
-SB=$(sandbox); machine "$SB" "enable minuet"
+SB=$(sandbox); machine "$SB" "enable nvim.minuet"
 # How an earlier run linked it: the whole directory, recorded as such.
 mkdir -p "$SB/.config/nvim" "$SB/.local/state/dotfiles"
 ln -s "$ROOT/nvim/lua" "$SB/.config/nvim/lua"
@@ -188,7 +189,7 @@ check "a file removed upstream is offered as a leftover" \
 check "and removed when told to" \
   "no" "$(is_link "$SB/.config/nvim/lua/plugins/gone.lua")"
 
-sed -i.orig 's/^enable minuet$/disable minuet/' "$SB/machine.sh"
+sed -i.orig 's/^enable nvim\.minuet$/disable nvim.minuet/' "$SB/machine.sh"
 out=$(answer "$SB" r)
 check "an optional file disabled later is a leftover" \
   "1" "$(count "$out" 'plugins/minuet.lua -> ')"
@@ -204,7 +205,7 @@ check "a machine that has answered nothing gets the template seeded" \
 check "and is told where it landed" \
   "1" "$(count "$out" 'Seeded .*machine.sh')"
 check "and is asked about optional config" \
-  "1" "$(count "$out" '^  copilot:$')"
+  "1" "$(count "$out" '^  ideavim.copilot:$')"
 check "but with nobody to answer, nothing is written down" \
   "0" "$(grep -c '^[a-z]' "$SB/machine.sh")"
 check "and nothing optional is turned on" \
@@ -227,45 +228,44 @@ rm -rf "$SB"
 
 # ── optional config ────────────────────────────────────────────────────
 SB=$(sandbox); machine "$SB"
-sed -i.orig '/^disable copilot$/d' "$SB/machine.sh"
+sed -i.orig '/^disable ideavim\.copilot$/d' "$SB/machine.sh"
 out=$(answer "$SB" y)
 check "an unanswered name is asked about" \
-  "1" "$(count "$out" '^  copilot:$')"
+  "1" "$(count "$out" '^  ideavim.copilot:$')"
 check "only that one" \
-  "0" "$(count "$out" '^  gemini: ')"
+  "1" "$(count "$out" '^  [a-z]*\.[a-z-]*:$')"
 check "and a yes is written down" \
-  "1" "$(grep -cx 'enable copilot' "$SB/machine.sh")"
+  "1" "$(grep -cx 'enable ideavim.copilot' "$SB/machine.sh")"
 check "and acted on in the same run" \
   "$ROOT/ideavim/copilot.vim" "$(readlink "$SB/.config/ideavim/copilot.vim")"
-check "in every module that claims the name" \
-  "1" "$(grep -c 'workbench.panel.chat.view.copilot' \
+check "and in no other module that uses the same name" \
+  "0" "$(grep -c 'workbench.panel.chat.view.copilot' \
            "$SB/$VSC_MAC/keybindings.json")"
 check "while the names answered no stay off" \
   "no" "$(is_link "$SB/.config/ideavim/gemini.vim")"
 out=$(run "$SB")
 check "an answered name is never asked about again" \
-  "0" "$(count "$out" '^  copilot:$')"
+  "0" "$(count "$out" '^  ideavim.copilot:$')"
 rm -rf "$SB"
 
 # Everything about a module is asked between its banner and the next:
-# the first module to claim a name asks about it, and a leftover link
-# into a module is offered with that module, not before the first.
+# a module asks about its own names, and a leftover link into a module
+# is offered with that module, not before the first.
 SB=$(sandbox); machine "$SB"
-sed -i.orig '/^disable copilot$/d' "$SB/machine.sh"
+sed -i.orig '/^disable ideavim\.copilot$/d' "$SB/machine.sh"
 run "$SB" >/dev/null
 ln -s "$ROOT/nvim/gone.lua" "$SB/.config/nvim/gone.lua"
 out=$(run "$SB")
 section() { # section <output> <pattern>: the banner above the match
   printf '%s\n' "$1" | awk -v p="$2" '/^=== /{b=$0} $0 ~ p {print b; exit}'
 }
-check "a name is asked about with the first module that claims it" \
-  "IdeaVim" "$(section "$out" '^  copilot:$' | awk '{print $2}')"
-check "saying what it brings in every module, from their descriptions" \
-  "ideavim vscode" \
-  "$(printf '%s\n' "$out" | grep -A2 '^  copilot:$' | tail -2 \
-       | awk '{print $1}' | tr '\n' ' ' | sed 's/ $//')"
-check "and not again with the next one, even unanswered" \
-  "1" "$(count "$out" '^  copilot:$')"
+check "a name is asked about with the module it names" \
+  "IdeaVim" "$(section "$out" '^  ideavim.copilot:$' | awk '{print $2}')"
+check "saying what it brings, from the manifest's description" \
+  "    Copilot keys" \
+  "$(printf '%s\n' "$out" | grep -A1 '^  ideavim.copilot:$' | tail -1)"
+check "and not again, even unanswered" \
+  "1" "$(count "$out" '^  ideavim.copilot:$')"
 check "a leftover link is offered with the module it points into" \
   "Neovim" "$(section "$out" 'nvim/gone.lua ->' | awk '{print $2}')"
 rm -rf "$SB"
@@ -273,7 +273,7 @@ rm -rf "$SB"
 # Every question is asked the one way: the choices in words, their
 # letters in brackets, the default in capitals.
 SB=$(sandbox); machine "$SB"
-sed -i.orig '/^disable copilot$/d' "$SB/machine.sh"
+sed -i.orig '/^disable ideavim\.copilot$/d' "$SB/machine.sh"
 out=$(answer "$SB" '')
 check "a run asks its questions out loud, even to a pipe" \
   "yes" "$(count "$out" 'Set up nvim? \[Y/n\] ' | grep -qv '^0$' && echo yes)"
@@ -289,19 +289,19 @@ check "no script asks a question except through prompt.sh" \
 check "and the old forms are gone" \
   "0" "$(count "$out" '(Y/n)\|(y/N)\|\[r\]emove\|\[o\]verwrite')"
 check "Enter to an optional name is a no" \
-  "1" "$(grep -cx 'disable copilot' "$SB/machine.sh")"
+  "1" "$(grep -cx 'disable ideavim.copilot' "$SB/machine.sh")"
 rm -rf "$SB"
 
 SB=$(sandbox); machine "$SB"
-sed -i.orig '/^disable copilot$/d' "$SB/machine.sh"
+sed -i.orig '/^disable ideavim\.copilot$/d' "$SB/machine.sh"
 answer "$SB" '' >/dev/null
 check "a no is written down too, so it is not asked again" \
-  "1" "$(grep -cx 'disable copilot' "$SB/machine.sh")"
+  "1" "$(grep -cx 'disable ideavim.copilot' "$SB/machine.sh")"
 rm -rf "$SB"
 
 # --reset starts over: the answers are set aside, and every question
 # is asked as on a new machine, at its usual default.
-SB=$(sandbox); machine "$SB" "enable copilot" "overlay ~/corp"
+SB=$(sandbox); machine "$SB" "enable ideavim.copilot" "overlay ~/corp"
 before=$(cat "$SB/machine.sh")
 out=$(answer "$SB" '' --reset)
 check "--reset moves the answers aside, not away" \
@@ -317,11 +317,12 @@ check "the overlay question has its own section, after it" \
 check "an overlay named before is not carried over" \
   "0" "$(grep -c '^overlay ' "$SB/machine.sh")"
 check "a name answered before is asked about again" \
-  "1" "$(count "$out" '^  copilot:$')"
+  "1" "$(count "$out" '^  ideavim.copilot:$')"
 check "at its usual default, not the old answer" \
-  "1" "$(count "$out" 'Enable copilot on this machine? \[y/N\]')"
+  "1" "$(count "$out" 'Enable ideavim.copilot on this machine? \[y/N\]')"
 check "so Enter throughout turns it off" \
-  "disable copilot" "$(grep -E '^(enable|disable) copilot$' "$SB/machine.sh")"
+  "disable ideavim.copilot" \
+  "$(grep -E '^(enable|disable) ideavim\.copilot$' "$SB/machine.sh")"
 check "--doctor --reset is refused, not half-honoured" \
   "1" "$(setup "$SB" --doctor --reset </dev/null | grep -c 'run --doctor')"
 rm -rf "$SB"
@@ -341,6 +342,18 @@ SB=$(sandbox); machine "$SB" "enable no-such-thing"
 out=$(run "$SB")
 check "a name no manifest claims is called out, not silently obeyed" \
   "1" "$(count "$out" 'no manifest declares this name')"
+rm -rf "$SB"
+
+SB=$(sandbox); machine "$SB" "enable jvm" "disable copilot"
+out=$(run "$SB")
+check "a name from before names had a module is called out" \
+  "1" "$(count "$out" '^  enable jvm: no manifest declares this name$')"
+check "with the names that replaced it" \
+  "1" "$(count "$out" 'names now start with their module: nvim.jvm, vscode.jvm$')"
+check "a disabled one too, since its question comes back" \
+  "1" "$(count "$out" 'ideavim.copilot, vscode.copilot$')"
+check "and it turns nothing on" \
+  "no" "$(is_link "$SB/.config/nvim/lua/plugins/jvm.lua")"
 rm -rf "$SB"
 
 SB=$(sandbox); machine "$SB" "enable Not A Name"
@@ -373,7 +386,7 @@ check "and none of the optional ones" \
 check "keybindings are the common set alone" \
   "61" "$(jq length "$K")"
 
-machine "$SB" "enable bazel" "enable gemini"
+machine "$SB" "enable vscode.bazel" "enable vscode.gemini"
 run "$SB" >/dev/null
 check "enabling a name merges its settings in" \
   '"./bazelw"' "$(jq '."bazel.executable"' "$S")"
@@ -382,7 +395,7 @@ check "without losing the common ones" \
 check "and keybinding fragments are appended, not replaced" \
   "66" "$(jq length "$K")"
 
-machine "$SB" "enable gemini"
+machine "$SB" "enable vscode.gemini"
 run "$SB" >/dev/null
 check "disabling it again takes its settings back out" \
   "null" "$(jq '."bazel.executable"' "$S")"
@@ -413,9 +426,9 @@ rm -rf "$SB"
 # ── leftovers ──────────────────────────────────────────────────────────
 # A run offers to remove whatever an earlier run set up that nothing
 # declares any more, whichever way it stopped being declared.
-SB=$(sandbox); machine "$SB" "enable copilot"
+SB=$(sandbox); machine "$SB" "enable ideavim.copilot"
 run "$SB" >/dev/null
-machine "$SB" "disable copilot"
+machine "$SB" "disable ideavim.copilot"
 out=$(run "$SB")
 C="$SB/.config/ideavim/copilot.vim"
 check "turning a name off makes its link a leftover" \
@@ -445,9 +458,9 @@ check "after which it is not mentioned again" \
   "0" "$(count "$out" 'no longer declared')"
 rm -rf "$SB"
 
-SB=$(sandbox); machine "$SB" "enable copilot"
+SB=$(sandbox); machine "$SB" "enable ideavim.copilot"
 run "$SB" >/dev/null
-machine "$SB" "disable copilot"
+machine "$SB" "disable ideavim.copilot"
 answer "$SB" k >/dev/null
 out=$(run "$SB")
 check "a leftover the owner keeps stays" \
@@ -457,9 +470,9 @@ check "and is not asked about again" \
 rm -rf "$SB"
 
 # --reset asks again what was kept, like any other leftover.
-SB=$(sandbox); machine "$SB" "enable copilot"
+SB=$(sandbox); machine "$SB" "enable ideavim.copilot"
 run "$SB" >/dev/null
-machine "$SB" "disable copilot"
+machine "$SB" "disable ideavim.copilot"
 answer "$SB" k >/dev/null
 out=$(run "$SB" --doctor)
 check "doctor marks a kept leftover kept" \
@@ -483,9 +496,9 @@ rm -rf "$SB"
 SB=$(sandbox); machine "$SB"
 mkdir -p "$SB/.config/ideavim"
 echo "mine" > "$SB/.config/ideavim/copilot.vim"
-machine "$SB" "enable copilot"
+machine "$SB" "enable ideavim.copilot"
 run "$SB" >/dev/null
-machine "$SB" "disable copilot"
+machine "$SB" "disable ideavim.copilot"
 out=$(answer "$SB" r)
 check "removing a link puts back the file it displaced" \
   "mine" "$(cat "$SB/.config/ideavim/copilot.vim")"

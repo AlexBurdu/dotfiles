@@ -1,6 +1,6 @@
 -- Kotlin and Java: language servers, debugger, Android attach.
 --
--- Optional: linked only where machine.sh has `enable jvm` (see
+-- Optional: linked only where machine.sh has `enable nvim.jvm` (see
 -- nvim/manifest.sh). Each spec below extends a common one beside it,
 -- which is why none of it lives in those.
 --

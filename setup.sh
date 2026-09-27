@@ -61,7 +61,7 @@ overlay() { overlay_roots+=("$1"); }
 
 # Turn an optional name on, or record that it stays off.  The later of
 # the two lines for one name wins, like any other shell assignment.
-# Arguments:  $1 - feature name
+# Arguments:  $1 - feature name, module first: `nvim.jvm`
 enable() {
   assert_feature_name "$1" "$MACHINE_FILE" || return 0
   MACHINE_DECLINED=$(without "$1" "$MACHINE_DECLINED")
@@ -332,31 +332,23 @@ features() {
     | sort
 }
 
-# What a name brings, a line per module that declares it, from the
-# manifests' descriptions -- the path where a line gives none:
-#     ideavim  Copilot keys
-#     vscode   Which languages Copilot completes; Copilot chat keys
+# What a name brings, from the manifests' descriptions -- the path
+# where a line gives none -- on one line:
+#     Which languages Copilot completes; Copilot chat keys
 # Arguments:  $1 - optional name
 feature_about() {
   awk -F'\t' -v n="$1" '
-    $2 == n {
-      m = $6; sub(/.*\//, "", m)
-      d = ($7 != "" ? $7 : $5)
-      if (!(m in about)) { order[++k] = m; about[m] = d }
-      else about[m] = about[m] "; " d
-    }
-    END {
-      for (i = 1; i <= k; i++) printf "    %-8s %s\n", order[i], about[order[i]]
-    }
+    $2 == n { about = about (about ? "; " : "") ($7 != "" ? $7 : $5) }
+    END { if (about) printf "    %s\n", about }
   ' "$DECLARE_OUT"
 }
 
 # Ask about every optional name a module declares that this machine
 # has not answered -- with --reset, every one it declares, defaulting
 # to the current answer -- and write the answer down so the question
-# comes once per name, not once per run.  A name several modules
-# declare is asked about with the first of them, and only there.  A
-# run with nobody at the terminal answers nothing: the name keeps what
+# comes once per name, not once per run.  A name an overlay's module
+# declares too is asked about with the first of the two, and only
+# there.  A run with nobody at the terminal answers nothing: the name keeps what
 # it had, and one never answered is asked about next run, rather than
 # being recorded as a "no" nobody gave.
 # Arguments:  $1 - module directory
@@ -397,15 +389,29 @@ module_declined() {
   printf '%s\n' "$MODULE_DIR" >> "$scratch/declined"
 }
 
-# An enabled name that nothing declares is always a typo or a retired
-# module.  Harmless, so reported rather than fatal.
+# An answered name that nothing declares is a typo, a retired module,
+# or a name from before names were qualified by their module -- which
+# is why a stray `disable` is reported too: its module would otherwise
+# ask the question again with no word of the answer it ignored.
+# Harmless, so reported rather than fatal.
 unclaimed_features() {
   local name
-  for name in $MACHINE_FEATURES; do
-    if ! features | cut -f1 | grep -qxF "$name"; then
-      printf '  enable %s: no manifest declares this name\n' "$name"
-    fi
-  done
+  for name in $MACHINE_FEATURES; do unclaimed enable "$name"; done
+  for name in $MACHINE_DECLINED; do unclaimed disable "$name"; done
+}
+
+# Arguments:  $1 - enable or disable;  $2 - feature name
+unclaimed() {
+  local like
+  if features | cut -f1 | grep -qxF "$2"; then return 0; fi
+  printf '  %s %s: no manifest declares this name\n' "$1" "$2"
+  case "$2" in *.*) return 0 ;; esac
+  like=$(features | cut -f1 | awk -v n="$2" '
+    substr($0, length($0) - length(n)) == "." n' | paste -sd, - \
+    | sed 's/,/, /g')
+  if [ -n "$like" ]; then
+    printf '    names now start with their module: %s\n' "$like"
+  fi
 }
 
 # ── state ──────────────────────────────────────────────────────────────
@@ -766,7 +772,7 @@ doctor() {
       state=unanswered
       if feature_enabled "$name"; then state=on; fi
       case " $MACHINE_DECLINED " in *" $name "*) state=off ;; esac
-      printf '  %-10s %-10s %s\n' "$name" "$state" "$files"
+      printf '  %-18s %-10s %s\n' "$name" "$state" "$files"
     done < <(features)
   fi
   unclaimed_features

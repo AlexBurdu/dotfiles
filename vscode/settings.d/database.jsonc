@@ -1,0 +1,8 @@
+// Merged into settings.json by setup.sh, only on a machine whose machine.sh
+// says `enable database`. See ../README.md.
+{
+  // DATABASE
+  // ---------------------------------------------------------------------------
+  "database-client.defaultSelectLimit": 300,
+  "database-client.autoSync": true
+}

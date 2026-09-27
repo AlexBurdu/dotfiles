@@ -27,7 +27,8 @@ tmux-status-hook.sh ready      # agent is done
 
 ### Setup
 
-Symlinked by `tmux/setup.sh`:
+`tmux/manifest.sh` links this whole directory, so a hook added here
+needs no setup run:
 ```
 ~/.config/tmux/hooks/tmux-status-hook.sh
 ```

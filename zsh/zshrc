@@ -148,5 +148,13 @@ fi
 # zoxide - smarter cd command (tracks frequently used directories)
 eval "$(zoxide init zsh)"
 
-export PATH="$HOME/.local/bin:$PATH"
 
+# Machine-class and overlay shell config, last so it can override what
+# is above. ~/.config/zsh is a real directory, not a symlink, so an
+# overlay kept in another version control can drop a file in beside
+# the ones this repo links. `(N)` so an empty directory is not an
+# error.
+for _dotfiles_zsh in ~/.config/zsh/*.zsh(N); do
+  source "$_dotfiles_zsh"
+done
+unset _dotfiles_zsh

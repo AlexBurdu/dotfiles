@@ -11,8 +11,6 @@ mc/panels.ini
 nvim/lazy-lock.json
 __pycache__/
 
-# Machine-local nvim plugin overlay (never committed)
-nvim/lua/plugins/local/
 
 # Machine-local commit-guard terms — the names are the thing being protected
 .githooks/blocked-terms
@@ -22,3 +20,7 @@ nvim/lua/plugins/local/
 # ~/.config/git/ignore too, but that is machine-local — a fresh clone
 # elsewhere would not have it, and this is a public repo.
 **/.claude/settings.local.json
+
+# Machine-local setup answers — which optional links this machine wants,
+# and where its overlays are. Seeded from machine.example.sh.
+/machine.sh

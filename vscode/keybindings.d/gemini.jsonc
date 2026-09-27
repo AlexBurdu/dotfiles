@@ -1,0 +1,30 @@
+// Appended to keybindings.json by setup.sh, only on a machine whose
+// machine.sh says `enable gemini`. See ../README.md.
+[
+  // GEMINI
+  // ---------------------------------------------------------------------------
+  {
+    "key": "alt+x alt+g",
+    "command": "cloudcode.gemini.chatView.focus"
+  },
+  {
+    "key": "ctrl+u",
+    "command": "cloudcode.duetAI.generateCode",
+    "when": "authLoggedIn && config.geminicodeassist.enable && editorTextFocus && !inGeminiDiffView && !isInDiffEditor && vim.mode == 'Insert'"
+  },
+  {
+    "key": "ctrl+\\",
+    "command": "cloudcode.duetAI.showinEditor",
+    "when": "editorTextFocus && shouldRegisterInEditorCommand && !inGeminiDiffView && !isInDiffEditor"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "cloudcode.duetAI.rejectCompletion",
+    "when": "authLoggedIn && config.geminicodeassist.enable && inlineSuggestionVisible"
+  },
+  {
+    "key": "cmd+n",
+    "command": "geminicodeassist.chat.new",
+    "when": "cloudcode.gemini.chatView.active"
+  }
+]

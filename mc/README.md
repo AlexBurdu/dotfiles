@@ -4,14 +4,17 @@ Cross-platform mc configuration with support for macOS and Linux.
 
 ## Setup
 
+Run the repo's setup from its root and answer yes to Midnight
+Commander:
+
 ```bash
-cd mc
 ./setup.sh
 ```
 
 This will:
 1. Replace a legacy `~/.config/mc` symlink with a real directory
-2. Symlink the static config (`handlers.ini`, `open-file.sh`, `mc.keymap`) back to this repo
+2. Symlink the static config (`handlers.ini`, `open-file.sh`,
+   `mc.keymap`) back to this repo
 3. Seed `~/.config/mc/ini` from `ini.template` if it does not exist yet
 4. Generate `~/.config/mc/mc.ext.ini` from the tracked template, substituting
    `@MC_CONFIG@` for the real config path
@@ -22,7 +25,7 @@ This will:
 own state on exit, and `tmux/set-themes.sh` seds the skin into `ini` on every
 appearance change — pointing that at the working tree left the repo permanently
 dirty and, worse, baked the absolute path of whichever machine last ran
-`setup.sh` into the tracked `mc.ext.ini`.
+setup into the tracked `mc.ext.ini`.
 
 | In `~/.config/mc` | Kind | Source |
 |-------------------|------|--------|
@@ -31,14 +34,16 @@ dirty and, worse, baked the absolute path of whichever machine last ran
 | `ini` | runtime | seeded once from `mc/ini.template`, then owned by mc |
 | `panels.ini` | runtime | created by mc |
 
-Re-run `setup.sh` after editing `handlers.ini` or `mc/mc.ext.ini`. To reset your
-mc settings to the shipped defaults, delete `~/.config/mc/ini` and re-run it.
+Re-run `./setup.sh` after editing `handlers.ini` or `mc/mc.ext.ini`. To
+reset your mc settings to the shipped defaults, delete
+`~/.config/mc/ini` and re-run it.
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `setup.sh` | Setup script |
+| `manifest.sh` | What gets linked |
+| `install.sh` | Seeds `ini` and generates `mc.ext.ini` |
 | `handlers.ini` | Cross-platform command mappings |
 | `open-file.sh` | Script that reads handlers.ini and runs the OS-specific command |
 | `mc.ext.ini` | File extension associations (template; `@MC_CONFIG@` is substituted at setup) |
@@ -78,10 +83,11 @@ linux = xdg-open
    linux = mpv
    ```
 
-2. Run `setup.sh` to regenerate `~/.config/mc/mc.ext.ini`
+2. Run `./setup.sh` to regenerate `~/.config/mc/mc.ext.ini`
 
-The setup script scans `handlers.ini` and patches matching sections in the generated
-`~/.config/mc/mc.ext.ini` (the tracked copy keeps the `@MC_CONFIG@` placeholder):
+`install.sh` scans `handlers.ini` and patches matching
+sections in the generated `~/.config/mc/mc.ext.ini` (the tracked copy
+keeps the `@MC_CONFIG@` placeholder):
 - `[Include/TYPE]` sections (e.g., `[Include/image]`)
 - Direct `[TYPE]` sections (e.g., `[pdf]`)
 

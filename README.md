@@ -5,10 +5,454 @@ universally.
 
 ## Setup
 
-Each directory with configuration contains a `setup.sh` script
-that can be used to setup the configuration. The root directory
-contains a `setup.sh` script that can be used to setup all
-configurations.
+```sh
+git clone <this repo> ~/dotfiles
+~/dotfiles/setup.sh            # set up, asking what it needs to know
+~/dotfiles/setup.sh --reset    # start over, as on a new machine
+~/dotfiles/setup.sh --doctor   # show this machine's answers, change nothing
+```
+
+A clone plus one run is the whole install, on any machine. Two kinds of
+answer are written to `machine.sh` in the checkout and not asked
+again unless you run `--reset`:
+
+1. **Overlays** — other repos laid out like this one, holding config
+   that belongs to this machine and not in a public repo. Asked once,
+   before anything else, on the first run. Enter on a machine with
+   none.
+2. **Optional config** — for each name a manifest declares with
+   `optional`, whether this machine wants it. Asked with the first
+   module that declares the name. Every name is off until answered
+   yes.
+
+Everything else is common and set up everywhere. `machine.sh` is
+gitignored, so each machine's answers stay on that machine:
+
+```sh
+# ~/dotfiles/machine.sh on a work laptop
+overlay ~/corp/dotfiles
+enable bazel
+disable copilot
+disable gemini
+```
+
+Change a line and run `./setup.sh` again. A name that a later
+`git pull` adds is asked about on the next run, once.
+
+### Starting over
+
+`./setup.sh --reset` sets this machine's answers aside and runs as if
+on a new machine:
+
+```
+=== Starting over ===
+  Previous answers moved to ~/.local/state/dotfiles/machine.sh.prev.
+  Every question is asked again as on a new machine, including
+  leftovers you once chose to keep.
+
+=== This machine ===
+  Seeded ~/dotfiles/machine.sh (gitignored), for this machine's
+  answers.
+
+=== Overlays ===
+  ...
+  Add an overlay directory (Enter for none):
+```
+
+Every question then takes its usual default: optional names are off
+unless you answer yes, and a leftover you once kept is skipped unless
+you keep it again. To undo a reset, move `machine.sh.prev` back.
+
+A reset doesn't forget the record of what setup put on disk. That
+record is how setup finds leftovers to offer for removal. Backups
+setup made (`.bak`, `.edited`) aren't touched either, because they can
+hold the only copy of something. `./setup.sh --doctor` lists every
+leftover, kept ones marked `(kept)`, and changes nothing.
+
+[machine.example.sh](./machine.example.sh) is the template the first
+run starts from.
+
+### What a run does
+
+1. Reads every manifest — this repo's, then each overlay's — in
+   *declare* mode, to learn what is declared, including which optional
+   names exist.
+2. Goes through the modules one at a time, and finishes each before
+   starting the next. Under the module's banner it:
+   - asks whether to set it up;
+   - asks about the optional names it declares that `machine.sh` does
+     not answer yet;
+   - offers to remove the links into it that an earlier run made and
+     nothing declares any more (see [Removing what is no longer
+     declared](#removing-what-is-no-longer-declared));
+   - links it;
+   - builds each generated file it is the last contributor to;
+   - runs its `install.sh`.
+3. Under `=== Left over ===`, asks about the leftovers no module
+   claims: links into a module that has gone, and generated files.
+   Then it builds any generated file whose last contributor was
+   declined or skipped.
+4. Records what it left on disk in `~/.local/state/dotfiles/`.
+
+Every question looks the same. The choices are named in words, their
+letters are in brackets, and the capital letter is what Enter gives:
+
+```
+=== Neovim — editor config, plugins, keymaps ===
+  Set up nvim? [Y/n]
+  Enable jvm on this machine? [y/N]
+  Remove it, keep it and stop asking, or skip for now? [r/k/S]
+```
+
+Any other answer is asked again, and the third wrong answer takes the
+default. Each section of a run opens with a `=== … ===` banner, and
+everything under it is indented. The questions come from
+[bash/prompt.sh](./bash/prompt.sh), which an `install.sh` sources too.
+
+A module is any subdirectory holding a `manifest.sh`, so adding a
+module means adding a file rather than editing the runner.
+
+### Writing a manifest
+
+A manifest is shell, not a config format. Nothing parses it, so `~`
+expands and paths with spaces quote the way they do everywhere else.
+The runner defines the vocabulary in
+[bash/manifest_lib.sh](./bash/manifest_lib.sh), then sources the
+manifest — which is nothing but calls into it:
+
+```sh
+# ghostty/manifest.sh
+platform mac linux
+module "Ghostty — terminal config and themes"
+
+link config ~/.config/ghostty/config \
+  "Appearance and behaviour settings"
+link themes ~/.config/ghostty/themes \
+  "Colour themes (light/dark), added to by dropping a file in"
+```
+
+| Verb | Effect |
+| --- | --- |
+| `platform mac linux` | Restrict to those systems; skipped elsewhere |
+| `module "<text>"` | Banner, and the question whether to set it up |
+| `link <src> <dst> [text]` | Symlink `<src>`, module-relative, into place |
+| `link_each <dir> <dst> [text]` | Make `<dst>` a real directory and link each entry of `<dir>` into it |
+| `merge <src> <dst> [text]` | Add a JSON(C) fragment to generated `<dst>` |
+| `optional <name> link\|merge …` | That verb, only where `machine.sh` enables `<name>` |
+
+Order matters. Each manifest is sourced in its own subshell, and both
+`platform` and `module` abandon a module by exiting that subshell, so
+they come first — everything after them runs only for a module that is
+actually being set up.
+
+Answering `n` to a module's question means *not now*: what an earlier
+run set up for it stays, and none of it is offered for removal, not even
+the links into it that are no longer declared.
+
+### Optional config
+
+`optional` takes a name and then an ordinary `link` or `merge`:
+
+```sh
+# ideavim/manifest.sh
+optional copilot link copilot.vim ~/.config/ideavim/copilot.vim
+# vscode/manifest.sh
+optional copilot merge keybindings.d/copilot.jsonc "$config/keybindings.json"
+```
+
+A name is a capability, not a file: one `enable copilot` in
+`machine.sh` turns on every declaration that names it, in every module.
+Three rules keep the names answerable:
+
+- **A name is a feature** — a language, a tool, an AI assistant — never
+  a kind of machine or a person. "personal" or "work" can't be answered
+  without opening the files; a machine's role is what `machine.sh` and
+  its overlays already are.
+- **One feature, one name, in every module.** Kotlin in Neovim and Java
+  in VS Code are both `jvm`, so one answer sets up the language
+  everywhere.
+- **Every `optional` line has a description.** The question is built
+  from them, one line per module:
+
+  ```
+    copilot:
+      ideavim  Copilot keys
+      vscode   Which languages Copilot completes, MCP server gallery; Copilot chat keys
+    Enable copilot on this machine? [y/N]
+  ```
+
+Settings that are only preferences, wanted wherever the tool is, go in
+the common files rather than behind a name.
+
+Today's names:
+
+| Name | Brings |
+| --- | --- |
+| `copilot` | IdeaVim bindings, VS Code settings and keybindings |
+| `jvm` | Neovim Kotlin/Java LSP, debugger and Android attach; VS Code Java settings |
+| `android` | Neovim Android plugin: logcat, devices, build, run |
+| `minuet` | Neovim Minuet AI ghost-text completion |
+| `gemini` | IdeaVim actions, VS Code keybindings |
+| `bazel` | VS Code Bazel settings |
+| `dart` | VS Code Dart settings |
+| `database` | VS Code database client settings |
+
+`./setup.sh --doctor` prints the live list, with this machine's answer
+to each.
+
+### Merged files
+
+Some config formats have no include, so a symlink can carry all of a
+file or none of it. VS Code's `settings.json` and `keybindings.json`
+are the case here: some of their sections are not wanted on every
+machine. For those, the module keeps *fragments* and declares each with
+`merge`; setup builds the real file from the ones that are active:
+
+```
+vscode/settings.d/base.jsonc       every machine
+vscode/settings.d/copilot.jsonc    optional copilot
+vscode/settings.d/bazel.jsonc      optional bazel
+…
+```
+
+Fragments are JSONC — comments and trailing commas are fine, and
+[bash/jsonc.awk](./bash/jsonc.awk) strips them before `jq` merges.
+Fragments for one destination merge in the order they were declared,
+this repo first and then each overlay: objects key by key, arrays
+concatenated, anything else replaced by the later fragment.
+Concatenation is what lets an overlay *add* keybindings.
+
+The built file is a real file, not a link, so editing it does not reach
+the repo. VS Code writes `settings.json` itself whenever a setting is
+changed in its UI; the next run notices the file differs from what it
+wrote, shows the difference, and asks before overwriting — keeping the
+edited copy as `settings.json.edited`. Carry a change you want to keep
+into its fragment.
+
+`merge` needs `jq`, which macOS ships in `/usr/bin` and Linux
+distributions package. Without it the run says which files it could not
+build and carries on.
+
+### A manifest only declares
+
+A manifest may not define functions, and the runner enforces it: it
+snapshots the defined functions around the `source` and refuses a
+manifest that added any, naming the file and stopping the run.
+
+The reason is declare mode, which every run — and `--doctor` — uses to
+read every manifest, and which must not change anything. A manifest
+that does its work while being read makes that unsafe by construction.
+
+The check covers function definitions only. A bare command at the top
+of a manifest would still run while it is read; bash offers no way to
+refuse that short of parsing the file, so it stays a rule rather than a
+guarantee.
+
+Anything with a side effect goes in an optional `<module>/install.sh`,
+which the runner executes after that module has linked. *Executed*, not
+sourced: a separate program, with no access to `link` or the rest of
+the vocabulary, so the two cannot grow back together. It gets
+`$MODULE_DIR` and `$DOTFILES_LIB` in the environment, and declare mode
+never runs it. To ask a question the way the rest of the run does, it
+sources `"$DOTFILES_LIB/prompt.sh"` and calls `confirm "Install TPM?"`.
+With nobody at the terminal, `confirm` counts as a no. A tool the
+script runs must not ask questions of its own: pass it the answer by
+flag instead, like `apt install -y` or fzf's installer with
+`--key-bindings --completion --no-update-rc`. See
+[mc/install.sh](./mc/install.sh) for generated files,
+[tmux/install.sh](./tmux/install.sh) and
+[zsh/install.sh](./zsh/install.sh) for installs.
+
+A failing `install.sh` is that module's problem and the run carries on;
+a manifest carrying code is the format's problem and stops it.
+
+### Link directories, not files
+
+Prefer one link to a directory over a link per file inside it. A file
+added upstream then works after a plain `git pull`, and a file deleted
+upstream disappears with it, instead of leaving a dangling link behind
+until the next setup run. `nvim/manifest.sh` links `bin/` as a whole
+for this reason.
+
+The exception is a directory where not every file goes to every
+machine, or where files that are not this repo's belong beside this
+repo's. `link_each` covers that: the destination is a real directory,
+and each entry of the source is linked into it — except an entry the
+manifest declares some other way, which is left to that line. Neovim's
+plugin specs are the example:
+
+```sh
+link_each lua ~/.config/nvim/lua
+link_each lua/plugins ~/.config/nvim/lua/plugins
+optional jvm link lua/plugins/jvm.lua \
+  ~/.config/nvim/lua/plugins/jvm.lua
+```
+
+Every spec in `lua/plugins/` is linked, save `jvm.lua`, which is
+linked only where `machine.sh` has `enable jvm`; `lua/plugins/`
+itself is left to its own `link_each`, so it becomes a real directory
+too, one an overlay or a hand-placed file can join. The price is the
+one any per-file link pays: a file added or deleted upstream needs a
+setup run. A directory that was once linked whole is turned into a
+real one on the next run, not offered as a leftover.
+
+So a `git pull` is enough for everything except:
+
+| Change | Needs |
+| --- | --- |
+| Editing a file any module links | nothing; next app launch picks it up |
+| Adding or deleting a file under a linked directory | nothing |
+| Adding or deleting a file linked individually or by `link_each` | a setup run |
+| Adding a module, or an optional name | a setup run |
+| Editing a VS Code fragment | a setup run |
+| `mc`'s generated `ini` and `mc.ext.ini` | a setup run |
+
+A directory link is only possible where the destination directory is
+this repo's alone. Link file by file where something else must also
+write there — app state (`mc`), or an overlay's plug-in point
+(`ideavim`, whose `~/.config/ideavim` has to stay a real directory so
+an overlay can put `overlay.vim` beside the linked files).
+
+### Platform
+
+`platform` is how a Linux machine skips the macOS-only modules. On
+Linux, `aerospace` and `karabiner` are passed over without
+prompting; everything else is set up as usual. Where only a path
+differs, branch inside the manifest instead — `vscode/manifest.sh`
+computes its destination once.
+
+### Overlays: config that cannot be published
+
+**This repo carries common config only.** Config that belongs to one
+machine or one employer — internal hosts, repos, tooling, or simply
+things not wanted everywhere — lives in its own repository, laid out
+the same way, checked out only where it belongs, and named in
+`machine.sh`:
+
+```sh
+overlay ~/corp/dotfiles
+```
+
+Every root is read in order, this repo first. An overlay can do three
+things with the common config:
+
+- **Add to it**, through the plug-in points below — the usual case.
+- **Merge into it**, with `merge` for the same destination: its
+  fragments land after this repo's.
+- **Replace it**, with a module of the same name linking the same
+  destination; it links last and wins.
+
+An overlay repo looks exactly like this one:
+
+```
+~/corp/dotfiles/
+  tmux/
+    manifest.sh          link work.conf ~/.config/tmux/overlay/work.conf
+    work.conf
+  zsh/
+    manifest.sh          link work.zsh ~/.config/zsh/work.zsh
+    work.zsh
+  nvim/
+    manifest.sh          link lsp.lua ~/.config/nvim/lua/plugins/work-lsp.lua
+    lsp.lua
+  vscode/
+    manifest.sh          merge settings.jsonc "$config/settings.json"
+    settings.jsonc
+```
+
+It gets the same vocabulary, `optional` included, and the same
+`install.sh`, because the runner reads it the same way. Nothing in it
+is referenced from this repo; the only thing connecting the two is the
+`overlay` line. An overlay named in `machine.sh` but not checked out is
+reported and skipped, and its links are left alone until it is back.
+
+#### Where an overlay plugs in
+
+An overlay cannot write *inside* a directory this repo links —
+`~/.config/nvim/bin` is a symlink to this checkout, so a file dropped
+there would land in the repo. Each app instead reads a path that is
+either left empty here or filled by `link_each`, and the overlay links
+into that:
+
+| App | Plug-in point | Mechanism |
+| --- | --- | --- |
+| zsh | `~/.config/zsh/*.zsh` | sourced last by `zshrc` |
+| nvim | `~/.config/nvim/lua/plugins/*.lua` | imported as specs, like this repo's |
+| tmux | `~/.config/tmux/overlay/*.conf` | `source-file -q`, last |
+| ghostty | `~/.config/ghostty/overlay.conf` | `config-file = ?`, last |
+| ideavim | `~/.config/ideavim/overlay.vim` | guarded `source`, last |
+| login profile | `~/.profile.local` | sourced last by `profile` |
+| VS Code | `merge` into the same destination | fragments after this repo's |
+
+Every one of them is last in its file, so an overlay overrides rather
+than merely adds. All are absent by default and silent about it.
+
+Link files into a plug-in point, never the directory itself. The
+directory is shared — this repo's optional files, every overlay, and
+anything placed by hand land in it side by side — so it has to stay a
+real directory, which setup creates when it first links into it.
+
+`karabiner` and `aerospace` have no plug-in point. `karabiner.json` is
+JSON and could move to `merge` the way VS Code did; `aerospace.toml`
+has no include and no merge here. An overlay can still own either
+outright, replacing the file. `tridactyl` has none either: its
+`source` command reports an error for a file that is not there, so it
+cannot be left empty by default.
+
+For config that is not worth a repo at all — scratch, for this machine
+alone — put a real file straight into the plug-in point: a spec in
+`~/.config/nvim/lua/plugins/`, a script in `~/.config/zsh/`. Setup only
+tracks the links it made, so it never offers to remove a file placed by
+hand. Anything that must not be published belongs in an overlay
+instead, where version control can protect it.
+
+This repo's own optional files use the plug-in point too. Neovim's
+optional specs sit in `nvim/lua/plugins/` beside the rest, and are
+linked into `~/.config/nvim/lua/plugins/` only where enabled, so
+`lazy_nvim.lua` imports that one directory and decides nothing itself.
+A spec there that names a plugin another spec already configures
+extends it — lazy.nvim merges the two — which is how `jvm.lua` adds
+servers to the common LSP setup.
+
+### Removing what is no longer declared
+
+Each run records what it set up — every link and every generated file —
+in `~/.local/state/dotfiles/`. Outside the checkout on purpose: it
+describes this machine's disk, so it has to survive a fresh clone or a
+`git clean`.
+
+The next run compares that record against what is declared now.
+Anything no longer declared is a leftover, however it stopped being
+declared: a module deleted, a `link` line removed, an optional name
+turned off, an overlay dropped from `machine.sh`, or a module retired
+inside an overlay. A leftover link into a module is asked about with
+that module, once its optional names are answered. Everything else is
+asked about at the end of the run:
+
+```
+  ~/.config/ideavim/copilot.vim -> ~/dotfiles/ideavim/copilot.vim
+  Remove it, keep it and stop asking, or skip for now? [r/k/S]
+```
+
+- **remove** deletes the link, and puts back the `.bak` that setup
+  moved aside when it first linked there, if there is one.
+- **keep** leaves it and stops tracking it.
+- **skip**, the default, leaves it and asks again next run — so a run
+  with nobody at the terminal changes nothing.
+
+A link that has since been replaced by something else is no longer
+this repo's, and is dropped without asking. On a machine with no
+record yet, the run also looks for links into the checkout under `~`
+and `~/.config`, so what older layouts left behind is found once too.
+
+What an `install.sh` made — TPM, zsh plugins, `mc`'s generated files —
+is not recorded, and is not removed with its module.
+
+`./setup.sh --doctor` prints the same list, plus any generated file
+edited since setup wrote it, and changes nothing.
+
+[bash/manifest_test.sh](./bash/manifest_test.sh) covers the runner
+against a sandbox `HOME`.
 
 ### Commit Guard
 
@@ -121,7 +565,8 @@ in each section below.
 | Accept / Confirm | `C-y` | `Tab` (full) `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) |
 | Dismiss | `C-e` | Auto | `C-d` | `C-d` |
 
-Neovim: LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or on `C-n`/`C-p`.
+Neovim: LSP popup auto-triggers while typing. Ghost text appears after
+400ms pause, or on `C-n`/`C-p`.
 
 ### [Karabiner](#karabiner) (Hardware-Level Remapping)
 
@@ -391,7 +836,12 @@ no language server is attached.
 
 ### Completion (Insert Mode)
 
-LSP popup and Minuet AI ghost text coexist. Keys are context-aware: some act on the popup when visible, ghost text otherwise.
+LSP popup and Minuet AI ghost text coexist. Keys are context-aware:
+some act on the popup when visible, ghost text otherwise.
+
+Ghost text is optional: `enable minuet` in `machine.sh`. Without it the
+ghost-text column does nothing, and `Tab`, `C-y` and `C-h` behave as
+plain insert-mode keys outside the popup.
 
 | Shortcut | LSP Popup | Minuet Ghost Text |
 |---|---|---|
@@ -403,7 +853,9 @@ LSP popup and Minuet AI ghost text coexist. Keys are context-aware: some act on 
 | `Tab` | - | Accept full suggestion |
 | `C-e` | Dismiss | - |
 
-LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or on `C-n`/`C-p`. Switch AI provider with `:MinuetProvider <name>` (`claude`, `gemini`, `codestral`, `ollama`).
+LSP popup auto-triggers while typing. Ghost text appears after 400ms
+pause, or on `C-n`/`C-p`. Switch AI provider with
+`:MinuetProvider <name>` (`claude`, `gemini`, `codestral`, `ollama`).
 
 ### Build & Test (Bazel/Gradle auto-detect)
 | Shortcut | Action |
@@ -414,19 +866,22 @@ LSP popup auto-triggers while typing. Ghost text appears after 400ms pause, or o
 | `Space br` | Rerun last build task |
 | `Space bl` | Toggle build task list (Overseer) |
 | `Space gb` | Go to owning BUILD file |
-| `Space bJ` | Toggle JetBrains Kotlin LSP |
+| `Space bJ` | Toggle JetBrains Kotlin LSP (optional `jvm`) |
 | `gd`/`gf` (gradle.kts) | Go to source file quoted on current line |
 
 ### Debug (DAP)
 
-Supported: Kotlin/Java (Android via ADB, tests via JDWP), Python (debugpy).
-Gradle debug tests inject `-Xdebug` via init script to make coroutine locals inspectable.
+Supported: Python (debugpy), and Kotlin/Java (Android via ADB, tests via
+JDWP) with optional `jvm` enabled in `machine.sh`. Without it,
+`Space dt`/`dT` on a JVM project and `Space da` in a Kotlin or Java file
+report that no adapter is set up. Gradle debug tests inject `-Xdebug`
+via init script to make coroutine locals inspectable.
 
 | Shortcut | Action |
 |---|---|
 | `Space dt` | Debug test under cursor (same targeting as `bt`) |
 | `Space dT` | Debug all tests (same targeting as `bT`) |
-| `Space da` | Attach to running process (Android: ADB package picker, Python: port) |
+| `Space da` | Attach to running process (Python: port; with `jvm`, Android: ADB package picker) |
 | `Space db` | Toggle breakpoint |
 | `Space dB` | Set conditional breakpoint (prompts for expression) |
 | `Space dc` | Continue (or start debug test if no active session) |
@@ -442,8 +897,10 @@ Gradle debug tests inject `-Xdebug` via init script to make coroutine locals ins
 
 ### Android
 
-Logcat and device selection work outside a Gradle project (falls back to cwd).
-Build/run still require a Gradle workspace.
+Optional: `enable android` in `machine.sh`. Logcat and device selection
+work outside a Gradle project (falls back to cwd). Build/run still
+require a Gradle workspace. Attaching the debugger is `Space da`, part of
+optional `jvm`.
 
 | Shortcut | Action |
 |---|---|
@@ -468,6 +925,11 @@ Config: [ideavim/ideavimrc.vim](./ideavim/ideavimrc.vim)
 AI Completion: [ideavim/copilot.vim](./ideavim/copilot.vim)
 Gemini: [ideavim/gemini.vim](./ideavim/gemini.vim)
 Bazel: [ideavim/intellijbazel.vim](./ideavim/intellijbazel.vim)
+
+The last three apply only on a machine that links them: `ideavimrc.vim`
+sources each one behind a `filereadable` guard, so leaving a file out of
+`ideavim/manifest.sh` — or not enabling its `optional` name — turns
+those bindings off rather than breaking startup.
 
 ### Navigation
 | Shortcut | Action |
@@ -594,6 +1056,9 @@ Settings: [vscode/settings.json](./vscode/settings.json)
 | `C-Shift-s` | Split terminal |
 
 ### AI Completion
+
+Only where `gemini.vim` / `copilot.vim` are linked; see above.
+
 | Shortcut | Action |
 |---|---|
 | `C-u` | Generate code (Gemini) |

@@ -106,12 +106,18 @@ imap <C-p> <Action>(NextInlineCompletionSuggestionAction)
 imap <C-y> <Action>(InsertInlineCompletionWordAction)
 imap <C-h> <Action>(InsertInlineCompletionLineAction)
 
-" Include the Gemini specific key mappings
-source ~/.config/ideavim/gemini.vim
+" AI completion bindings, each applied only where the file is linked --
+" `source` on a missing file is an error, so the guard is what lets a
+" machine simply not have one. Which machines get them is decided by the
+" manifest that links them, not here.
+if filereadable(expand("~/.config/ideavim/gemini.vim"))
+  source ~/.config/ideavim/gemini.vim
+endif
 
-" Copilot will override code completion bindings with its own, if the file is
-" available
-" source ~/.config/ideavim/copilot.vim
+" Copilot overrides the code completion bindings above with its own.
+if filereadable(expand("~/.config/ideavim/copilot.vim"))
+  source ~/.config/ideavim/copilot.vim
+endif
 
 " VCS (Version Control System)
 nmap <M-v> m'<Action>(ActivateVersionControlToolWindow)
@@ -161,4 +167,14 @@ map <Leader>vt <Action>(ViewToolButtons)
 
 map <Leader>z <Action>(ToggleDistractionFreeMode)
 
-source ~/.config/ideavim/intellijbazel.vim
+if filereadable(expand("~/.config/ideavim/intellijbazel.vim"))
+  source ~/.config/ideavim/intellijbazel.vim
+endif
+
+" Config from outside this repo — work settings kept in another version
+" control, linked here by an overlay module. Last, so it can override
+" anything above. Guarded because `source` on a missing file is an
+" error, and most machines will not have one.
+if filereadable(expand("~/.config/ideavim/overlay.vim"))
+  source ~/.config/ideavim/overlay.vim
+endif

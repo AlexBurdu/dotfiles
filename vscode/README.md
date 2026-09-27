@@ -2,9 +2,10 @@
 
 ## Files
 
-- `settings.json` - User settings (symlinked to VS Code config dir)
-- `keybindings.json` - Custom keybindings (symlinked to VS Code config dir)
-- `setup.sh` - Creates symlinks to VS Code's config location
+- `settings.d/*.jsonc` - Fragments that `settings.json` is built from
+- `keybindings.d/*.jsonc` - Fragments that `keybindings.json` is built from
+- `manifest.sh` - Declares which fragments go into which file, which of
+  them are optional, and the config directory on each platform
 
 ## Section Formatting
 
@@ -21,50 +22,37 @@ Both JSON files use a consistent hierarchy for readability:
 // Sub-subsection (H3)
 ```
 
-## Settings Organization
+## How the files are built
 
-The `settings.json` is organized into sections for easy copying between
-personal and work setups:
+VS Code's JSON has no include, so one linked file could carry every
+section or none. Each section is a fragment instead, and `setup.sh`
+merges the active ones with `jq` into a real `settings.json` and
+`keybindings.json` in VS Code's config directory. Fragments are JSONC:
+comments and trailing commas are fine.
 
-### Common (copied to work)
+| Fragment | Used on |
+| --- | --- |
+| `settings.d/base.jsonc` — general, theming, Vim | every machine |
+| `settings.d/copilot.jsonc` — Copilot languages, MCP gallery | `enable copilot` |
+| `settings.d/bazel.jsonc` | `enable bazel` |
+| `settings.d/dart.jsonc` | `enable dart` |
+| `settings.d/jvm.jsonc` — Spring Boot, Eclipse files hidden | `enable jvm` |
+| `settings.d/database.jsonc` | `enable database` |
+| `keybindings.d/base.jsonc` — AI, navigation | every machine |
+| `keybindings.d/gemini.jsonc` | `enable gemini` |
+| `keybindings.d/copilot.jsonc` | `enable copilot` |
 
-Everything above `// LOCAL CONFIG` is shared between personal and work:
+The `enable` lines go in the gitignored `machine.sh` at the repo root;
+the first setup run asks about each name. An overlay repo can add its
+own fragments for the same files, merged after these — objects key by
+key, keybinding arrays appended. See the Setup section of the
+[repo README](../README.md).
 
-- **GENERAL** - diffEditor, files, window, workbench basics
-- **THEMING AND APPEARANCE** - fonts, colors, visual preferences
-- **VIM CONFIGURATION** - VSCodeVim plugin settings and keybindings
+## Editing
 
-### Local Config (personal only)
-
-Settings under `// LOCAL CONFIG` are specific to the home setup and not
-copied to work:
-
-- **COPILOT** - GitHub Copilot settings
-- **BAZEL** - Bazel build system settings
-- **DART** - Dart/Flutter language settings
-- **JAVA** - Java/Spring Boot settings
-- **DATABASE** - Database client settings
-- MCP gallery, file exclusions, other machine-specific settings
-
-## Keybindings Organization
-
-The `keybindings.json` follows the same pattern:
-
-### Common
-
-- **AI** - General inline suggestions, Gemini
-- **NAVIGATION** - Editor, Terminal, Side Bar, List Navigation, Misc
-
-### Local Config
-
-- **COPILOT** - GitHub Copilot chat keybindings
-
-## Setup
-
-```bash
-cd vscode
-./setup.sh
-```
-
-This creates symlinks from VS Code's config directory to the dotfiles.
-Changes made in VS Code will be reflected in the dotfiles.
+The built files are copies, so an edit made in VS Code — including
+changing a setting through its UI — does not reach this repo. Carry it
+into the right fragment and run `./setup.sh`. The run notices that the
+file on disk differs from what it last wrote, shows the difference, and
+asks before overwriting; the edited copy is kept as
+`settings.json.edited`.

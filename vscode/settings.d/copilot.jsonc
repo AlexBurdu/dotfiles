@@ -1,0 +1,13 @@
+// Merged into settings.json by setup.sh, only on a machine whose machine.sh
+// says `enable copilot`. See ../README.md.
+{
+  // COPILOT
+  // ---------------------------------------------------------------------------
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": false,
+    "scminput": false
+  },
+  "chat.mcp.gallery.enabled": true
+}

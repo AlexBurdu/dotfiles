@@ -4,6 +4,9 @@
 // - https://github.com/Melkeydev/vscode_bindings/tree/main
 // - https://www.youtube.com/watch?v=GST8we5uABo
 // - https://code.visualstudio.com/docs/getstarted/keybindings#_display
+//
+// Common to every machine. setup.sh merges this with the optional
+// fragments beside it into VS Code's settings.json. See ../README.md.
 {
   // ===========================================================================
   // GENERAL
@@ -414,63 +417,5 @@
   "extensions.experimental.affinity": {
     "vscodevim.vim": 1
   },
-
-  // ===========================================================================
-  // LOCAL CONFIG (personal/home only - not copied to work)
-  // ===========================================================================
-
-  "files.exclude": {
-    "**/.classpath": true,
-    "**/.project": true,
-    "**/.settings": true,
-    "**/.factorypath": true
-  },
-  "chat.mcp.gallery.enabled": true,
-  "git.openRepositoryInParentFolders": "always",
-
-  // COPILOT
-  // ---------------------------------------------------------------------------
-  "github.copilot.enable": {
-    "*": true,
-    "plaintext": true,
-    "markdown": false,
-    "scminput": false
-  },
-
-  // BAZEL
-  // ---------------------------------------------------------------------------
-  "bazel.executable": "./bazelw",
-  "bazel.buildifierFixOnFormat": true,
-  "settingsSync.ignoredSettings": [
-    "-bazel.executable",
-    "-bazel.buildifierExecutable"
-  ],
-
-  // DART
-  // ---------------------------------------------------------------------------
-  "[dart]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "editor.rulers": [
-      80
-    ],
-    "editor.selectionHighlight": false,
-    "editor.suggest.snippetsPreventQuickSuggestions": false,
-    "editor.suggestSelection": "first",
-    "editor.tabCompletion": "onlySnippets",
-    "editor.wordBasedSuggestions": "off"
-  },
-  "dart.debugExternalLibraries": true,
-  "dart.debugSdkLibraries": true,
-  "dart.previewLsp": true,
-
-  // JAVA
-  // ---------------------------------------------------------------------------
-  "boot-java.change-detection.on": true,
-  "redhat.telemetry.enabled": false,
-
-  // DATABASE
-  // ---------------------------------------------------------------------------
-  "database-client.defaultSelectLimit": 300,
-  "database-client.autoSync": true
+  "git.openRepositoryInParentFolders": "always"
 }

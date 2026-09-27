@@ -1,4 +1,8 @@
 // Place your key bindings in this file to overwrite the defaults
+//
+// Common to every machine. setup.sh appends the optional fragments
+// beside it and writes the result to VS Code's keybindings.json.
+// See ../README.md.
 [
   // ===========================================================================
   // AI
@@ -26,33 +30,6 @@
     "key": "ctrl+h",
     "command": "editor.action.inlineSuggest.acceptNextLine",
     "when": "editorFocus && inlineSuggestionVisible"
-  },
-
-  // GEMINI
-  // ---------------------------------------------------------------------------
-  {
-    "key": "alt+x alt+g",
-    "command": "cloudcode.gemini.chatView.focus"
-  },
-  {
-    "key": "ctrl+u",
-    "command": "cloudcode.duetAI.generateCode",
-    "when": "authLoggedIn && config.geminicodeassist.enable && editorTextFocus && !inGeminiDiffView && !isInDiffEditor && vim.mode == 'Insert'"
-  },
-  {
-    "key": "ctrl+\\",
-    "command": "cloudcode.duetAI.showinEditor",
-    "when": "editorTextFocus && shouldRegisterInEditorCommand && !inGeminiDiffView && !isInDiffEditor"
-  },
-  {
-    "key": "ctrl+d",
-    "command": "cloudcode.duetAI.rejectCompletion",
-    "when": "authLoggedIn && config.geminicodeassist.enable && inlineSuggestionVisible"
-  },
-  {
-    "key": "cmd+n",
-    "command": "geminicodeassist.chat.new",
-    "when": "cloudcode.gemini.chatView.active"
   },
 
   // ===========================================================================
@@ -352,31 +329,5 @@
     "key": "ctrl+shift+f10",
     "command": "testing.runAtCursor",
     "when": "editorTextFocus"
-  },
-
-  // ===========================================================================
-  // LOCAL CONFIG (personal/home only - not copied to work)
-  // ===========================================================================
-
-  // COPILOT
-  // ---------------------------------------------------------------------------
-  {
-    "key": "alt+x alt+c",
-    "command": "workbench.panel.chat.view.copilot.focus"
-  },
-  {
-    "key": "alt+x alt+c",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "sideBarVisible"
-  },
-  {
-    "key": "cmd+enter",
-    "command": "-chatEditor.action.accept",
-    "when": "chatEdits.hasEditorModifications && editorFocus && !chatEdits.isRequestInProgress"
-  },
-  {
-    "key": "ctrl+enter",
-    "command": "-github.copilot.generate",
-    "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
   }
 ]

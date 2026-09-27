@@ -1,0 +1,15 @@
+// Merged into settings.json by setup.sh, only on a machine whose machine.sh
+// says `enable jvm`. See ../README.md.
+{
+  // JVM
+  // ---------------------------------------------------------------------------
+  "boot-java.change-detection.on": true,
+  "redhat.telemetry.enabled": false,
+  // Eclipse project metadata the Java extension writes beside the sources
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  }
+}

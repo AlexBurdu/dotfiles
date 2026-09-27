@@ -14,3 +14,9 @@ macos-option-as-alt = true
 # Window
 # window-padding-x = 10
 # window-padding-y = 10
+
+# Config from outside this repo — work settings kept in another version
+# control, linked to ~/.config/ghostty/overlay.conf by an overlay
+# module. `?` makes it optional; the path is relative to this file's
+# location as installed, which is the symlink, not the repo.
+config-file = ?overlay.conf

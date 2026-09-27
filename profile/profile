@@ -1,0 +1,152 @@
+# Login environment for macOS and Linux: locale, PATH, SDK locations and
+# the language version managers.
+#
+# Read by login shells, and by every interactive zsh through zsh/zshrc,
+# so it runs again in each tmux pane and nvim :terminal on top of what
+# the parent shell already set.  Everything here is safe to repeat: PATH
+# entries go through path_prepend and path_append, which never add one
+# twice.
+#
+# Plain sh, not bash or zsh: a graphical login may read it with /bin/sh.
+
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# Remove every occurrence of a directory from PATH.
+# Arguments:  $1 - directory
+_path_drop() {
+  while :; do
+    case ":$PATH:" in *":$1:"*) ;; *) return 0 ;; esac
+    _path=":$PATH:"
+    _path="${_path%%":$1:"*}:${_path#*":$1:"}"
+    _path="${_path#:}"
+    PATH="${_path%:}"
+  done
+}
+
+# Put a directory first on PATH, moving it there if it is already on it:
+# a nested login shell on macOS has path_helper push the system
+# directories back in front, and this is what undoes that.
+# Arguments:  $1 - directory; skipped when missing
+path_prepend() {
+  [ -d "$1" ] || return 0
+  _path_drop "$1"
+  PATH="$1${PATH:+:$PATH}"
+}
+
+# Put a directory last on PATH, unless it is on it already.
+# Arguments:  $1 - directory; skipped when missing
+path_append() {
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in *":$1:"*) return 0 ;; esac
+  PATH="${PATH:+$PATH:}$1"
+}
+
+case "$(uname -s)" in
+  Darwin)
+    path_prepend /opt/homebrew/sbin
+    path_prepend /opt/homebrew/bin
+    # GNU grep and coreutils ahead of the BSD ones.
+    for _gnu in grep coreutils; do
+      path_prepend "/opt/homebrew/opt/$_gnu/libexec/gnubin"
+      case ":${MANPATH-}:" in
+        *":/opt/homebrew/opt/$_gnu/libexec/gnuman:"*) ;;
+        *) MANPATH="/opt/homebrew/opt/$_gnu/libexec/gnuman:${MANPATH-}" ;;
+      esac
+    done
+    unset _gnu
+    export MANPATH
+    path_append "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+    export ANDROID_HOME="$HOME/Library/Android/sdk"
+    ;;
+  Linux)
+    # Android Studio's default, then an SDK kept beside other apps.
+    for _sdk in "$HOME/Android/Sdk" "$HOME/apps/AndroidSDK"; do
+      if [ -d "$_sdk" ]; then export ANDROID_HOME="$_sdk"; break; fi
+    done
+    unset _sdk
+    ;;
+esac
+
+path_append "$HOME/go/bin"
+path_prepend "$HOME/.local/bin"
+
+# The SDK's adb ahead of any packaged one: an adb client that differs
+# from the server Android Studio started keeps restarting that server.
+if [ -n "${ANDROID_HOME-}" ]; then
+  export ADB="$ANDROID_HOME/platform-tools/adb"
+  path_prepend "$ANDROID_HOME/platform-tools"
+  path_append "$ANDROID_HOME/emulator"
+  path_append "$ANDROID_HOME/cmdline-tools/latest/bin"
+fi
+
+# Version managers, without their start-up cost.  Each puts its default
+# version on PATH directly, and loads itself the first time its command
+# is typed.  Sourced eagerly, nvm.sh alone took 0.2s per shell on macOS
+# and 2.8s on Linux, most of it spent resolving the default version.
+
+export SDKMAN_DIR="$HOME/.sdkman"
+if [ -d "$SDKMAN_DIR/candidates/java/current" ]; then
+  export JAVA_HOME="$SDKMAN_DIR/candidates/java/current"
+  path_prepend "$JAVA_HOME/bin"
+fi
+if [ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
+  sdk() {
+    unset -f sdk
+    . "$SDKMAN_DIR/bin/sdkman-init.sh"
+    sdk "$@"
+  }
+fi
+
+export NVM_DIR="${XDG_CONFIG_HOME:+$XDG_CONFIG_HOME/nvm}"
+NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # The default alias names a version, or a prefix of one ("20");
+  # anything else ("lts/*", "node") is left for nvm itself to resolve.
+  _node=
+  if [ -r "$NVM_DIR/alias/default" ]; then
+    read -r _node < "$NVM_DIR/alias/default"
+  fi
+  _node="${_node#v}"
+  case "$_node" in
+    '' | *[!0-9.]*) _node= ;;
+    *)
+      if [ ! -d "$NVM_DIR/versions/node/v$_node" ]; then
+        _node=$(command ls "$NVM_DIR/versions/node" 2>/dev/null |
+          grep "^v$_node\." | sort -V | tail -n 1)
+        _node="${_node#v}"
+      fi
+      ;;
+  esac
+  if [ -n "$_node" ]; then
+    export NVM_BIN="$NVM_DIR/versions/node/v$_node/bin"
+    export NVM_INC="$NVM_DIR/versions/node/v$_node/include/node"
+    path_prepend "$NVM_BIN"
+    # nvm runs under bash and zsh only, which pass arguments to `.`.
+    nvm() {
+      unset -f nvm
+      # shellcheck disable=SC2240
+      . "$NVM_DIR/nvm.sh" --no-use
+      nvm "$@"
+    }
+  else
+    . "$NVM_DIR/nvm.sh"
+  fi
+  unset _node
+fi
+
+export PATH
+
+# Machine-local profile, if there is one: private paths, work setup, anything
+# with no business in a public repo. Whoever owns it symlinks it to this name,
+# so nothing here needs to know what is on the other end.
+#
+# Last, on purpose. It reads what is set above — ANDROID_HOME and JAVA_HOME
+# among others — and anything it sets is meant to win, which is what augmenting
+# these dotfiles means. It may use path_prepend and path_append too.
+# Guarded, because a fresh machine or anyone else's clone has no such file
+# and should carry on regardless.
+[ -f "$HOME/.profile.local" ] && . "$HOME/.profile.local"
+
+unset -f _path_drop path_prepend path_append
+unset _path

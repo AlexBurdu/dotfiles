@@ -1,0 +1,12 @@
+// Merged into settings.json by setup.sh, only on a machine whose machine.sh
+// says `enable bazel`. See ../README.md.
+{
+  // BAZEL
+  // ---------------------------------------------------------------------------
+  "bazel.executable": "./bazelw",
+  "bazel.buildifierFixOnFormat": true,
+  "settingsSync.ignoredSettings": [
+    "-bazel.executable",
+    "-bazel.buildifierExecutable"
+  ]
+}

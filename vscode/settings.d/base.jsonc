@@ -14,6 +14,7 @@
 
   "diffEditor.renderSideBySide": false,
   "diffEditor.codeLens": true,
+  "diffEditor.ignoreTrimWhitespace": true,
   "extensions.ignoreRecommendations": true,
   "files.autoSave": "onFocusChange",
   "files.eol": "\n",
@@ -63,354 +64,449 @@
   "vim.easymotion": false,
   "vim.incsearch": true,
   "vim.hlsearch": true,
+  "vim.surround": true,
   "vim.handleKeys": {
     "<C-d>": true,
     "<C-u>": true,
     "<C-a>": true,
     "<C-e>": true,
-    "<C-f>": false,
+    "<C-y>": true,
+    "<C-f>": true,
+    "<C-b>": true,
     "<o>": true
   },
   "vim.insertModeKeyBindings": [],
   "vim.normalModeKeyBindingsNonRecursive": [
-    // NAVIGATION
-    // Quick open / switcher
+    // UNDO / REDO (Fix VSCodeVim undo tree desync)
+    // -------------------------------------------------------------------------
     {
-      "before": [
-        "C-p"
-      ],
+      "before": ["u"],
+      "after": [],
+      "commands": [{ "command": "undo" }]
+    },
+    {
+      "before": ["<C-r>"],
+      "after": [],
+      "commands": [{ "command": "redo" }]
+    },
+
+    // SAVE & QUIT
+    // -------------------------------------------------------------------------
+    {
+      "before": ["leader", "w"],
+      "commands": ["workbench.action.files.save"]
+    },
+    {
+      "before": ["leader", "q"],
+      "commands": [":q"]
+    },
+    {
+      "before": ["leader", "Q"],
+      "commands": [":q!"]
+    },
+
+    // NAVIGATION & CENTERED SCROLLING (Neovim keymap.vim parity)
+    // -------------------------------------------------------------------------
+    {
+      "before": ["C-f"],
+      "after": ["C-f", "z", "z"]
+    },
+    {
+      "before": ["C-b"],
+      "after": ["C-b", "z", "z"]
+    },
+    {
+      "before": ["C-e"],
+      "after": ["C-e", "j"]
+    },
+    {
+      "before": ["C-y"],
+      "after": ["C-y", "k"]
+    },
+    {
+      "before": ["n"],
+      "after": ["n", "z", "z", "z", "v"]
+    },
+    {
+      "before": ["N"],
+      "after": ["N", "z", "z", "z", "v"]
+    },
+    {
+      "before": ["C-n"],
+      "commands": [":noh"]
+    },
+    {
+      "before": ["J"],
+      "after": ["m", "z", "J", "`", "z"]
+    },
+
+    // CLIPBOARD, VOID REGISTER & PATH YANKING
+    // -------------------------------------------------------------------------
+    {
+      "before": ["leader", "y"],
+      "after": ["\"", "+", "y"]
+    },
+    {
+      "before": ["leader", "Y"],
+      "after": ["\"", "+", "Y"]
+    },
+    {
+      "before": ["d", "D"],
+      "after": ["\"", "_", "d"]
+    },
+    {
+      "before": ["leader", "y", "p"],
+      "commands": ["copyRelativeFilePath"]
+    },
+    {
+      "before": ["leader", "y", "P"],
+      "commands": ["copyFilePath"]
+    },
+
+    // SPLITS & BUFFERS (Neovim keymap.vim parity)
+    // -------------------------------------------------------------------------
+    // Create splits (<leader>h/j/k/l)
+    {
+      "before": ["leader", "h"],
+      "commands": [":vsplit"]
+    },
+    {
+      "before": ["leader", "l"],
+      "commands": [":vsplit", "workbench.action.focusRightGroup"]
+    },
+    {
+      "before": ["leader", "k"],
+      "commands": [":split"]
+    },
+    {
+      "before": ["leader", "j"],
+      "commands": [":split", "workbench.action.focusBelowGroup"]
+    },
+    // Resize splits (<leader><leader>h/j/k/l)
+    {
+      "before": ["leader", "leader", "h"],
+      "commands": ["workbench.action.decreaseViewWidth"]
+    },
+    {
+      "before": ["leader", "leader", "l"],
+      "commands": ["workbench.action.increaseViewWidth"]
+    },
+    {
+      "before": ["leader", "leader", "k"],
+      "commands": ["workbench.action.increaseViewHeight"]
+    },
+    {
+      "before": ["leader", "leader", "j"],
+      "commands": ["workbench.action.decreaseViewHeight"]
+    },
+    // Navigate between splits (<C-h/j/k/l>)
+    {
+      "before": ["c-h"],
+      "commands": ["workbench.action.focusLeftGroup"]
+    },
+    {
+      "before": ["c-l"],
+      "commands": ["workbench.action.focusRightGroup"]
+    },
+    {
+      "before": ["c-j"],
+      "commands": ["workbench.action.focusBelowGroup"]
+    },
+    {
+      "before": ["c-k"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    // Move editor across splits (<C-w>H/J/K/L)
+    {
+      "before": ["c-w", "H"],
+      "commands": ["workbench.action.moveEditorToLeftGroup"]
+    },
+    {
+      "before": ["c-w", "L"],
+      "commands": ["workbench.action.moveEditorToRightGroup"]
+    },
+    {
+      "before": ["c-w", "K"],
+      "commands": ["workbench.action.moveEditorToAboveGroup"]
+    },
+    {
+      "before": ["c-w", "J"],
+      "commands": ["workbench.action.moveEditorToBelowGroup"]
+    },
+    // Switch between buffers (<S-h> / <S-l>)
+    {
+      "before": ["S-h"],
+      "commands": [":bprevious"]
+    },
+    {
+      "before": ["S-l"],
+      "commands": [":bnext"]
+    },
+
+    // FILE EXPLORER (Neovim oil.nvim "\" parity)
+    // -------------------------------------------------------------------------
+    {
+      "before": ["\\"],
       "commands": [
-        "workbench.action.quickOpen"
+        "workbench.files.action.showActiveFileInExplorer",
+        "workbench.explorer.fileView.focus"
+      ]
+    },
+
+    // FIND & CODE INTELLIGENCE (Neovim Telescope parity)
+    // -------------------------------------------------------------------------
+    {
+      "before": ["C-p"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["leader", "e"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["leader", "t"],
+      "commands": ["workbench.action.gotoSymbol"]
+    },
+    {
+      "before": ["leader", "f", "f"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["leader", "f", "p"],
+      "commands": ["workbench.action.findInFiles"]
+    },
+    {
+      "before": ["leader", "f", "g"],
+      "commands": ["workbench.action.findInFiles"]
+    },
+    {
+      "before": ["leader", "f", "r"],
+      "commands": ["workbench.action.replaceInFiles"]
+    },
+    {
+      "before": ["leader", "f", "s"],
+      "commands": ["workbench.action.showAllSymbols"]
+    },
+    {
+      "before": ["leader", "f", "u"],
+      "commands": ["editor.action.findReferences"]
+    },
+    {
+      "before": ["leader", "f", "i"],
+      "commands": ["editor.action.goToImplementation"]
+    },
+    {
+      "before": ["leader", "f", "c"],
+      "commands": ["editor.action.goToTypeDefinition"]
+    },
+    {
+      "before": ["leader", "f", "w"],
+      "commands": ["workbench.action.openRecent"]
+    },
+    {
+      "before": ["g", "d"],
+      "commands": ["editor.action.revealDefinition"]
+    },
+
+    // LSP INFO, DIAGNOSTICS & FORMATTING (Neovim lsp.lua / trouble.lua parity)
+    // -------------------------------------------------------------------------
+    {
+      "before": ["leader", "s", "h"],
+      "commands": ["editor.action.showHover"]
+    },
+    {
+      "before": ["leader", "s", "e"],
+      "commands": ["editor.action.marker.showHover"]
+    },
+    {
+      "before": ["leader", "s", "d"],
+      "commands": ["workbench.actions.view.problems"]
+    },
+    {
+      "before": ["leader", "s", "r"],
+      "commands": ["editor.action.changeAll"]
+    },
+    {
+      "before": ["leader", "n"],
+      "commands": ["editor.action.marker.next"]
+    },
+    {
+      "before": ["leader", "N"],
+      "commands": ["editor.action.marker.prev"]
+    },
+    {
+      "before": ["[", "t"],
+      "commands": ["editor.action.marker.prev"]
+    },
+    {
+      "before": ["]", "t"],
+      "commands": ["editor.action.marker.next"]
+    },
+    {
+      "before": ["leader", "leader", "f"],
+      "commands": ["editor.action.formatDocument"]
+    },
+
+    // BUILD, TEST & DEBUG (Neovim build.lua & dap.lua parity)
+    // -------------------------------------------------------------------------
+    {
+      "before": ["leader", "b", "t"],
+      "commands": ["testing.runAtCursor"]
+    },
+    {
+      "before": ["leader", "b", "T"],
+      "commands": ["testing.runCurrentFile"]
+    },
+    {
+      "before": ["leader", "b", "r"],
+      "commands": ["testing.reRunLastRun"]
+    },
+    {
+      "before": ["leader", "b", "l"],
+      "commands": ["workbench.view.extension.test"]
+    },
+    {
+      "before": ["leader", "d", "t"],
+      "commands": ["testing.debugAtCursor"]
+    },
+    {
+      "before": ["leader", "d", "T"],
+      "commands": ["testing.debugCurrentFile"]
+    },
+    {
+      "before": ["leader", "d", "b"],
+      "commands": ["editor.debug.action.toggleBreakpoint"]
+    },
+    {
+      "before": ["leader", "d", "B"],
+      "commands": ["editor.debug.action.conditionalBreakpoint"]
+    },
+    {
+      "before": ["leader", "d", "c"],
+      "commands": ["workbench.action.debug.continue"]
+    },
+    {
+      "before": ["leader", "d", "o"],
+      "commands": ["workbench.action.debug.stepOver"]
+    },
+    {
+      "before": ["leader", "d", "i"],
+      "commands": ["workbench.action.debug.stepInto"]
+    },
+    {
+      "before": ["leader", "d", "O"],
+      "commands": ["workbench.action.debug.stepOut"]
+    },
+    {
+      "before": ["leader", "d", "r"],
+      "commands": ["workbench.action.debug.restart"]
+    },
+    {
+      "before": ["leader", "d", "x"],
+      "commands": ["workbench.action.debug.stop"]
+    },
+    {
+      "before": ["leader", "d", "u"],
+      "commands": ["workbench.debug.action.toggleRepl"]
+    },
+
+    // VCS / GIT & DIFF NAVIGATION (Neovim fugitive / vim-signify parity)
+    // -------------------------------------------------------------------------
+    {
+      "before": ["leader", "v", "s"],
+      "commands": ["workbench.view.scm"]
+    },
+    {
+      "before": ["leader", "v", "b"],
+      "commands": ["git.timeline.open"]
+    },
+    {
+      "before": ["leader", "v", "d"],
+      "commands": ["git.openChange"]
+    },
+    {
+      "before": ["leader", "v", "n"],
+      "commands": [
+        "workbench.action.editor.nextChange",
+        "workbench.action.compareEditor.nextChange"
       ]
     },
     {
-      "before": [
-        "leader",
-        "e"
-      ],
+      "before": ["leader", "v", "N"],
       "commands": [
-        "workbench.action.quickOpen"
+        "workbench.action.editor.previousChange",
+        "workbench.action.compareEditor.previousChange"
       ]
     },
     {
-      "before": [
-        "leader",
-        "t"
-      ],
+      "before": ["[", "c"],
       "commands": [
-        "breadcrumbs.focusAndSelect"
-      ]
-    },
-    // Move between splits
-    {
-      "before": [
-        "c-h"
-      ],
-      "commands": [
-        "workbench.action.focusLeftGroup"
+        "workbench.action.editor.previousChange",
+        "workbench.action.compareEditor.previousChange"
       ]
     },
     {
-      "before": [
-        "c-l"
-      ],
+      "before": ["]", "c"],
       "commands": [
-        "workbench.action.focusRightGroup"
+        "workbench.action.editor.nextChange",
+        "workbench.action.compareEditor.nextChange"
       ]
     },
     {
-      "before": [
-        "c-j"
-      ],
-      "commands": [
-        "workbench.action.focusBelowGroup"
-      ]
+      "before": ["leader", "p"],
+      "commands": ["git.push"]
     },
     {
-      "before": [
-        "c-k"
-      ],
-      "commands": [
-        "workbench.action.focusAboveGroup"
-      ]
+      "before": ["leader", "P"],
+      "commands": ["git.pullRebase"]
     },
-    // switch b/w buffers
+
+    // OTHER / UI
+    // -------------------------------------------------------------------------
     {
-      "before": [
-        "S-l"
-      ],
-      "commands": [
-        ":bnext"
-      ]
+      "before": ["leader", "z"],
+      "commands": ["workbench.action.toggleZenMode"]
     },
     {
-      "before": [
-        "S-h"
-      ],
-      "commands": [
-        ":bprevious"
-      ]
-    },
-    // Splits
-    {
-      "before": [
-        "leader",
-        "leader",
-        "l"
-      ],
-      "commands": [
-        ":vsplit"
-      ]
+      "before": ["leader", "u"],
+      "commands": ["timeline.focus"]
     },
     {
-      "before": [
-        "leader",
-        "leader",
-        "h"
-      ],
-      "commands": [
-        ":vsplit",
-        "workbench.action.focusLeftGroup"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "leader",
-        "j"
-      ],
-      "commands": [
-        ":split"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "leader",
-        "k"
-      ],
-      "commands": [
-        ":split",
-        "workbench.action.focusAboveGroup"
-      ]
-    },
-    // Find stuff
-    {
-      "before": [
-        "leader",
-        "f",
-        "i"
-      ],
-      "commands": [
-        "editor.action.goToImplementation"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "f",
-        "s"
-      ],
-      "commands": [
-        "workbench.action.showAllSymbols"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "f",
-        "f"
-      ],
-      "commands": [
-        "workbench.action.findInFiles"
-      ]
-    },
-    // Jump/Go To/Reveal
-    {
-      "before": [
-        "g",
-        "d"
-      ],
-      "commands": [
-        "editor.action.revealDefinition"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "g",
-        "b"
-      ],
-      "commands": [
-        "relatedFiles.openBuildFile"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "s",
-        "h"
-      ],
-      "commands": [
-        "editor.action.showDefinitionPreviewHover"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "s",
-        "e"
-      ],
-      "commands": [
-        "editor.action.showDefinitionPreviewHover"
-      ]
-    },
-    // Navigate to warnings or errors in the file
-    {
-      "before": [
-        "leader",
-        "n"
-      ],
-      "commands": [
-        "editor.action.marker.next"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "N"
-      ],
-      "commands": [
-        "editor.action.marker.prev"
-      ]
-    },
-    // DEBUG
-    {
-      "before": [
-        "leader",
-        "leader",
-        "b"
-      ],
-      "commands": [
-        "editor.debug.action.toggleInlineBreakpoint"
-      ]
-    },
-    // Misc
-    {
-      "before": [
-        "leader",
-        "leader",
-        "f"
-      ],
-      "commands": [
-        "editor.action.formatDocument"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "w"
-      ],
-      "commands": [
-        "workbench.action.files.save"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "q"
-      ],
-      "commands": [
-        ":q"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "y",
-        "b"
-      ],
-      "commands": [
-        "blaze.copyTargetAtCursor"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "z"
-      ],
-      "commands": [
-        "workbench.action.toggleZenMode"
-      ]
-    },
-    // VCS/Git
-    {
-      "before": [
-        "leader",
-        "v",
-        "d"
-      ],
-      "commands": [
-        "git.openChange"
-      ]
-    },
-    {
-      "before": [
-        "leader",
-        "v",
-        "s"
-      ],
-      "commands": [
-        "workbench.view.scm"
-      ]
-    },
-    // UI
-    // Toolbars
-    {
-      "before": [
-        "leader",
-        "v",
-        "t"
-      ],
-      "commands": [
-        "workbench.action.toggleActivityBarVisibility"
-      ]
+      "before": ["leader", "v", "t"],
+      "commands": ["workbench.action.toggleActivityBarVisibility"]
     }
   ],
   "vim.visualModeKeyBindings": [
     // Stay in visual mode while indenting
     {
-      "before": [
-        "<"
-      ],
-      "commands": [
-        "editor.action.outdentLines"
-      ]
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
     },
     {
-      "before": [
-        ">"
-      ],
-      "commands": [
-        "editor.action.indentLines"
-      ]
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
     },
     // Move selected lines while staying in visual mode
     {
-      "before": [
-        "J"
-      ],
-      "commands": [
-        "editor.action.moveLinesDownAction"
-      ]
+      "before": ["J"],
+      "commands": ["editor.action.moveLinesDownAction"]
     },
     {
-      "before": [
-        "K"
-      ],
-      "commands": [
-        "editor.action.moveLinesUpAction"
-      ]
+      "before": ["K"],
+      "commands": ["editor.action.moveLinesUpAction"]
+    },
+    // Clipboard yank, paste without overwriting clipboard, void delete
+    {
+      "before": ["leader", "y"],
+      "after": ["\"", "+", "y"]
+    },
+    {
+      "before": ["leader", "p"],
+      "after": ["\"", "_", "d", "P"]
+    },
+    {
+      "before": ["y", "D"],
+      "after": ["\"", "_", "y", "d"]
     }
   ],
   // To improve performance

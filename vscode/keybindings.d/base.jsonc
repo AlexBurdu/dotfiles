@@ -112,7 +112,7 @@
 
   // SIDE BAR
   // ---------------------------------------------------------------------------
-  // File tree (Alt+F and \ both work)
+  // File tree (Alt+F and \ both work; Enter opens file and passes focus)
   {
     "key": "alt+f",
     "command": "workbench.explorer.fileView.focus"
@@ -124,18 +124,43 @@
   },
   {
     "key": "\\",
-    "command": "workbench.explorer.fileView.focus",
-    "when": "!editorTextFocus"
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "filesExplorerFocus && !inputFocus"
   },
   {
     "key": "\\",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "explorerViewletFocus"
+    "command": "workbench.files.action.showActiveFileInExplorer",
+    "when": "editorTextFocus && !isInEmbeddedEditor"
+  },
+  {
+    "key": "\\",
+    "command": "workbench.explorer.fileView.focus",
+    "when": "!editorTextFocus && !filesExplorerFocus && !inputFocus"
   },
   {
     "key": "ctrl+n",
     "command": "explorer.newFile",
     "when": "explorerViewletFocus"
+  },
+  {
+    "key": "enter",
+    "command": "-renameFile",
+    "when": "filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "return",
+    "command": "-renameFile",
+    "when": "filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "enter",
+    "command": "explorer.openAndPassFocus",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "return",
+    "command": "explorer.openAndPassFocus",
+    "when": "filesExplorerFocus && !inputFocus"
   },
   // Source control
   {
@@ -316,6 +341,49 @@
     "key": "down",
     "command": "quickInput.next",
     "when": "inQuickInput && quickInputType == 'quickPick'"
+  },
+
+  // COMPARE / DIFF EDITOR CHANGE NAVIGATION
+  // ---------------------------------------------------------------------------
+  {
+    "key": "space v n",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "space v shift+n",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "] c",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "[ c",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "space v n",
+    "command": "workbench.action.editor.nextChange",
+    "when": "editorTextFocus && !textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "space v shift+n",
+    "command": "workbench.action.editor.previousChange",
+    "when": "editorTextFocus && !textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "] c",
+    "command": "workbench.action.editor.nextChange",
+    "when": "editorTextFocus && !textCompareEditorVisible && !inputFocus"
+  },
+  {
+    "key": "[ c",
+    "command": "workbench.action.editor.previousChange",
+    "when": "editorTextFocus && !textCompareEditorVisible && !inputFocus"
   },
 
   // MISC

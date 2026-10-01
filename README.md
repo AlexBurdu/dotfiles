@@ -539,39 +539,41 @@ in each section below.
 
 ### Navigation
 
-| Action | [Tmux](#tmux-prefix-c-s) | [Neovim](#neovim-leader-space) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#vs-code) | [MC](#midnight-commander) |
+| Action | [Tmux](#tmux-prefix-c-s) | [Neovim](#neovim-leader-space) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#vs-code-vscodevim-leader-space) | [MC](#midnight-commander) |
 |---|---|---|---|---|---|
-| Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` (lists) | `h/j/k/l` |
+| Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `h/j/k/l` |
 | Breadcrumb/navbar | - | `C-t` | `C-t` | `C-t` | - |
-| Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | - | - |
-| Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | - | - |
-| Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | - | - |
+| Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
+| Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
+| Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | `C-w H/J/K/L` | - |
 | Cycle layout / orientation | `C-s Space` | - | `C-w C-r` | - | - |
-| Previous tab/buffer | `C-s [` | `S-h` | `S-h` | - | - |
-| Next tab/buffer | `C-s ]` | `S-l` | `S-l` | - | - |
+| Previous tab/buffer | `C-s [` | `S-h` | `S-h` | `S-h` | - |
+| Next tab/buffer | `C-s ]` | `S-l` | `S-l` | `S-l` | - |
 | Move tab/window left | `C-s {` | - | - | - | - |
 | Move tab/window right | `C-s }` | - | - | - | - |
 | Last window | `C-s Enter` | - | - | - | - |
 
 ### Find & Code Intelligence
 
-| Action | [Neovim](#telescope-fuzzy-finder) | [IntelliJ](#find--goto) |
-|---|---|---|
-| Find files | `Space ff` | `Space ff` |
-| Find in path (grep) | `Space fp` | `Space fp` |
-| Find references | `Space fu` | `Space fu` |
-| Find implementations | `Space fi` | `Space fi` |
-| Code actions / class | `Space fc` | `Space fc` |
-| Document symbols | `Space t` | `Space t` |
-| Zen/distraction-free | `Space z` | `Space z` |
+| Action | [Neovim](#telescope-fuzzy-finder) | [IntelliJ](#find--goto) | [VS Code](#vs-code-vscodevim-leader-space) |
+|---|---|---|---|
+| Find files | `Space ff` | `Space ff` | `Space ff` |
+| Find in path (grep) | `Space fp` | `Space fp` | `Space fp` / `Space fg` |
+| Find symbols | `Space fs` | `Space fs` | `Space fs` |
+| Find references | `Space fu` | `Space fu` | `Space fu` |
+| Find implementations | `Space fi` | `Space fi` | `Space fi` |
+| Type definitions / class | `Space fc` | `Space fc` | `Space fc` |
+| Document symbols | `Space t` | `Space t` | `Space t` |
+| Zen/distraction-free | `Space z` | `Space z` | `Space z` |
 
 ### VCS/Git
 
-| Action | [Tmux](#ai-agent-management-tmux-pilot) | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) | [VS Code](#vs-code) |
+| Action | [Tmux](#ai-agent-management-tmux-pilot) | [Neovim](#git-fugitive) | [IntelliJ](#vcsgit) | [VS Code](#vs-code-vscodevim-leader-space) |
 |---|---|---|---|---|
 | VCS panel | `C-s d` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
-| Blame/annotate | - | `Space vb` | `Space vb` | - |
+| Blame/annotate | - | `Space vb` | `Space vb` | `Space vb` |
 | Show hunk diff | - | `Space vd` | `Space vd` | `Space vd` |
+| Next / Prev hunk | - | `Space vn` / `Space vN` | `Space vn` / `Space vN` | `Space vn` / `Space vN` |
 
 ### Completion (Insert Mode)
 
@@ -1038,24 +1040,90 @@ those bindings off rather than breaking startup.
 
 ---
 
-## VS Code
+## VS Code (VSCodeVim, Leader: Space)
 
-Keybindings: [vscode/keybindings.json](./vscode/keybindings.json)
-Settings: [vscode/settings.json](./vscode/settings.json)
+Keybindings: [vscode/keybindings.d/](./vscode/keybindings.d/)
+Settings: [vscode/settings.d/](./vscode/settings.d/)
 
-### Navigation & Files
+### Navigation & Splits
 | Shortcut | Action |
 |---|---|
-| `C-Shift-e` | Quick open |
+| `C-h/j/k/l` | Navigate splits (and lists) |
+| `Space h/j/k/l` | Create split left / below / above / right |
+| `Space Space h/l` | Resize split narrower / wider |
+| `Space Space k/j` | Resize split taller / shorter |
+| `C-w H/J/K/L` | Move editor to left / below / above / right group |
+| `S-h` / `S-l` | Previous / next buffer |
+| `C-f` / `C-b` | Page forward / backward (centered) |
+| `C-e` / `C-y` | Scroll line down / up (cursor follows) |
+| `n` / `N` | Next / previous search match (centered) |
+| `C-n` (normal) | Clear search highlighting (`:noh`) |
 | `C-t` | Focus breadcrumbs |
-| `\` / `Alt-f` | Toggle file explorer |
-| `Alt-e` | Focus editor group |
+| `\` / `Alt-f` | Reveal active file in explorer / toggle file explorer |
+| `Enter` (explorer) | Open file and pass focus to editor |
+| `Alt-e` | Focus active editor group |
 | `Alt-v` | Toggle source control |
-| `C-f4` | Close editor |
-| `C-n` | New file (in explorer) |
-| `C-Shift-n` | New folder (in explorer) |
+| `C-Shift-e` / `C-p` | Quick open |
 | `C-Shift-j` | Toggle panel |
 | `C-Shift-Escape` | Close sidebar |
+
+### Editing & Clipboard
+| Shortcut | Action |
+|---|---|
+| `Space w` | Save |
+| `Space q` / `Space Q` | Quit / quit without saving (`:q!`) |
+| `Space y` / `Space Y` | Yank / yank line to system clipboard |
+| `Space p` (visual) | Paste without overwriting clipboard (`"_dP`) |
+| `dD` / `yD` (visual) | Delete to void register / yank + delete to void |
+| `Space yp` / `Space yP` | Copy relative / absolute file path |
+| `J` (normal) | Join lines preserving cursor (`mzJ`z`) |
+| `J` / `K` (visual) | Move selected lines down / up |
+| `<` / `>` (visual) | Indent and keep selection |
+| `Space sr` | Change all occurrences of word under cursor |
+| `Space Space f` | Format document |
+| `C-/` | Toggle line comment |
+
+### Find, LSP & Diagnostics
+| Shortcut | Action |
+|---|---|
+| `Space ff` | Find files (Quick Open) |
+| `Space fp` / `Space fg` | Find in files (live grep) |
+| `Space fr` | Replace in files |
+| `Space fs` | Workspace symbols |
+| `Space fu` | Find references |
+| `Space fi` | Go to implementation |
+| `Space fc` | Go to type definition |
+| `Space fw` | Open recent workspace / folder |
+| `Space e` | Quick open recent files |
+| `Space t` | Document symbols |
+| `gd` | Go to definition |
+| `Space sh` | Show hover documentation |
+| `Space se` | Show diagnostic error hover |
+| `Space sd` | Toggle Problems panel |
+| `Space n` / `Space N` | Next / previous diagnostic (`]t` / `[t`) |
+
+### VCS / Git
+| Shortcut | Action |
+|---|---|
+| `Space vs` / `Alt-v` | Source control view |
+| `Space vb` | Timeline / blame view |
+| `Space vd` | Open file changes diff |
+| `Space vn` / `Space vN` | Next / previous change hunk (`]c` / `[c`) |
+| `Space p` / `Space P` | Git push / Git pull --rebase |
+
+### Build, Test & Debug
+| Shortcut | Action |
+|---|---|
+| `Space bt` / `C-Shift-f10` | Run test at cursor |
+| `Space bT` | Run all tests in current file |
+| `Space br` | Rerun last test run |
+| `Space bl` | Open test explorer view |
+| `Space dt` / `Space dT` | Debug test at cursor / all tests in file |
+| `Space db` / `Space dB` | Toggle breakpoint / conditional breakpoint |
+| `Space dc` | Continue debugging |
+| `Space do` / `di` / `dO` | Step over / into / out |
+| `Space dr` / `Space dx` | Restart / stop debugger |
+| `Space du` | Toggle debug console (REPL) |
 
 ### List Navigation (vim-style)
 | Shortcut | Action |
@@ -1075,7 +1143,7 @@ Settings: [vscode/settings.json](./vscode/settings.json)
 
 ### AI Completion
 
-Only where `gemini.vim` / `copilot.vim` are linked; see above.
+Only where `vscode.gemini` / `vscode.copilot` are enabled; see above.
 
 | Shortcut | Action |
 |---|---|
@@ -1091,9 +1159,10 @@ Only where `gemini.vim` / `copilot.vim` are linked; see above.
 ### Other
 | Shortcut | Action |
 |---|---|
-| `C-/` | Toggle line comment |
+| `Space z` | Toggle zen mode |
+| `Space u` | Focus timeline / local history |
+| `Space vt` | Toggle activity bar visibility |
 | `Shift-Space` | Trigger suggestions |
-| `C-Shift-f10` | Run test at cursor |
 
 ---
 

@@ -594,7 +594,7 @@ in each section below.
 | Focus frame / execution point | `Space df` | `Space df` | `Space df` |
 | Hover / evaluate expression | `Space dh` | `Space dh` / `M-F8` | `Space dh` / `M-F8` |
 | Add to watches | `Space de` | `Space de` | `Space de` |
-| Restart / stop / disconnect | `Space dr` / `Space dx` / `Space dD` | `Space dr` / `Space dx` (`C-BS`/`C-F2`) / `Space dD` | `Space dr` / `Space dx` (`C-BS`/`C-F2`) / `Space dD` |
+| Restart / stop / disconnect | `Space dr` / `Space dx` / `Space dX` | `Space dr` / `Space dx` (`C-BS`/`C-F2`) / `Space dX` | `Space dr` / `Space dx` (`C-BS`/`C-F2`) / `Space dX` |
 | Toggle debug UI / console | `Space du` | `Space du` | `Space du` |
 | Debug view / toolbar | `Space dv` (dap-ui sidebar) | `Space dv` (Debug tool window) | `Space dv` (Run and Debug view) |
 
@@ -817,7 +817,7 @@ go to trash.
 | `C-t` / `Space Space t` | Open breadcrumb picker |
 | `C-h` / `C-l` | Previous / next breadcrumb (or close nested submenu) |
 | `C-j` / `C-k` | Move down/up in menu |
-| `Enter` | Unfold directory/submenu or open file/symbol |
+| `Enter` / `C-Enter` | Unfold directory/submenu or open file/symbol |
 | `Esc` / `q` | Close menu |
 
 ### Splits
@@ -938,7 +938,7 @@ via init script to make coroutine locals inspectable.
 | `Space de` | Add to watches (normal: word under cursor, visual: selection) |
 | `Space dr` | Restart debug session |
 | `Space dx` | Stop/terminate debuggee and close UI |
-| `Space dD` | Disconnect debugger without terminating and close UI |
+| `Space dX` | Disconnect debugger without terminating and close UI |
 | `Space du` | Toggle DAP UI |
 | `Space dv` | Toggle DAP sidebar only (scopes, breakpoints, stacks, watches) |
 
@@ -1061,7 +1061,7 @@ those bindings off rather than breaking startup.
 | `Space dh` | Quick evaluate expression (normal / visual) |
 | `Space de` | Add to watches (normal / visual) |
 | `Space dr` / `Space dx` | Rerun / stop debug session |
-| `Space dD` | Disconnect without terminating (closes the debug tab, which offers Disconnect / Terminate) |
+| `Space dX` | Disconnect without terminating (closes the debug tab, which offers Disconnect / Terminate) |
 | `Space du` / `Space dv` | Activate Debug tool window |
 | `Space ab` | Android / active config: Build and Debug (`Debug`) |
 | `Space ar` | Android / active config: Build and Run (`Run`) |
@@ -1124,7 +1124,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `C-e` / `C-y` | Scroll line down / up (cursor follows) |
 | `n` / `N` | Next / previous search match (centered) |
 | `C-n` (normal) | Clear search highlighting (`:noh`) |
-| `C-t` / `Space Space t` | Focus breadcrumbs picker (`C-h`/`C-l` prev/next crumb, `C-j`/`C-k` down/up, `Enter` unfold dir / open file) |
+| `C-t` / `Space Space t` | Focus breadcrumbs picker (`C-h`/`C-l` prev/next crumb, `C-j`/`C-k` down/up, `Enter`/`C-Enter` unfold dir / open file) |
 | `\` / `Alt-f` | Reveal active file in explorer / focus file explorer (pure focus; `Shift-Escape` closes the sidebar) |
 | `Enter` (explorer) | Open file and pass focus to editor |
 | `Alt-e` | Focus active editor group |
@@ -1202,7 +1202,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space de` | Add selection to watch (normal & visual) |
 | `Space dr` | Restart debugger |
 | `Space dx` / `C-Backspace` / `C-f2` | Stop debugger (terminates debuggee) |
-| `Space dD` | Disconnect debugger (leaves debuggee running) |
+| `Space dX` | Disconnect debugger (leaves debuggee running) |
 | `Space du` | Toggle debug console (REPL) |
 | `Space dv` | Show Run and Debug view (sidebar with variables, watch, call stack, breakpoints) |
 

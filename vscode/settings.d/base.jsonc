@@ -669,7 +669,7 @@
       "silent": true
     },
     {
-      "before": ["<plug-ldr-d>", "D"],
+      "before": ["<plug-ldr-d>", "X"],
       "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
       "commands": [
         {

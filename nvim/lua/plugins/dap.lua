@@ -14,6 +14,7 @@
 --   <Leader>do/di/dO step over / into / out (;  repeats last step)
 --   <Leader>dh      eval expression under cursor or selection
 --   <Leader>de      add expression to watches (word or selection)
+--   <Leader>dx/dX   stop (terminate) / disconnect (keep running) and close UI
 return {
   "mfussenegger/nvim-dap",
   dependencies = {
@@ -127,7 +128,7 @@ return {
       dap.disconnect({ terminateDebuggee = true })
       dapui.close()
     end, { desc = "Stop/terminate debuggee and close UI" })
-    vim.keymap.set("n", "<Leader>dD", function()
+    vim.keymap.set("n", "<Leader>dX", function()
       dap.disconnect({ terminateDebuggee = false })
       dapui.close()
     end, { desc = "Disconnect debugger without terminating and close UI" })

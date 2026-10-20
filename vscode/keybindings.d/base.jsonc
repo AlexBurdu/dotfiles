@@ -225,7 +225,7 @@
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
   },
   {
-    "key": "space d shift+d",
+    "key": "space d shift+x",
     "command": "workbench.action.debug.disconnect",
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
   },
@@ -1003,7 +1003,7 @@
     "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
   },
   {
-    "key": "shift+d",
+    "key": "shift+x",
     "command": "runCommands",
     "args": {
       "commands": [
@@ -1168,10 +1168,30 @@
   // `Ctrl+L` move to the previous / next breadcrumb on the bar with its picker
   // (`breadcrumbs.focusPreviousWithPicker` / `breadcrumbs.focusNextWithPicker`),
   // `Ctrl+J`/`Ctrl+K` (list.focusDown/Up above) move inside the dropdown, and
-  // `Enter` (`list.select`) unfolds/folds a directory or opens a file / symbol.
-  // Without a picker (plain `breadcrumbs.focus`), `Ctrl+H`/`Ctrl+L` move along
-  // the breadcrumb bar.
+  // `Enter` or `Ctrl+Enter` (`list.select`) unfolds/folds a directory or opens
+  // a file / symbol. Without a picker (plain `breadcrumbs.focus`), `Ctrl+H`/`Ctrl+L`
+  // move along the breadcrumb bar and `Enter` or `Ctrl+Enter` opens its picker.
   // ---------------------------------------------------------------------------
+  {
+    "key": "ctrl+enter",
+    "command": "-breadcrumbs.revealFocusedFromTreeAside",
+    "when": "breadcrumbsVisible && breadcrumbsActive && listFocus"
+  },
+  {
+    "key": "ctrl+enter",
+    "command": "-breadcrumbs.revealFocused",
+    "when": "breadcrumbsVisible && breadcrumbsActive"
+  },
+  {
+    "key": "ctrl+enter",
+    "command": "list.select",
+    "when": "breadcrumbsVisible && breadcrumbsActive && listFocus"
+  },
+  {
+    "key": "ctrl+enter",
+    "command": "breadcrumbs.selectFocused",
+    "when": "breadcrumbsVisible && breadcrumbsActive && !listFocus"
+  },
   {
     "key": "ctrl+h",
     "command": "breadcrumbs.focusPreviousWithPicker",

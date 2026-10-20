@@ -182,7 +182,7 @@ nmap <Leader>dx <Action>(Stop)
 " detaches sessions whose process handler prefers detaching (remote JVM /
 " "Attach Debugger to Android Process"). For launched sessions, closing the
 " debug tab offers the Terminate / Disconnect dialog.
-nmap <Leader>dD <Action>(ActivateDebugToolWindow)<Action>(CloseContent)
+nmap <Leader>dX <Action>(ActivateDebugToolWindow)<Action>(CloseContent)
 nmap <Leader>du <Action>(ActivateDebugToolWindow)
 " Debug view / toolbar: IntelliJ has a single Debug tool window, so <Leader>dv
 " (VS Code "Run and Debug" view, Neovim dap-ui sidebar) is an alias of <Leader>du.

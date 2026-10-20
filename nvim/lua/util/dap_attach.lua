@@ -6,6 +6,7 @@
 local M = {}
 
 local handlers = {}
+local last_fn = nil
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
 
 -- register({ "kotlin", "java" }, fn): <Leader>da in those filetypes runs fn.
@@ -13,6 +14,20 @@ function M.register(filetypes, fn)
   for _, ft in ipairs(filetypes) do
     handlers[ft] = fn
   end
+end
+
+-- Record the last debug launch/attach callback so <Leader>dd can re-run it
+-- directly without prompting.
+function M.set_last(fn)
+  last_fn = fn
+end
+
+function M.run_last()
+  if last_fn then
+    last_fn()
+    return
+  end
+  M.attach()
 end
 
 function M.attach()

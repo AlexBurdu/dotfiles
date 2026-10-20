@@ -275,6 +275,11 @@ local function attach_dap_to_test(root, task)
 end
 
 local function bazel_debug_target(overseer, root, target, filter)
+  pcall(function()
+    require("util.dap_attach").set_last(function()
+      bazel_debug_target(overseer, root, target, filter)
+    end)
+  end)
   local jdwp = "transport=dt_socket,server=y,suspend=y,address=5005"
   local java_opts = "-agentlib:jdwp=" .. jdwp .. " -Djdk.attach.allowAttachSelf=true"
   local args = {
@@ -336,6 +341,11 @@ end
 -- coroutine variable spilling) and --no-configuration-cache (init scripts are
 -- incompatible with config cache). Polls for JDWP and attaches DAP.
 local function gradle_debug_run(overseer, root, args, label)
+  pcall(function()
+    require("util.dap_attach").set_last(function()
+      gradle_debug_run(overseer, root, args, label)
+    end)
+  end)
   local build   = require("util.build")
   local wrapper = build.gradlew(root)
   local init_script = vim.fn.stdpath("config") .. "/lua/util/gradle-debug-init.gradle"

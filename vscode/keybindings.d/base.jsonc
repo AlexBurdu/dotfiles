@@ -52,10 +52,203 @@
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "!focusPanel"
   },
+  // Non-code editor tabs & empty editor groups (Webviews like Logcat/Markdown
+  // preview, image previews, Settings UI, empty splits): VSCodeVim only runs
+  // when `editorTextFocus` is true, so bind tab cycling (`S-h`/`S-l`), close
+  // (`Space q`/`Q`), split navigation (`C-h/j/k/l`), split creation/move
+  // (`Space h/j/k/l` & `C-w H/J/K/L`), split resizing (`Space Space h/j/k/l`),
+  // and file/task pickers (`Space e`/`ff`/`fp`/`fg`/`Space c`) at the
+  // workbench level when `editorAreaFocus && !editorTextFocus && !inputFocus`.
+  {
+    "key": "shift+h",
+    "command": "workbench.action.previousEditorInGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "shift+l",
+    "command": "workbench.action.nextEditorInGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space shift+q",
+    "command": "workbench.action.revertAndCloseActiveEditor",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "workbench.action.focusLeftGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.focusRightGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.focusBelowGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !listFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.focusAboveGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !listFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space h",
+    "command": "workbench.action.splitEditorLeft",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && activeEditorCanSplitInGroup"
+  },
+  {
+    "key": "space l",
+    "command": "workbench.action.splitEditorRight",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && activeEditorCanSplitInGroup"
+  },
+  {
+    "key": "space k",
+    "command": "workbench.action.splitEditorUp",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && activeEditorCanSplitInGroup"
+  },
+  {
+    "key": "space j",
+    "command": "workbench.action.splitEditorDown",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && activeEditorCanSplitInGroup"
+  },
+  {
+    "key": "space h",
+    "command": "workbench.action.moveEditorToLeftGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && !activeEditorCanSplitInGroup && !activeEditorGroupEmpty"
+  },
+  {
+    "key": "space l",
+    "command": "workbench.action.moveEditorToRightGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && !activeEditorCanSplitInGroup && !activeEditorGroupEmpty"
+  },
+  {
+    "key": "space k",
+    "command": "workbench.action.moveEditorToAboveGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && !activeEditorCanSplitInGroup && !activeEditorGroupEmpty"
+  },
+  {
+    "key": "space j",
+    "command": "workbench.action.moveEditorToBelowGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && !activeEditorCanSplitInGroup && !activeEditorGroupEmpty"
+  },
+  {
+    "key": "space space h",
+    "command": "workbench.action.decreaseViewWidth",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space space l",
+    "command": "workbench.action.increaseViewWidth",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space space k",
+    "command": "workbench.action.increaseViewHeight",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space space j",
+    "command": "workbench.action.decreaseViewHeight",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+w shift+h",
+    "command": "workbench.action.moveEditorToLeftGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+w shift+l",
+    "command": "workbench.action.moveEditorToRightGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+w shift+k",
+    "command": "workbench.action.moveEditorToAboveGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+w shift+j",
+    "command": "workbench.action.moveEditorToBelowGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space e",
+    "command": "workbench.action.quickOpen",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space f f",
+    "command": "workbench.action.quickOpen",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space f p",
+    "command": "workbench.action.findInFiles",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space f g",
+    "command": "workbench.action.findInFiles",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space space c",
+    "command": "workbench.action.tasks.runTask",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space space t",
+    "command": "breadcrumbs.focusAndSelect",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus && breadcrumbsPossible && breadcrumbsVisible"
+  },
+  {
+    "key": "space d d",
+    "command": "workbench.action.debug.start",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space d a",
+    "command": "workbench.action.debug.selectandstart",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space d x",
+    "command": "workbench.action.debug.stop",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space d shift+d",
+    "command": "workbench.action.debug.disconnect",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space d v",
+    "command": "workbench.view.debug",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  // Ctrl+N is Vim's :noh / clear selection (settings.d/base.jsonc), never
+  // "New Untitled File"; in the suggest widget it navigates (see below).
   {
     "key": "ctrl+n",
-    "command": "workbench.action.files.newUntitledFile",
-    "when": "!explorerViewletFocus"
+    "command": "-workbench.action.files.newUntitledFile"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "extension.vim_ctrl+n",
+    "when": "(editorTextFocus && vim.active && vim.use<C-n> && !inDebugRepl && !inlineSuggestionVisible && vim.mode != 'Insert') || (vim.mode == 'CommandlineInProgress' && vim.active && vim.use<C-n> && !inDebugRepl) || (vim.mode == 'SearchInProgressMode' && vim.active && vim.use<C-n> && !inDebugRepl)"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "cancelSelection",
+    "when": "editorTextFocus && !vim.active && editorHasSelection && !inlineSuggestionVisible"
   },
   {
     "key": "ctrl+shift+n",
@@ -112,20 +305,12 @@
 
   // SIDE BAR
   // ---------------------------------------------------------------------------
-  // File tree (Alt+F and \ both work; Enter opens file and passes focus)
+  // File tree (Alt+F and \ both work; Enter opens file and passes focus).
+  // Alt+F, Alt+V and \ only ever focus (Neovim oil.nvim / VCS status parity);
+  // Shift+Escape closes the sidebar explicitly.
   {
     "key": "alt+f",
     "command": "workbench.explorer.fileView.focus"
-  },
-  {
-    "key": "alt+f",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "explorerViewletFocus"
-  },
-  {
-    "key": "\\",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "filesExplorerFocus && !inputFocus"
   },
   {
     "key": "\\",
@@ -167,10 +352,45 @@
     "key": "alt+v",
     "command": "workbench.scm.focus"
   },
+  // If the SCM provider renders its commit input box (`inScmInput`), jump
+  // straight to the file list so Ctrl+J / Ctrl+K navigate it immediately.
   {
     "key": "alt+v",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "sideBarVisible"
+    "command": "workbench.scm.action.focusNextResourceGroup",
+    "when": "inScmInput"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.scm.action.focusNextResourceGroup",
+    "when": "inScmInput"
+  },
+  {
+    "key": "escape",
+    "command": "workbench.scm.action.focusNextResourceGroup",
+    "when": "inScmInput && vim.mode != 'Insert'"
+  },
+  // Escape in any Sidebar tree/view or non-terminal Panel view returns to the
+  // active editor in Normal mode with the selection cleared, instead of VS
+  // Code's default `list.clear` that traps focus in the empty list. Inline
+  // renames, tree filters, pending cuts and multi-selections still cancel first.
+  {
+    "key": "escape",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.focusActiveEditorGroup",
+        "cancelSelection",
+        "extension.vim_escape"
+      ]
+    },
+    "when": "(sideBarFocus || (panelFocus && !terminalFocus)) && !inputFocus && !treeFindOpen && !explorerResourceCut && !listMultiSelection"
+  },
+  // Ctrl+L moves from the Sidebar into the editor when not inside a tree/list
+  // (inside a list it expands / selects, see LIST NAVIGATION).
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "sideBarFocus && !listFocus && !inputFocus"
   },
   {
     "key": "ctrl+shift+n",
@@ -187,14 +407,11 @@
     "command": "-editor.action.triggerSuggest",
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly"
   },
+  // Ctrl+B stays Vim's page-up (`gd` goes to the definition); VS Code's default
+  // sidebar toggle on it is removed.
   {
     "key": "ctrl+b",
     "command": "-workbench.action.toggleSidebarVisibility"
-  },
-  {
-    "key": "ctrl+b",
-    "command": "editor.action.revealDefinition",
-    "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
   },
   {
     "key": "f12",
@@ -343,18 +560,712 @@
     "when": "inQuickInput && quickInputType == 'quickPick'"
   },
 
-  // COMPARE / DIFF EDITOR CHANGE NAVIGATION
+  // VIM-PARITY EDITOR KEYS (jump list, tab switching, focused hover)
+  // ---------------------------------------------------------------------------
+  // Ctrl+O / Ctrl+I: VS Code binds Ctrl+O to Open File / Quick Open and
+  // VSCodeVim's own jump tracker skips `gd` jumps, so route both keys to the
+  // history service (navigateBack / navigateForward).
+  {
+    "key": "ctrl+o",
+    "command": "-workbench.action.files.openFile"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-workbench.action.files.openFolderViaWorkspace"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-workbench.action.files.openFileFolder"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-workbench.action.quickOpen"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-workbench.action.quickOpenNavigateNextInFilePicker"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "-lineBreakInsert",
+    "when": "textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.navigateBack",
+    "when": "!terminalFocus && !inQuickInput && (!editorTextFocus || vim.mode != 'Insert')"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "workbench.action.navigateForward",
+    "when": "editorTextFocus && vim.mode != 'Insert'"
+  },
+  // Ctrl+[ / Ctrl+]: previous / next tab in the group, also in non-code tabs
+  // (Logcat, previews, Settings UI); unbind indent/outdent and VSCodeVim's keys.
+  {
+    "key": "ctrl+[",
+    "command": "-editor.action.outdentLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+]",
+    "command": "-editor.action.indentLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+[",
+    "command": "-extension.vim_ctrl+[",
+    "when": "editorTextFocus && vim.active && vim.use<C-[> && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+]",
+    "command": "-extension.vim_ctrl+]",
+    "when": "editorTextFocus && vim.active && vim.use<C-]> && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+[",
+    "command": "workbench.action.previousEditorInGroup",
+    "when": "!terminalFocus && !inQuickInput"
+  },
+  {
+    "key": "ctrl+]",
+    "command": "workbench.action.nextEditorInGroup",
+    "when": "!terminalFocus && !inQuickInput"
+  },
+  // Focused hover tooltip (second press of `Space sh` / `Space se`): Vim
+  // scrolling and dismissal inside `ContentHoverWidget`.
+  {
+    "key": "j",
+    "command": "editor.action.scrollDownHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "k",
+    "command": "editor.action.scrollUpHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "h",
+    "command": "editor.action.scrollLeftHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "l",
+    "command": "editor.action.scrollRightHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "editor.action.pageDownHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "ctrl+u",
+    "command": "editor.action.pageUpHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "ctrl+f",
+    "command": "editor.action.pageDownHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "ctrl+b",
+    "command": "editor.action.pageUpHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "g g",
+    "command": "editor.action.goToTopHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "shift+g",
+    "command": "editor.action.goToBottomHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "q",
+    "command": "editor.action.hideHover",
+    "when": "editorHoverFocused"
+  },
+  {
+    "key": "escape",
+    "command": "editor.action.hideHover",
+    "when": "editorHoverFocused"
+  },
+
+  // DEBUGGER <leader>d* FIRE-AND-FORGET DISPATCH (`when: vim.leaderD`)
+  // `<leader>d` (settings.d/base.jsonc) buffers `<plug-ldr-d>` in VSCodeVim and
+  // sets `vim.leaderD`; the third key is handled here so long-running debug
+  // commands (`debug.start` awaits preLaunchTasks and the session) never block
+  // VSCodeVim's `taskQueue`. Each rule resets the context, flushes the buffered
+  // `<plug-ldr-d>` via `<plug-ldrd-ok>` and runs the command.
   // ---------------------------------------------------------------------------
   {
-    "key": "space v n",
-    "command": "workbench.action.compareEditor.nextChange",
-    "when": "textCompareEditorVisible && !inputFocus"
+    "key": "d",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.start"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
   },
   {
-    "key": "space v shift+n",
-    "command": "workbench.action.compareEditor.previousChange",
-    "when": "textCompareEditorVisible && !inputFocus"
+    "key": "a",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.selectandstart"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
   },
+  {
+    "key": "t",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "testing.debugAtCursor"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+t",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "testing.debugCurrentFile"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "b",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "editor.debug.action.toggleBreakpoint"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+b",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "editor.debug.action.conditionalBreakpoint"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "c",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.continue"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "o",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.stepOver"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "i",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.stepInto"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+o",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.stepOut"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "f",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.debug.action.focusCallStackView"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "h",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "editor.debug.action.showDebugHover"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "e",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "editor.debug.action.selectionToWatch"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "r",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.restart"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "x",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.stop"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+d",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.disconnect"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "u",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.debug.action.toggleRepl"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "v",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.view.debug"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "escape",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "extension.vim_escape"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+c",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "extension.vim_escape"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+
+  // INLINE COMMENT WIDGET (VS Code comments API: review / PR comments)
+  // Submitting a comment (Ctrl+Enter / Cmd+Enter) or dismissing an empty one in
+  // Normal mode (Escape / Space q) returns focus to the active editor in Normal
+  // mode with no lingering selection. `space q` is scoped to the comment editor
+  // so the chord resolver never intercepts the Vim leader in the code editor.
+  // ---------------------------------------------------------------------------
+  {
+    "key": "ctrl+enter",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "editor.action.submitComment",
+        "workbench.action.focusActiveEditorGroup",
+        "cancelSelection",
+        "extension.vim_escape"
+      ]
+    },
+    "when": "commentEditorFocused"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "editor.action.submitComment",
+        "workbench.action.focusActiveEditorGroup",
+        "cancelSelection",
+        "extension.vim_escape"
+      ]
+    },
+    "when": "commentEditorFocused"
+  },
+  {
+    "key": "escape",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.hideComment",
+        "workbench.action.focusActiveEditorGroup",
+        "cancelSelection",
+        "extension.vim_escape"
+      ]
+    },
+    "when": "(commentEditorFocused || commentFocused) && commentIsEmpty && vim.mode != 'Insert'"
+  },
+  {
+    "key": "space q",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.hideComment",
+        "workbench.action.focusActiveEditorGroup",
+        "cancelSelection",
+        "extension.vim_escape"
+      ]
+    },
+    "when": "commentEditorFocused && commentIsEmpty && vim.mode != 'Insert'"
+  },
+
+  // BREADCRUMB PICKER NAVIGATION (Ctrl+T / Space Space t -> Ctrl+H/J/K/L)
+  // `breadcrumbs.focusAndSelect` opens the picker tree for the last crumb;
+  // `breadcrumbsActive` stays true while that tree has focus, so `Ctrl+H` and
+  // `Ctrl+L` move to the previous / next breadcrumb on the bar with its picker
+  // (`breadcrumbs.focusPreviousWithPicker` / `breadcrumbs.focusNextWithPicker`),
+  // `Ctrl+J`/`Ctrl+K` (list.focusDown/Up above) move inside the dropdown, and
+  // `Enter` (`list.select`) unfolds/folds a directory or opens a file / symbol.
+  // Without a picker (plain `breadcrumbs.focus`), `Ctrl+H`/`Ctrl+L` move along
+  // the breadcrumb bar.
+  // ---------------------------------------------------------------------------
+  {
+    "key": "ctrl+h",
+    "command": "breadcrumbs.focusPreviousWithPicker",
+    "when": "breadcrumbsVisible && breadcrumbsActive && listFocus"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "breadcrumbs.focusNextWithPicker",
+    "when": "breadcrumbsVisible && breadcrumbsActive && listFocus"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "breadcrumbs.focusPrevious",
+    "when": "breadcrumbsVisible && breadcrumbsActive && !listFocus"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "breadcrumbs.focusNext",
+    "when": "breadcrumbsVisible && breadcrumbsActive && !listFocus"
+  },
+
+  // COMPLETION POPUP & INLINE AI SUGGESTIONS (Insert mode, Neovim parity)
+  // `Ctrl+J`/`Ctrl+K` open the completion popup or move down/up inside it,
+  // `Ctrl+D`/`Ctrl+U` page it, `Ctrl+N`/`Ctrl+P` cycle inline (ghost text)
+  // suggestions or fetch a fresh one when none is shown (and navigate the
+  // popup when only that is open), and `Ctrl+E` dismisses whichever is visible.
+  // `Tab` (accept all), `Ctrl+Y` (next word) and `Ctrl+H` (next line) keep the
+  // defaults bound at the top of this file.
+  // ---------------------------------------------------------------------------
+  {
+    "key": "ctrl+j",
+    "command": "editor.action.triggerSuggest",
+    "when": "editorTextFocus && !suggestWidgetVisible && !editorReadonly && vim.mode == 'Insert'"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "editor.action.triggerSuggest",
+    "when": "editorTextFocus && !suggestWidgetVisible && !editorReadonly && vim.mode == 'Insert'"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "selectNextPageSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+u",
+    "command": "selectPrevPageSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus && !inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+p",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus && !inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorTextFocus && !editorReadonly && vim.mode == 'Insert' && !inlineSuggestionVisible && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+p",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorTextFocus && !editorReadonly && vim.mode == 'Insert' && !inlineSuggestionVisible && !suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+e",
+    "command": "editor.action.inlineSuggest.hide",
+    "when": "editorTextFocus && inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+e",
+    "command": "hideSuggestWidget",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+
+  // COMPARE / DIFF EDITOR CHANGE NAVIGATION (`Space vn` / `Space vN` are
+  // VSCodeVim chords in settings.d/base.jsonc; Space-prefixed chords must never
+  // be workbench keybindings or VS Code swallows the Vim leader key)
+  // ---------------------------------------------------------------------------
   {
     "key": "] c",
     "command": "workbench.action.compareEditor.nextChange",
@@ -364,16 +1275,6 @@
     "key": "[ c",
     "command": "workbench.action.compareEditor.previousChange",
     "when": "textCompareEditorVisible && !inputFocus"
-  },
-  {
-    "key": "space v n",
-    "command": "workbench.action.editor.nextChange",
-    "when": "editorTextFocus && !textCompareEditorVisible && !inputFocus"
-  },
-  {
-    "key": "space v shift+n",
-    "command": "workbench.action.editor.previousChange",
-    "when": "editorTextFocus && !textCompareEditorVisible && !inputFocus"
   },
   {
     "key": "] c",
@@ -397,5 +1298,128 @@
     "key": "ctrl+shift+f10",
     "command": "testing.runAtCursor",
     "when": "editorTextFocus"
+  },
+
+  // INTELLIJ DEBUG & RUN PARITY (alex-linux.xml)
+  // ---------------------------------------------------------------------------
+  // Debug saved / active configuration (Shift+F9 / Shift+F5)
+  {
+    "key": "shift+f5",
+    "command": "-workbench.action.debug.stop",
+    "when": "inDebugMode"
+  },
+  {
+    "key": "shift+f9",
+    "command": "-editor.debug.action.toggleInlineBreakpoint",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "shift+f9",
+    "command": "workbench.action.debug.start"
+  },
+  {
+    "key": "shift+f5",
+    "command": "workbench.action.debug.start"
+  },
+  // Choose & debug configuration (Shift+Alt+F9 / Ctrl+Shift+F5)
+  {
+    "key": "ctrl+shift+f5",
+    "command": "-workbench.action.debug.restart",
+    "when": "inDebugMode"
+  },
+  {
+    "key": "shift+alt+f9",
+    "command": "workbench.action.debug.selectandstart"
+  },
+  {
+    "key": "ctrl+shift+f5",
+    "command": "workbench.action.debug.selectandstart"
+  },
+  // Resume / continue active debug session (F9 / F5)
+  {
+    "key": "f9",
+    "command": "-editor.debug.action.toggleBreakpoint",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "f9",
+    "command": "workbench.action.debug.continue",
+    "when": "inDebugMode"
+  },
+  {
+    "key": "f5",
+    "command": "workbench.action.debug.continue",
+    "when": "inDebugMode"
+  },
+  // Run saved configuration without debugging (Shift+F10 / F6) & choose task (Shift+Alt+F10)
+  {
+    "key": "f6",
+    "command": "-workbench.action.focusNextPart"
+  },
+  {
+    "key": "shift+f10",
+    "command": "-editor.action.showContextMenu",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "shift+f10",
+    "command": "workbench.action.debug.run"
+  },
+  {
+    "key": "f6",
+    "command": "workbench.action.debug.run"
+  },
+  {
+    "key": "shift+alt+f10",
+    "command": "workbench.action.tasks.runTask"
+  },
+  // Step Over / Step Into / Step Out (F8 / F7 / Shift+F8)
+  {
+    "key": "f8",
+    "command": "workbench.action.debug.stepOver",
+    "when": "inDebugMode"
+  },
+  {
+    "key": "f7",
+    "command": "workbench.action.debug.stepInto",
+    "when": "inDebugMode"
+  },
+  {
+    "key": "shift+f8",
+    "command": "workbench.action.debug.stepOut",
+    "when": "inDebugMode"
+  },
+  // Run to Cursor (Alt+F9) & Evaluate / Debug Hover (Alt+F8)
+  {
+    "key": "alt+f9",
+    "command": "editor.debug.action.runToCursor",
+    "when": "inDebugMode && editorTextFocus"
+  },
+  {
+    "key": "alt+f8",
+    "command": "editor.debug.action.showDebugHover",
+    "when": "inDebugMode && editorTextFocus"
+  },
+  // Toggle Line Breakpoint (Ctrl+F8)
+  {
+    "key": "ctrl+f8",
+    "command": "editor.debug.action.toggleBreakpoint",
+    "when": "editorTextFocus"
+  },
+  // Stop / Disconnect (Ctrl+Backspace / Ctrl+F2)
+  {
+    "key": "ctrl+f2",
+    "command": "-editor.action.changeAll",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+backspace",
+    "command": "workbench.action.debug.stop",
+    "when": "inDebugMode && !inputFocus"
+  },
+  {
+    "key": "ctrl+f2",
+    "command": "workbench.action.debug.stop",
+    "when": "inDebugMode"
   }
 ]

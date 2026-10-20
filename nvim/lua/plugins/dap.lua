@@ -6,6 +6,7 @@
 --                 kotlin-debug-adapter and the Android attach flow
 --
 -- Workflows:
+--   <Leader>dd     debug last / saved configuration (falls back to <Leader>da)
 --   <Leader>dt/dT  debug test under cursor / all tests (see keymap/build.lua)
 --   <Leader>da      attach to running process, per filetype (util/dap_attach)
 --   <Leader>dc      continue (or start debug test if no session)
@@ -79,13 +80,19 @@ return {
     local function attach_python()
       local port = vim.fn.input("Port (default 5678): ", "5678")
       if port == "" then return end
-      dap.run({
-        type = "python",
-        name = "Attach to process",
-        request = "attach",
-        connect = { host = "localhost", port = tonumber(port) },
-        cwd = vim.fn.getcwd(),
-      })
+      local port_num = tonumber(port)
+      local cwd = vim.fn.getcwd()
+      local function run_python()
+        dap.run({
+          type = "python",
+          name = "Attach to process",
+          request = "attach",
+          connect = { host = "localhost", port = port_num },
+          cwd = cwd,
+        })
+      end
+      dap_attach.set_last(run_python)
+      run_python()
     end
 
     dap_attach.register({ "python" }, function()
@@ -95,6 +102,7 @@ return {
 
     -- ── Keymaps ─────────────────────────────────────────────────────────────
 
+    vim.keymap.set("n", "<Leader>dd", dap_attach.run_last, { desc = "Debug last / saved configuration" })
     vim.keymap.set("n", "<Leader>da", dap_attach.attach, { desc = "Attach debugger (language-aware)" })
     vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
     vim.keymap.set("n", "<Leader>dB", function()
@@ -116,10 +124,17 @@ return {
     vim.keymap.set("n", "<Leader>df", dap.focus_frame, { desc = "Focus current frame" })
     vim.keymap.set("n", "<Leader>dr", dap.restart, { desc = "Restart" })
     vim.keymap.set("n", "<Leader>dx", function()
+      dap.disconnect({ terminateDebuggee = true })
+      dapui.close()
+    end, { desc = "Stop/terminate debuggee and close UI" })
+    vim.keymap.set("n", "<Leader>dD", function()
       dap.disconnect({ terminateDebuggee = false })
       dapui.close()
-    end, { desc = "Disconnect and close UI" })
+    end, { desc = "Disconnect debugger without terminating and close UI" })
     vim.keymap.set("n", "<Leader>du", dapui.toggle, { desc = "Toggle DAP UI" })
+    -- <Leader>dv: only the sidebar layout (scopes, breakpoints, stacks, watches),
+    -- the equivalent of VS Code's Run and Debug view; <Leader>du toggles everything.
+    vim.keymap.set("n", "<Leader>dv", function() dapui.toggle({ layout = 1 }) end, { desc = "Toggle DAP sidebar (debug view)" })
     vim.keymap.set({ "n", "v" }, "<Leader>dh", function() dapui.eval() end, { desc = "Eval under cursor (repeat to focus)" })
     vim.keymap.set("n", "<Leader>de", function()
       local expr = vim.fn.expand("<cword>")

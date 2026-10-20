@@ -18,6 +18,10 @@
   "extensions.ignoreRecommendations": true,
   "files.autoSave": "onFocusChange",
   "files.eol": "\n",
+  // Only open the Run and Debug view when a breakpoint is hit, and never pull
+  // window focus for it (the debugger is driven from Vim chords).
+  "debug.openDebug": "openOnDebugBreak",
+  "debug.focusWindowOnBreak": false,
   "window.reopenFolders": "all",
   "window.restoreWindows": "all",
   "workbench.welcome.enabled": true,
@@ -76,6 +80,35 @@
     "<o>": true
   },
   "vim.insertModeKeyBindings": [],
+  "vim.normalModeKeyBindings": [
+    // DEBUGGER PREFIX (<leader>d -> fire-and-forget dispatch of <leader>d* chords)
+    // VSCodeVim runs `remapping.commands` with `await` on a single `taskQueue`
+    // (`remapper.ts`), so a 3-key chord bound straight to
+    // `workbench.action.debug.start` freezes every Vim key until the preLaunch
+    // build and the debug session have started. Instead `<leader>d` is a
+    // recursive remap that buffers the synthetic `<plug-ldr-d>` key and sets the
+    // `vim.leaderD` context, and keybindings.d/base.jsonc dispatches the third
+    // key through VS Code's KeybindingService, outside `taskQueue`. The
+    // `["<plug-ldr-d>", ...]` entries in vim.normalModeKeyBindingsNonRecursive
+    // are the fallbacks VSCodeVim matches itself when the third key arrives
+    // before the `setContext` RPC reaches the browser (fast typing), and
+    // `["<plug-ldr-d>"]` alone resets the context after the 1s timeout or an
+    // unmapped key (previously `<Space>d` + pause left Vim in operator-pending
+    // `d`, so the next `j` deleted two lines). Avoid `d-`, `c-`, `s-` inside
+    // `<plug-...>` names: VSCodeVim normalises them as modifiers.
+    // -------------------------------------------------------------------------
+    {
+      "before": ["leader", "d"],
+      "after": ["<plug-ldr-d>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", true]
+        }
+      ],
+      "silent": true
+    }
+  ],
   "vim.normalModeKeyBindingsNonRecursive": [
     // UNDO / REDO (Fix VSCodeVim undo tree desync)
     // -------------------------------------------------------------------------
@@ -133,7 +166,18 @@
     },
     {
       "before": ["C-n"],
-      "commands": [":noh"]
+      "commands": [":noh", "cancelSelection"]
+    },
+    // Jump list (<C-o> / <C-i>): VSCodeVim's own jump tracker ignores jumps made
+    // through `remapping.commands` (e.g. `gd` -> editor.action.revealDefinition),
+    // so route to VS Code's history service, which records every navigation.
+    {
+      "before": ["C-o"],
+      "commands": ["workbench.action.navigateBack"]
+    },
+    {
+      "before": ["C-i"],
+      "commands": ["workbench.action.navigateForward"]
     },
     {
       "before": ["J"],
@@ -199,10 +243,11 @@
       "before": ["leader", "leader", "j"],
       "commands": ["workbench.action.decreaseViewHeight"]
     },
-    // Navigate between splits (<C-h/j/k/l>)
+    // Navigate between splits (<C-h/j/k/l>); `navigate*` also crosses from the
+    // outermost split into the Sidebar / Panel like vim-tmux-navigator.
     {
       "before": ["c-h"],
-      "commands": ["workbench.action.focusLeftGroup"]
+      "commands": ["workbench.action.navigateLeft"]
     },
     {
       "before": ["c-l"],
@@ -210,11 +255,11 @@
     },
     {
       "before": ["c-j"],
-      "commands": ["workbench.action.focusBelowGroup"]
+      "commands": ["workbench.action.navigateDown"]
     },
     {
       "before": ["c-k"],
-      "commands": ["workbench.action.focusAboveGroup"]
+      "commands": ["workbench.action.navigateUp"]
     },
     // Move editor across splits (<C-w>H/J/K/L)
     {
@@ -233,13 +278,21 @@
       "before": ["c-w", "J"],
       "commands": ["workbench.action.moveEditorToBelowGroup"]
     },
-    // Switch between buffers (<S-h> / <S-l>)
+    // Switch between buffers (<S-h> / <S-l>, <C-[> / <C-]>)
     {
       "before": ["S-h"],
       "commands": [":bprevious"]
     },
     {
       "before": ["S-l"],
+      "commands": [":bnext"]
+    },
+    {
+      "before": ["C-["],
+      "commands": [":bprevious"]
+    },
+    {
+      "before": ["C-]"],
       "commands": [":bnext"]
     },
 
@@ -268,6 +321,10 @@
       "commands": ["workbench.action.gotoSymbol"]
     },
     {
+      "before": ["leader", "leader", "t"],
+      "commands": ["breadcrumbs.focusAndSelect"]
+    },
+    {
       "before": ["leader", "f", "f"],
       "commands": ["workbench.action.quickOpen"]
     },
@@ -287,9 +344,11 @@
       "before": ["leader", "f", "s"],
       "commands": ["workbench.action.showAllSymbols"]
     },
+    // `editor.action.findReferences` is programmatic-only (asserts on its uri /
+    // position arguments); `goToReferences` peeks references at the cursor.
     {
       "before": ["leader", "f", "u"],
-      "commands": ["editor.action.findReferences"]
+      "commands": ["editor.action.goToReferences"]
     },
     {
       "before": ["leader", "f", "i"],
@@ -310,13 +369,25 @@
 
     // LSP INFO, DIAGNOSTICS & FORMATTING (Neovim lsp.lua / trouble.lua parity)
     // -------------------------------------------------------------------------
+    // Hover / diagnostic tooltip: first press shows it, second press moves focus
+    // into it (`editorHoverFocused`, Vim scrolling in keybindings.d/base.jsonc).
     {
       "before": ["leader", "s", "h"],
-      "commands": ["editor.action.showHover"]
+      "commands": [
+        {
+          "command": "editor.action.showHover",
+          "args": { "focus": "focusIfVisible" }
+        }
+      ]
     },
     {
       "before": ["leader", "s", "e"],
-      "commands": ["editor.action.marker.showHover"]
+      "commands": [
+        {
+          "command": "editor.action.showHover",
+          "args": { "focus": "focusIfVisible" }
+        }
+      ]
     },
     {
       "before": ["leader", "s", "d"],
@@ -346,6 +417,23 @@
       "before": ["leader", "leader", "f"],
       "commands": ["editor.action.formatDocument"]
     },
+    {
+      "before": ["leader", "r", "n"],
+      "commands": ["editor.action.rename"]
+    },
+    {
+      "before": ["leader", "c", "a"],
+      "commands": ["editor.action.quickFix"]
+    },
+    // Review comment threads (VS Code comments API)
+    {
+      "before": ["leader", "c", "l"],
+      "commands": ["editor.action.nextCommentThreadAction"]
+    },
+    {
+      "before": ["leader", "c", "L"],
+      "commands": ["workbench.action.focusCommentsPanel"]
+    },
 
     // BUILD, TEST & DEBUG (Neovim build.lua & dap.lua parity)
     // -------------------------------------------------------------------------
@@ -366,48 +454,255 @@
       "commands": ["workbench.view.extension.test"]
     },
     {
-      "before": ["leader", "d", "t"],
-      "commands": ["testing.debugAtCursor"]
+      "before": ["leader", "leader", "c"],
+      "commands": ["workbench.action.tasks.runTask"]
+    },
+    // DEBUGGER (<leader>d*): fallbacks for the <plug-ldr-d> dispatch declared in
+    // vim.normalModeKeyBindings above; the primary path is keybindings.d/base.jsonc.
+    {
+      "before": ["<plug-ldr-d>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        }
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "T"],
-      "commands": ["testing.debugCurrentFile"]
+      "before": ["<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        }
+      ],
+      "silent": true
+    },
+    // Dummy 2-key remap: a fallback's `after: ["<plug-ldr-clr>", ...]` breaks this
+    // potential remap so VSCodeVim clears
+    // `wasPerformingRemapThatFinishedWaitingForTimeout` (remapper.ts) instead of
+    // slicing keys off the next chord. Shared by every <plug-ldr-*> prefix.
+    {
+      "before": ["<plug-ldr-clr>", "<plug-ldr-never>"],
+      "commands": [],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "b"],
-      "commands": ["editor.debug.action.toggleBreakpoint"]
+      "before": ["<plug-ldr-d>", "d"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.start"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "B"],
-      "commands": ["editor.debug.action.conditionalBreakpoint"]
+      "before": ["<plug-ldr-d>", "a"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.selectandstart"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "c"],
-      "commands": ["workbench.action.debug.continue"]
+      "before": ["<plug-ldr-d>", "t"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "testing.debugAtCursor"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "o"],
-      "commands": ["workbench.action.debug.stepOver"]
+      "before": ["<plug-ldr-d>", "T"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "testing.debugCurrentFile"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "i"],
-      "commands": ["workbench.action.debug.stepInto"]
+      "before": ["<plug-ldr-d>", "b"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.toggleBreakpoint"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "O"],
-      "commands": ["workbench.action.debug.stepOut"]
+      "before": ["<plug-ldr-d>", "B"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.conditionalBreakpoint"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "r"],
-      "commands": ["workbench.action.debug.restart"]
+      "before": ["<plug-ldr-d>", "c"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.continue"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "x"],
-      "commands": ["workbench.action.debug.stop"]
+      "before": ["<plug-ldr-d>", "o"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stepOver"
+      ],
+      "silent": true
     },
     {
-      "before": ["leader", "d", "u"],
-      "commands": ["workbench.debug.action.toggleRepl"]
+      "before": ["<plug-ldr-d>", "i"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stepInto"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "O"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stepOut"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "f"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.debug.action.focusCallStackView"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "h"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.showDebugHover"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "e"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.selectionToWatch"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "r"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.restart"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "x"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stop"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "D"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.disconnect"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "u"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.debug.action.toggleRepl"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-d>", "v"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.view.debug"
+      ],
+      "silent": true
     },
 
     // VCS / GIT & DIFF NAVIGATION (Neovim fugitive / vim-signify parity)
@@ -433,6 +728,13 @@
     },
     {
       "before": ["leader", "v", "N"],
+      "commands": [
+        "workbench.action.editor.previousChange",
+        "workbench.action.compareEditor.previousChange"
+      ]
+    },
+    {
+      "before": ["leader", "v", "p"],
       "commands": [
         "workbench.action.editor.previousChange",
         "workbench.action.compareEditor.previousChange"
@@ -507,6 +809,21 @@
     {
       "before": ["y", "D"],
       "after": ["\"", "_", "y", "d"]
+    },
+    // Exit Visual mode, clear search highlight and selection
+    {
+      "before": ["C-n"],
+      "after": ["<Esc>"],
+      "commands": [":noh", "cancelSelection"]
+    },
+    // Debug hover & add selection to watch
+    {
+      "before": ["leader", "d", "h"],
+      "commands": ["editor.debug.action.showDebugHover"]
+    },
+    {
+      "before": ["leader", "d", "e"],
+      "commands": ["editor.debug.action.selectionToWatch"]
     }
   ],
   // To improve performance

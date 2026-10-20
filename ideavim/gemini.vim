@@ -8,3 +8,12 @@
 " completion, accept next word, etc.). These are defined in ideavimrc.vim.
 " " This file only includes the actions that are specific to Gemini.
 imap <C-g> <Action>(com.google.tools.intellij.aiplugin.generation.GenerateManualInlineCompletionAction)
+
+" AI chat / inline edit, same chords as the Neovim and VS Code configs:
+" <Leader>ac asks Gemini (Android Studio's "StudioBot" chat tool window),
+" <Leader>ai opens Gemini "Transform Code" for an inline edit of the selection.
+" Find more ids with :actionlist sml.
+nmap <Leader>ac <Action>(ActivateStudioBotToolWindow)
+vmap <Leader>ac <Action>(ActivateStudioBotToolWindow)
+nmap <Leader>ai <Action>(ActivateTransformCodeToolWindow)
+vmap <Leader>ai <Action>(ActivateTransformCodeToolWindow)

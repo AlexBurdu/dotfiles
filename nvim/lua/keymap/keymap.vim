@@ -35,11 +35,13 @@ nnoremap <Leader>l :vsplit<CR><C-w>r
 nnoremap <Leader>k :split<CR>
 nnoremap <Leader>j :split<CR><C-w>r
 
-" Resize splits (prefix with count, e.g. 10<Leader><Leader>k)
-nnoremap <Leader><Leader>h :<C-u>execute 'vertical resize -' . v:count1<CR>
-nnoremap <Leader><Leader>l :<C-u>execute 'vertical resize +' . v:count1<CR>
-nnoremap <Leader><Leader>k :<C-u>execute 'resize +' . v:count1<CR>
-nnoremap <Leader><Leader>j :<C-u>execute 'resize -' . v:count1<CR>
+" Resize splits. Without a count the step is 8 columns / 3 lines, close to the
+" 60px step VS Code uses for the same chords; prefix a count for a precise
+" amount (e.g. 10<Leader><Leader>k).
+nnoremap <Leader><Leader>h :<C-u>execute 'vertical resize -' . (v:count ? v:count : 8)<CR>
+nnoremap <Leader><Leader>l :<C-u>execute 'vertical resize +' . (v:count ? v:count : 8)<CR>
+nnoremap <Leader><Leader>k :<C-u>execute 'resize +' . (v:count ? v:count : 3)<CR>
+nnoremap <Leader><Leader>j :<C-u>execute 'resize -' . (v:count ? v:count : 3)<CR>
 
 " ### Edit ###
 " Move selected lines while staying in visual mode

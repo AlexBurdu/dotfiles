@@ -198,6 +198,7 @@ return {
       local recent_packages = {}
 
       local function do_attach_kotlin(package)
+        dap_attach.set_last(function() do_attach_kotlin(package) end)
         -- Move to front of recents
         for i, p in ipairs(recent_packages) do
           if p == package then table.remove(recent_packages, i) break end

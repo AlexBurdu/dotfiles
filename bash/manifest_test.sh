@@ -384,7 +384,7 @@ check "which holds the common settings" \
 check "and none of the optional ones" \
   "null" "$(jq '."bazel.executable"' "$S")"
 check "keybindings are the common set alone" \
-  "74" "$(jq length "$K")"
+  "198" "$(jq length "$K")"
 
 machine "$SB" "enable vscode.bazel" "enable vscode.gemini"
 run "$SB" >/dev/null
@@ -393,7 +393,7 @@ check "enabling a name merges its settings in" \
 check "without losing the common ones" \
   '"<Space>"' "$(jq '."vim.leader"' "$S")"
 check "and keybinding fragments are appended, not replaced" \
-  "79" "$(jq length "$K")"
+  "203" "$(jq length "$K")"
 
 machine "$SB" "enable vscode.gemini"
 run "$SB" >/dev/null

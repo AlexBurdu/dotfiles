@@ -542,13 +542,13 @@ in each section below.
 | Action | [Tmux](#tmux-prefix-c-s) | [Neovim](#neovim-leader-space) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#vs-code-vscodevim-leader-space) | [MC](#midnight-commander) |
 |---|---|---|---|---|---|
 | Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `h/j/k/l` |
-| Breadcrumb/navbar | - | `C-t` | `C-t` | `C-t` | - |
+| Breadcrumb/navbar | - | `C-t` / `Space Space t` | `C-t` / `Space Space t` | `C-t` / `Space Space t` | - |
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | `C-w H/J/K/L` | - |
 | Cycle layout / orientation | `C-s Space` | - | `C-w C-r` | - | - |
-| Previous tab/buffer | `C-s [` | `S-h` | `S-h` | `S-h` | - |
-| Next tab/buffer | `C-s ]` | `S-l` | `S-l` | `S-l` | - |
+| Previous tab/buffer | `C-s [` | `S-h` | `S-h` / `C-[` | `S-h` / `C-[` | - |
+| Next tab/buffer | `C-s ]` | `S-l` | `S-l` / `C-]` | `S-l` / `C-]` | - |
 | Move tab/window left | `C-s {` | - | - | - | - |
 | Move tab/window right | `C-s }` | - | - | - | - |
 | Last window | `C-s Enter` | - | - | - | - |
@@ -575,15 +575,38 @@ in each section below.
 | Show hunk diff | - | `Space vd` | `Space vd` | `Space vd` |
 | Next / Prev hunk | - | `Space vn` / `Space vN` | `Space vn` / `Space vN` | `Space vn` / `Space vN` |
 
+### Debug
+
+| Action | [Neovim](#debug-dap) | [IntelliJ](#debug-build--android) | [VS Code](#build-test--debug) |
+|---|---|---|---|
+| Debug saved / last config | `Space dd` | `Space dd` / `S-F9` / `S-F5` | `Space dd` / `S-F9` / `S-F5` |
+| Select & start / attach | `Space da` | `Space da` / `S-M-F9` / `C-S-F5` | `Space da` / `S-M-F9` / `C-S-F5` |
+| Run / build saved task picker | `Space bl` | `Space bl` / `Space Space c` / `S-M-F10` | `Space bl` / `Space Space c` / `S-M-F10` |
+| Build project / target | `Space bb` | `Space bb` / `C-F9` | `Space bb` |
+| Run test at cursor / all | `Space bt` / `Space bT` | `Space bt` / `Space bT` (`C-S-F10`) | `Space bt` / `Space bT` (`C-S-F10`) |
+| Rerun last build / test | `Space br` | `Space br` | `Space br` |
+| Debug test at cursor / all | `Space dt` / `Space dT` | `Space dt` / `Space dT` (`C-S-F9`) | `Space dt` / `Space dT` |
+| Android: build+debug / run / attach | `Space ab` / `ar` / `aa` | `Space ab` / `ar` / `aa` | `Space ab` / `ar` / `aa` |
+| Android: device / manager / logcat | `Space ad` / `am` / `al` | `Space ad` / `am` / `al` (`Space Space d`) | `Space ad` / `am` / `al` |
+| Toggle / conditional breakpoint | `Space db` / `Space dB` | `Space db` / `Space dB` / `C-F8` | `Space db` / `Space dB` / `C-F8` |
+| Continue / resume | `Space dc` | `Space dc` / `F9` / `F5` | `Space dc` / `F9` / `F5` |
+| Step over / into / out | `Space do` / `di` / `dO` | `Space do` / `di` / `dO` (`F8`/`F7`/`S-F8`) | `Space do` / `di` / `dO` (`F8`/`F7`/`S-F8`) |
+| Focus frame / execution point | `Space df` | `Space df` | `Space df` |
+| Hover / evaluate expression | `Space dh` | `Space dh` / `M-F8` | `Space dh` / `M-F8` |
+| Add to watches | `Space de` | `Space de` | `Space de` |
+| Restart / stop / disconnect | `Space dr` / `Space dx` / `Space dD` | `Space dr` / `Space dx` (`C-BS`/`C-F2`) / `Space dD` | `Space dr` / `Space dx` (`C-BS`/`C-F2`) / `Space dD` |
+| Toggle debug UI / console | `Space du` | `Space du` | `Space du` |
+| Debug view / toolbar | `Space dv` (dap-ui sidebar) | `Space dv` (Debug tool window) | `Space dv` (Run and Debug view) |
+
 ### Completion (Insert Mode)
 
 | Action | [Neovim LSP Popup](#completion-insert-mode) | [Neovim AI Ghost Text](#completion-insert-mode) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#ai-completion) |
 |---|---|---|---|---|
-| Trigger | `C-j` / `C-k` | `C-n` / `C-p` | `C-u` | `C-u` |
-| Next / Previous | `C-n` `C-j` / `C-p` `C-k` | `C-n` / `C-p` | `C-n` / `C-p` | `C-n` / `C-p` |
-| Page down / up | `C-d` / `C-u` | - | - | - |
-| Accept / Confirm | `C-y` | `Tab` (full) `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) |
-| Dismiss | `C-e` | Auto | `C-d` | `C-d` |
+| Trigger | `C-j` / `C-k` | `C-n` / `C-p` | `C-u` (popup auto-opens) | `C-j` / `C-k` (popup) `C-n` / `C-p` (AI) |
+| Next / Previous | `C-n` `C-j` / `C-p` `C-k` | `C-n` / `C-p` | `C-j` / `C-k` (popup) `C-n` / `C-p` (AI) | `C-j` / `C-k` (popup) `C-n` / `C-p` (AI) |
+| Page down / up | `C-d` / `C-u` | - | - | `C-d` / `C-u` |
+| Accept / Confirm | `C-y` | `Tab` (full) `C-y` (word) `C-h` (line) | `C-y` (word) `C-h` (line) | `Tab` (full) `C-y` (word) `C-h` (line) |
+| Dismiss | `C-e` | Auto | `C-e` | `C-e` |
 
 Neovim: LSP popup auto-triggers while typing. Ghost text appears after
 400ms pause, or on `C-n`/`C-p`.
@@ -791,10 +814,11 @@ go to trash.
 ### Breadcrumb Navigation (dropbar.nvim)
 | Shortcut | Action |
 |---|---|
-| `C-t` | Open breadcrumb picker |
+| `C-t` / `Space Space t` | Open breadcrumb picker |
+| `C-h` / `C-l` | Previous / next breadcrumb (or close nested submenu) |
 | `C-j` / `C-k` | Move down/up in menu |
-| `C-l` | Expand/enter submenu |
-| `C-h` | Close menu |
+| `Enter` | Unfold directory/submenu or open file/symbol |
+| `Esc` / `q` | Close menu |
 
 ### Splits
 | Shortcut | Action |
@@ -803,8 +827,8 @@ go to trash.
 | `Space l` | Vertical split (right) |
 | `Space k` | Horizontal split (above) |
 | `Space j` | Horizontal split (below) |
-| `Space Space h/l` | Resize split narrower/wider (supports count) |
-| `Space Space k/j` | Resize split taller/shorter (supports count) |
+| `Space Space h/l` | Resize split narrower / wider (8 columns, or count) |
+| `Space Space k/j` | Resize split taller / shorter (3 lines, or count) |
 | `C-w H/J/K/L` | Move split directionally (nvim default) |
 
 ### Telescope (Fuzzy Finder)
@@ -818,7 +842,7 @@ go to trash.
 | `Space fw` | Find workspace (zoxide), set cwd, open oil | — |
 | `Space e` | Recent files (current directory) | — |
 | `Space t` | LSP document symbols (with hierarchy) | Fuzzy find in buffer |
-| `C-t` | Pick from breadcrumb (dropbar.nvim) | — |
+| `C-t` / `Space Space t` | Pick from breadcrumb (dropbar.nvim) | — |
 | `gd` | Go to definition | Grep word under cursor |
 | `Space fu` | Find references (LSP) | Grep word under cursor |
 | `Space fi` | Find implementations (LSP) | Grep word under cursor |
@@ -899,6 +923,7 @@ via init script to make coroutine locals inspectable.
 
 | Shortcut | Action |
 |---|---|
+| `Space dd` | Rerun last debug configuration (or prompt to attach if none run yet) |
 | `Space dt` | Debug test under cursor (same targeting as `bt`) |
 | `Space dT` | Debug all tests (same targeting as `bT`) |
 | `Space da` | Attach to running process (Python: port; with `jvm`, Android: ADB package picker) |
@@ -912,8 +937,10 @@ via init script to make coroutine locals inspectable.
 | `Space dh` | Eval expression under cursor or visual selection (repeat to focus float) |
 | `Space de` | Add to watches (normal: word under cursor, visual: selection) |
 | `Space dr` | Restart debug session |
-| `Space dx` | Disconnect debugger and close UI |
+| `Space dx` | Stop/terminate debuggee and close UI |
+| `Space dD` | Disconnect debugger without terminating and close UI |
 | `Space du` | Toggle DAP UI |
+| `Space dv` | Toggle DAP sidebar only (scopes, breakpoints, stacks, watches) |
 
 ### Android
 
@@ -955,8 +982,8 @@ those bindings off rather than breaking startup.
 | Shortcut | Action |
 |---|---|
 | `C-h/j/k/l` | Pane navigation |
-| `S-h` / `S-l` | Previous/next tab |
-| `C-t` | Show navigation bar |
+| `S-h` / `S-l` / `C-[` / `C-]` | Previous/next tab |
+| `C-t` / `Space Space t` | Show navigation bar |
 | `Space t` | File structure popup |
 | `Space e` | Recent files |
 | `Space Space e` | Switcher |
@@ -990,7 +1017,17 @@ those bindings off rather than breaking startup.
 | `Space sp` | Parameter info |
 | `Space sh` | Quick JavaDoc |
 | `Space se` | Show error description |
+| `Space sd` | Problems tool window |
 | `Space n` / `Space N` | Next/previous error |
+
+### Completion (Insert Mode)
+| Shortcut | Action |
+|---|---|
+| `C-j` / `C-k` | Move down/up in the completion popup (`EditorDown` / `EditorUp`; `<C-J>` removed from `lookupkeys`) |
+| `C-e` | Dismiss completion popup / inline suggestion (`EditorEscape`) |
+| `C-u` | Call inline completion |
+| `C-n` / `C-p` | Previous/next inline completion suggestion |
+| `C-y` / `C-h` | Accept inline completion word / line |
 
 ### VCS/Git
 | Shortcut | Action |
@@ -1003,14 +1040,35 @@ those bindings off rather than breaking startup.
 | `]c` / `[c` | Next/previous change marker |
 | `Space vo` | Editor only view |
 | `Space vp` | Editor and preview view |
-| `Space vs` | Git status |
+| `Space vs` / `Alt-v` | Version Control tool window |
 
-### Debug & Build
+### Debug, Build & Android
 | Shortcut | Action |
 |---|---|
-| `Space Space b` | Toggle breakpoint |
-| `Space Space c` | Run/Debug configuration |
-| `Space Space d` | Device and snapshot combo |
+| `Space bb` | Build targets of current file (`MakeBlazeModule`, falls back to `CompileDirty` in plain projects) |
+| `Space bB` | Build whole Bazel project (`MakeBlazeProject`) |
+| `Space bt` / `Space bT` | Run context configuration (test/method/class at cursor) |
+| `Space br` | Rerun last configuration |
+| `Space bl` / `Space Space c` | Choose and run saved configuration (`ChooseRunConfiguration`) |
+| `Space dd` | Debug active configuration |
+| `Space da` | Choose and start debug configuration |
+| `Space dt` / `Space dT` | Debug context configuration (test/method/class at cursor) |
+| `Space db` / `Space Space b` | Toggle line breakpoint |
+| `Space dB` | Edit / conditional breakpoint |
+| `Space dc` | Resume program |
+| `Space do` / `di` / `dO` | Step over / into / out |
+| `Space df` | Show execution point (focus current frame) |
+| `Space dh` | Quick evaluate expression (normal / visual) |
+| `Space de` | Add to watches (normal / visual) |
+| `Space dr` / `Space dx` | Rerun / stop debug session |
+| `Space dD` | Disconnect without terminating (closes the debug tab, which offers Disconnect / Terminate) |
+| `Space du` / `Space dv` | Activate Debug tool window |
+| `Space ab` | Android / active config: Build and Debug (`Debug`) |
+| `Space ar` | Android / active config: Build and Run (`Run`) |
+| `Space aa` | Attach debugger to Android process (`AndroidConnectDebuggerAction`) |
+| `Space ad` / `Space Space d` | Select device and snapshot (`DeviceAndSnapshotComboBox`) |
+| `Space am` | Activate Android Device Manager tool window |
+| `Space al` | Activate Android Logcat tool window |
 | `Space Space p` | Refresh or run preview |
 | `Space Space sg` | Sync Gradle |
 | `Space Space sb` | Sync Blaze/Bazel |
@@ -1023,7 +1081,14 @@ those bindings off rather than breaking startup.
 | `Space Space g` | Run anything |
 | `Space Space r` | Refactorings quick list |
 | `Space yp` | Copy file path from repo root |
+| `Space yP` | Copy absolute file path |
 | `Space yb` | Copy Bazel target path |
+
+### AI (Gemini, `ideavim.gemini`)
+| Shortcut | Action |
+|---|---|
+| `Space ac` | Ask Gemini / open the Android Studio Gemini chat tool window (normal / visual) |
+| `Space ai` | Gemini Transform Code (inline edit) for the selection |
 
 ### Bookmarks
 | Shortcut | Action |
@@ -1048,21 +1113,23 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 ### Navigation & Splits
 | Shortcut | Action |
 |---|---|
-| `C-h/j/k/l` | Navigate splits (and lists) |
-| `Space h/j/k/l` | Create split left / below / above / right |
+| `C-h/j/k/l` | Navigate splits (and lists; works in non-code/webview tabs too) |
+| `Space h/j/k/l` | Create split left / below / above / right (moves singleton webview tabs like Logcat into split) |
 | `Space Space h/l` | Resize split narrower / wider |
 | `Space Space k/j` | Resize split taller / shorter |
 | `C-w H/J/K/L` | Move editor to left / below / above / right group |
-| `S-h` / `S-l` | Previous / next buffer |
+| `S-h` / `S-l` / `C-[` / `C-]` | Previous / next buffer (works in non-code/webview tabs too) |
+| `C-o` / `C-i` | Jump back / forward (VS Code history; includes `gd` jumps) |
 | `C-f` / `C-b` | Page forward / backward (centered) |
 | `C-e` / `C-y` | Scroll line down / up (cursor follows) |
 | `n` / `N` | Next / previous search match (centered) |
 | `C-n` (normal) | Clear search highlighting (`:noh`) |
-| `C-t` | Focus breadcrumbs |
-| `\` / `Alt-f` | Reveal active file in explorer / toggle file explorer |
+| `C-t` / `Space Space t` | Focus breadcrumbs picker (`C-h`/`C-l` prev/next crumb, `C-j`/`C-k` down/up, `Enter` unfold dir / open file) |
+| `\` / `Alt-f` | Reveal active file in explorer / focus file explorer (pure focus; `Shift-Escape` closes the sidebar) |
 | `Enter` (explorer) | Open file and pass focus to editor |
 | `Alt-e` | Focus active editor group |
-| `Alt-v` | Toggle source control |
+| `Alt-v` | Focus source control file list (skips the commit input box when the provider shows one) |
+| `Escape` (sidebar / panel) | Back to the active editor in Normal mode with the selection cleared |
 | `C-Shift-e` / `C-p` | Quick open |
 | `C-Shift-j` | Toggle panel |
 | `C-Shift-Escape` | Close sidebar |
@@ -1090,15 +1157,17 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space fp` / `Space fg` | Find in files (live grep) |
 | `Space fr` | Replace in files |
 | `Space fs` | Workspace symbols |
-| `Space fu` | Find references |
+| `Space fu` | Peek references |
 | `Space fi` | Go to implementation |
 | `Space fc` | Go to type definition |
 | `Space fw` | Open recent workspace / folder |
 | `Space e` | Quick open recent files |
 | `Space t` | Document symbols |
 | `gd` | Go to definition |
-| `Space sh` | Show hover documentation |
-| `Space se` | Show diagnostic error hover |
+| `Space rn` | Rename symbol |
+| `Space ca` | Code action / quick fix |
+| `Space sh` / `Space se` | Show hover / diagnostic; press again to focus it (`j`/`k`, `C-d`/`C-u`, `gg`/`G`, `q`) |
+| `Space cl` / `Space cL` | Next review comment thread / focus Comments panel |
 | `Space sd` | Toggle Problems panel |
 | `Space n` / `Space N` | Next / previous diagnostic (`]t` / `[t`) |
 
@@ -1108,7 +1177,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space vs` / `Alt-v` | Source control view |
 | `Space vb` | Timeline / blame view |
 | `Space vd` | Open file changes diff |
-| `Space vn` / `Space vN` | Next / previous change hunk (`]c` / `[c`) |
+| `Space vn` / `Space vN` / `Space vp` | Next / previous change hunk (`]c` / `[c`) |
 | `Space p` / `Space P` | Git push / Git pull --rebase |
 
 ### Build, Test & Debug
@@ -1118,19 +1187,55 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space bT` | Run all tests in current file |
 | `Space br` | Rerun last test run |
 | `Space bl` | Open test explorer view |
+| `Space Space c` / `Shift-Alt-f10` | Select and run saved task / build configuration |
+| `Space dd` / `Shift-f9` / `Shift-f5` | Debug active / saved configuration |
+| `Space da` / `Shift-Alt-f9` / `C-Shift-f5` | Select and start debug configuration |
+| `Shift-f10` / `f6` | Run active configuration without debugging |
 | `Space dt` / `Space dT` | Debug test at cursor / all tests in file |
-| `Space db` / `Space dB` | Toggle breakpoint / conditional breakpoint |
-| `Space dc` | Continue debugging |
-| `Space do` / `di` / `dO` | Step over / into / out |
-| `Space dr` / `Space dx` | Restart / stop debugger |
+| `Space db` / `C-f8` | Toggle breakpoint |
+| `Space dB` | Set conditional breakpoint |
+| `Space dc` / `f9` / `f5` | Continue / resume debugging |
+| `Space do` / `di` / `dO` (`f8` / `f7` / `Shift-f8`) | Step over / into / out |
+| `Alt-f9` | Run to cursor |
+| `Space df` | Focus call stack view |
+| `Space dh` / `Alt-f8` | Debug hover / evaluate (normal & visual) |
+| `Space de` | Add selection to watch (normal & visual) |
+| `Space dr` | Restart debugger |
+| `Space dx` / `C-Backspace` / `C-f2` | Stop debugger (terminates debuggee) |
+| `Space dD` | Disconnect debugger (leaves debuggee running) |
 | `Space du` | Toggle debug console (REPL) |
+| `Space dv` | Show Run and Debug view (sidebar with variables, watch, call stack, breakpoints) |
+
+`Space d` is a non-blocking prefix: VSCodeVim buffers it and VS Code's keybinding
+service dispatches the third key, so `Space dd` / `Space da` never freeze Vim
+while a preLaunch build or the debug session starts; after a 1s pause or an
+unmapped key the prefix is dropped (no stray `d` operator).
+
+### Review Comments (inline widget)
+| Shortcut | Action |
+|---|---|
+| `C-Enter` / `Cmd-Enter` | Submit the comment and return to the editor in Normal mode |
+| `Escape` / `Space q` | Dismiss an empty comment (Normal mode) and return to the editor |
 
 ### List Navigation (vim-style)
 | Shortcut | Action |
 |---|---|
 | `C-j` / `C-k` | Move down/up |
-| `C-h` / `C-l` | Collapse/expand |
+| `C-h` / `C-l` | Collapse/expand (breadcrumb picker: `C-h` opens the parent crumb's picker) |
 | `C-u` / `C-d` | Page up/down |
+
+### Completion (Insert Mode)
+
+Universal VS Code commands, so they also work in forks without the Gemini /
+Copilot extensions.
+
+| Shortcut | Action |
+|---|---|
+| `C-j` / `C-k` | Open the completion popup, or move down/up inside it |
+| `C-d` / `C-u` | Page down/up in the completion popup |
+| `C-n` / `C-p` | Next/previous inline suggestion (ghost text), fetch a fresh one when none is shown, or move in the popup |
+| `C-e` | Dismiss inline suggestion / completion popup |
+| `Tab` / `C-y` / `C-h` | Accept inline suggestion: all / next word / next line |
 
 ### Terminal
 | Shortcut | Action |
@@ -1150,6 +1255,7 @@ Only where `vscode.gemini` / `vscode.copilot` are enabled; see above.
 | `C-u` | Generate code (Gemini) |
 | `C-d` | Reject completion (Gemini) |
 | `C-n` / `C-p` | Next/previous suggestion |
+| `C-e` | Dismiss suggestion |
 | `C-y` | Accept next word |
 | `C-h` | Accept next line |
 | `C-\` | Show Gemini in editor |

@@ -30,6 +30,7 @@ nmap <M-f> m'<Action>(SelectInProjectView)
 nmap <Leader>e m'<Action>(RecentFiles)
 nmap <Leader><Leader>e m'<Action>(Switcher)
 nmap <C-t> m'<Action>(ShowNavBar)
+nmap <Leader><Leader>t m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
 
 # CamelCase motion
@@ -44,17 +45,23 @@ nmap <Leader>' m'<Action>(ShowBookmarks)
 
 " Move between splits
 nnoremap <C-h> <C-w>h
-" Use ctrl-j as an ide shortcut in visual mode
-sethandler <C-j> i-v:ide n:vim
+" Insert mode: <C-j>/<C-k> navigate the completion popup (Neovim parity, see
+" "Code Completion" below); visual mode keeps the IDE shortcut.
+sethandler <C-j> v:ide n-i:vim
 nnoremap <C-j> <C-w>j
-" Use ctrl-k as an ide shortcut in visual mode
-sethandler <C-k> i-v:ide n:vim
+sethandler <C-k> v:ide n-i:vim
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-" Switch Buffers / Tabs
+" Switch Buffers / Tabs (<S-h>/<S-l> and <C-[>/<C-]> as in Neovim / VS Code).
+" IdeaVim keeps <C-[> and <Esc> as distinct keystrokes, so only the physical
+" Ctrl+[ is remapped in normal mode; insert mode still leaves insert on Ctrl+[.
 nmap <S-h> m'<Action>(PreviousTab)
 nmap <S-l> m'<Action>(NextTab)
+sethandler <C-[> n:vim
+sethandler <C-]> n:vim
+nmap <C-[> m'<Action>(PreviousTab)
+nmap <C-]> m'<Action>(NextTab)
 
 " Move between splits / tab
 nmap <C-w>= <Action>(MaximizeEditorInSplit)
@@ -74,6 +81,7 @@ nmap <Leader>sp <Action>(ParameterInfo)
 " Jump/GoTo
 nmap <Leader>sh <Action>(QuickJavaDoc)
 nmap <Leader>se <Action>(ShowErrorDescription)
+nmap <Leader>sd <Action>(ActivateProblemsViewToolWindow)
 nmap <Leader>n m'<Action>(GotoNextError)
 nmap <Leader>N m'<Action>(GotoPreviousError)
 
@@ -97,6 +105,14 @@ nmap <Leader>gu m'<Action>(GotoSuperMethod)
 nmap <Leader>gb m'<Action>(Blaze.OpenCorrespondingBuildFile)
 
 " Code Completion
+" Completion popup: <C-j>/<C-k> move down/up and <C-e> dismisses (Neovim
+" parity). IdeaVim forwards the keys listed in 'lookupkeys' straight to the IDE
+" while a lookup is open, which would swallow <C-j>, so <C-J> is left out of it.
+set lookupkeys=<Tab>,<Down>,<Up>,<Enter>,<Left>,<Right>,<C-Down>,<C-Up>,<PageUp>,<PageDown>,<C-Q>
+imap <C-j> <Action>(EditorDown)
+imap <C-k> <Action>(EditorUp)
+sethandler <C-e> i:vim
+imap <C-e> <Action>(EditorEscape)
 imap <C-u> <Action>(CallInlineCompletionAction)
 " Use ctrl-n as an ide shortcut in insert mode only
 sethandler <C-n> n-v:ide i:vim
@@ -121,6 +137,7 @@ endif
 
 " VCS (Version Control System)
 nmap <M-v> m'<Action>(ActivateVersionControlToolWindow)
+nmap <Leader>vs m'<Action>(ActivateVersionControlToolWindow)
 map <Leader>vb <Action>(Annotate)
 map <Leader>vc <Action>(CheckinProject)
 map <Leader>vh <Action>(Vcs.ShowTabbedFileHistory)
@@ -132,14 +149,59 @@ map ]c <Action>(VcsShowNextChangeMarker)
 map <Leader>vN <Action>(VcsShowPrevChangeMarker)
 map [c <Action>(VcsShowPrevChangeMarker)
 
-" ### Debug ###
+" ### Build, Test & Debug ###
+" IntelliJ's own make actions (CompileDirty, MakeModule, ...) are hidden in
+" Bazel projects, where "Compile File" (MakeBlazeModule) builds the
+" targets owning the current file and "Compile Project" (MakeBlazeProject)
+" builds everything in the project view, matching <Leader>bb / <Leader>bB in
+" Neovim and VS Code. CompileDirty stays as the fallback for plain projects.
+nmap <Leader>bb <Action>(MakeBlazeModule)<Action>(CompileDirty)
+nmap <Leader>bB <Action>(MakeBlazeProject)
+nmap <Leader>bt <Action>(RunClass)
+nmap <Leader>bT <Action>(RunClass)
+nmap <Leader>br <Action>(Rerun)
+nmap <Leader>bl <Action>(ChooseRunConfiguration)
+nmap <Leader>dd <Action>(Debug)
+nmap <Leader>da <Action>(ChooseDebugConfiguration)
+nmap <Leader>dt <Action>(DebugClass)
+nmap <Leader>dT <Action>(DebugClass)
+nmap <Leader>db <Action>(ToggleLineBreakpoint)
+nmap <Leader>dB <Action>(EditBreakpoint)
+nmap <Leader>dc <Action>(Resume)
+nmap <Leader>do <Action>(StepOver)
+nmap <Leader>di <Action>(StepInto)
+nmap <Leader>dO <Action>(StepOut)
+nmap <Leader>df <Action>(ShowExecutionPoint)
+nmap <Leader>dh <Action>(QuickEvaluateExpression)
+vmap <Leader>dh <Action>(QuickEvaluateExpression)
+nmap <Leader>de <Action>(Debugger.AddToWatch)
+vmap <Leader>de <Action>(Debugger.AddToWatch)
+nmap <Leader>dr <Action>(Rerun)
+nmap <Leader>dx <Action>(Stop)
+" Disconnect without terminating: IntelliJ has no detach action; Stop already
+" detaches sessions whose process handler prefers detaching (remote JVM /
+" "Attach Debugger to Android Process"). For launched sessions, closing the
+" debug tab offers the Terminate / Disconnect dialog.
+nmap <Leader>dD <Action>(ActivateDebugToolWindow)<Action>(CloseContent)
+nmap <Leader>du <Action>(ActivateDebugToolWindow)
+" Debug view / toolbar: IntelliJ has a single Debug tool window, so <Leader>dv
+" (VS Code "Run and Debug" view, Neovim dap-ui sidebar) is an alias of <Leader>du.
+nmap <Leader>dv <Action>(ActivateDebugToolWindow)
 map <Leader><Leader>b <Action>(ToggleLineBreakpoint)
 " map <Leader><Leader>j <Action>(RunToCursor)
-" Select the active Run/Debug configuration
-map <Leader><Leader>c <Action>(RunConfiguration)
+" Select and run a saved Run/Debug configuration
+map <Leader><Leader>c <Action>(ChooseRunConfiguration)
 " Select the device to use for the current run/debug configuration
 map <Leader><Leader>d <Action>(DeviceAndSnapshotComboBox)
 map <Leader><Leader>p <Action>(RefreshOrRunPreviewAction)
+
+" ### Android ###
+nmap <Leader>ab <Action>(Debug)
+nmap <Leader>ar <Action>(Run)
+nmap <Leader>aa <Action>(AndroidConnectDebuggerAction)
+nmap <Leader>ad <Action>(DeviceAndSnapshotComboBox)
+nmap <Leader>am <Action>(ActivateDeviceManager2ToolWindow)
+nmap <Leader>al <Action>(ActivateLogcatToolWindow)
 
 " ### Refactor ###
 nmap <Leader><Leader>a <Action>(AnalyzeMenu)
@@ -150,6 +212,8 @@ vmap <Leader><Leader>r <Action>(Refactorings.QuickListPopupAction)
 " ### Paths ###
 " Copy file path from repo root
 nmap <Leader>yp <Action>(CopyPathFromRepositoryRootProvider)
+" Copy absolute file path (keymap.vim's :lua version is Neovim-only)
+nmap <Leader>yP <Action>(CopyAbsolutePath)
 
 " Build Tools Support
 " Sync Gradle

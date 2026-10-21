@@ -546,9 +546,13 @@ in each section below.
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
 | Move pane/split | `C-s H/J/K/L` | `C-w H/J/K/L` | `C-w H/L` | `C-w H/J/K/L` | - |
-| Cycle layout / orientation | `C-s Space` | - | `C-w C-r` | - | - |
-| Previous tab/buffer | `C-s [` | `S-h` | `S-h` / `C-[` | `S-h` / `C-[` | - |
-| Next tab/buffer | `C-s ]` | `S-l` | `S-l` / `C-]` | `S-l` / `C-]` | - |
+| Maximize / equalize split | `C-s z` | `C-w \|` / `C-w =` | `C-w \|` / `C-w =` | `C-w \|` / `C-w =` | - |
+| Cycle layout / orientation | `C-s Space` | `C-w C-r` | `C-w C-r` | `C-w C-r` | - |
+| CamelCase subword motion | - | `w` / `e` / `b` (`iw`) | `w` / `e` / `b` | `w` / `e` / `b` (`iw`) | - |
+| Previous tab/buffer | `C-s [` | `S-h` / `C-[` | `S-h` / `C-[` | `S-h` / `C-[` | - |
+| Next tab/buffer | `C-s ]` | `S-l` / `C-]` | `S-l` / `C-]` | `S-l` / `C-]` | - |
+| Buffer switcher (MRU) | - | `Space Space e` | `Space Space e` | `Space Space e` | - |
+| Toggle / show bookmarks | - | `Space m` / `Space '` | `Space m` / `Space '` | `Space m` / `Space '` | - |
 | Move tab/window left | `C-s {` | - | - | - | - |
 | Move tab/window right | `C-s }` | - | - | - | - |
 | Last window | `C-s Enter` | - | - | - | - |
@@ -562,8 +566,12 @@ in each section below.
 | Find symbols | `Space fs` | `Space fs` | `Space fs` |
 | Find references | `Space fu` | `Space fu` | `Space fu` |
 | Find implementations | `Space fi` | `Space fi` | `Space fi` |
+| Go to declaration / super | `Space gu` | `Space gu` | `Space gu` |
 | Type definitions / class | `Space fc` | `Space fc` | `Space fc` |
 | Document symbols | `Space t` | `Space t` | `Space t` |
+| Hover / type / param info | `Space sh` / `st` / `sp` | `Space sh` / `st` / `sp` | `Space sh` / `st` / `sp` |
+| Rename / code action / refactor | `Space rn` / `ca` / `Space Space r` | `Space rn` / `ca` / `Space Space r` | `Space rn` / `ca` / `Space Space r` |
+| Context / popup menu | `Space Space m` | `Space Space m` | `Space Space m` |
 | Zen/distraction-free | `Space z` | `Space z` | `Space z` |
 
 ### VCS/Git
@@ -572,6 +580,7 @@ in each section below.
 |---|---|---|---|---|
 | VCS panel | `C-s d` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` | `Alt-v` / `Space vs` |
 | Blame/annotate | - | `Space vb` | `Space vb` | `Space vb` |
+| File history | - | `Space vh` | `Space vh` | `Space vh` |
 | Show hunk diff | - | `Space vd` | `Space vd` | `Space vd` |
 | Next / Prev hunk | - | `Space vn` / `Space vN` | `Space vn` / `Space vN` | `Space vn` / `Space vN` |
 
@@ -841,9 +850,13 @@ go to trash.
 | `Space fc` | LSP type definitions | Grep word under cursor |
 | `Space fw` | Find workspace (zoxide), set cwd, open oil | — |
 | `Space e` | Recent files (current directory) | — |
+| `Space Space e` | Switch open buffers (MRU) | — |
+| `Space m` / `Space '` | Toggle mnemonic mark / pick marks | — |
+| `Space vh` | Git file commit history (visual: selection range) | — |
 | `Space t` | LSP document symbols (with hierarchy) | Fuzzy find in buffer |
 | `C-t` / `Space Space t` | Pick from breadcrumb (dropbar.nvim) | — |
 | `gd` | Go to definition | Grep word under cursor |
+| `Space gu` | Go to declaration / supertype (LSP) | Grep word under cursor |
 | `Space fu` | Find references (LSP) | Grep word under cursor |
 | `Space fi` | Find implementations (LSP) | Grep word under cursor |
 
@@ -872,9 +885,13 @@ no language server is attached.
 ### LSP Info & Diagnostics
 | Shortcut | Action |
 |---|---|
-| `Space sh` | Show hover documentation |
+| `Space sh` / `Space st` | Show hover / expression type documentation |
+| `Space sp` | Show parameter signature help |
 | `Space se` | Show error/diagnostic description |
 | `Space sd` | Toggle diagnostics list (Trouble) |
+| `Space rn` | Rename symbol |
+| `Space ca` / `Space Space r` | Code action / refactorings (normal & visual) |
+| `Space Space m` | Show popup context menu |
 | `Space n` / `Space N` | Next/previous diagnostic |
 | `[t` / `]t` | Next/previous diagnostic (Trouble) |
 
@@ -1077,9 +1094,11 @@ those bindings off rather than breaking startup.
 ### Refactor & Copy
 | Shortcut | Action |
 |---|---|
+| `Space rn` | Rename element |
+| `Space ca` | Show intention actions / quick fixes (normal & visual) |
 | `Space Space a` | Analyze menu |
 | `Space Space g` | Run anything |
-| `Space Space r` | Refactorings quick list |
+| `Space Space r` | Refactorings quick list (normal & visual) |
 | `Space yp` | Copy file path from repo root |
 | `Space yP` | Copy absolute file path |
 | `Space yb` | Copy Bazel target path |
@@ -1118,7 +1137,11 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space Space h/l` | Resize split narrower / wider |
 | `Space Space k/j` | Resize split taller / shorter |
 | `C-w H/J/K/L` | Move editor to left / below / above / right group |
+| `C-w \|` / `C-w =` | Toggle maximize editor group / equalize split widths |
+| `C-w C-r` / `C-w r` | Toggle split orientation (horizontal / vertical) |
+| `w` / `e` / `b` (`iw`) | CamelCase subword motion and inner-subword text object |
 | `S-h` / `S-l` / `C-[` / `C-]` | Previous / next buffer (works in non-code/webview tabs too) |
+| `Space m` / `Space '` | Set mnemonic mark (gutter bookmark) / pick from marks (`:marks`) |
 | `C-o` / `C-i` | Jump back / forward (VS Code history; includes `gd` jumps) |
 | `C-f` / `C-b` | Page forward / backward (centered) |
 | `C-e` / `C-y` | Scroll line down / up (cursor follows) |
@@ -1162,11 +1185,15 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space fc` | Go to type definition |
 | `Space fw` | Open recent workspace / folder |
 | `Space e` | Quick open recent files |
+| `Space Space e` | Switch open editors by most recently used |
 | `Space t` | Document symbols |
 | `gd` | Go to definition |
+| `Space gu` | Go to declaration / super |
 | `Space rn` | Rename symbol |
-| `Space ca` | Code action / quick fix |
-| `Space sh` / `Space se` | Show hover / diagnostic; press again to focus it (`j`/`k`, `C-d`/`C-u`, `gg`/`G`, `q`) |
+| `Space ca` / `Space Space r` | Code action / refactorings (normal & visual) |
+| `Space Space m` | Show editor context menu |
+| `Space sh` / `Space se` / `Space st` | Show hover / diagnostic / type info; press again to focus it (`j`/`k`, `C-d`/`C-u`, `gg`/`G`, `q`) |
+| `Space sp` | Trigger parameter signature hints |
 | `Space cl` / `Space cL` | Next review comment thread / focus Comments panel |
 | `Space sd` | Toggle Problems panel |
 | `Space n` / `Space N` | Next / previous diagnostic (`]t` / `[t`) |
@@ -1176,6 +1203,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 |---|---|
 | `Space vs` / `Alt-v` | Source control view |
 | `Space vb` | Timeline / blame view |
+| `Space vh` | File history (Timeline view) |
 | `Space vd` | Open file changes diff |
 | `Space vn` / `Space vN` / `Space vp` | Next / previous change hunk (`]c` / `[c`) |
 | `Space p` / `Space P` | Git push / Git pull --rebase |

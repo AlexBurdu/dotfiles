@@ -66,6 +66,8 @@
   "vim.leader": "<Space>",
   "vim.useCtrlKeys": true,
   "vim.easymotion": false,
+  "vim.camelCaseMotion.enable": true,
+  "vim.showMarksInGutter": true,
   "vim.incsearch": true,
   "vim.hlsearch": true,
   "vim.surround": true,
@@ -183,6 +185,27 @@
       "before": ["J"],
       "after": ["m", "z", "J", "`", "z"]
     },
+    // CamelCase subword motion (Neovim vim-wordmotion / IdeaVim `[w`/`]w`/`[b` parity).
+    // `vim.camelCaseMotion.enable` registers MoveCamelCaseWord* on `<leader>w/e/b`;
+    // non-recursive `after` skips `remappers.sendKey` so physical `<Space>w` (save),
+    // `<Space>e` (recent files), and `<Space>b*` (build/test) stay untouched.
+    {
+      "before": ["w"],
+      "after": ["<leader>", "w"]
+    },
+    {
+      "before": ["e"],
+      "after": ["<leader>", "e"]
+    },
+    {
+      "before": ["b"],
+      "after": ["<leader>", "b"]
+    },
+    {
+      "before": ["leader", "b"],
+      "commands": [],
+      "silent": true
+    },
 
     // CLIPBOARD, VOID REGISTER & PATH YANKING
     // -------------------------------------------------------------------------
@@ -261,7 +284,7 @@
       "before": ["c-k"],
       "commands": ["workbench.action.navigateUp"]
     },
-    // Move editor across splits (<C-w>H/J/K/L)
+    // Move editor across splits (<C-w>H/J/K/L) and split layout (<C-w>|, <C-w>=, <C-w><C-r>)
     {
       "before": ["c-w", "H"],
       "commands": ["workbench.action.moveEditorToLeftGroup"]
@@ -277,6 +300,22 @@
     {
       "before": ["c-w", "J"],
       "commands": ["workbench.action.moveEditorToBelowGroup"]
+    },
+    {
+      "before": ["c-w", "|"],
+      "commands": ["workbench.action.toggleMaximizeEditorGroup"]
+    },
+    {
+      "before": ["c-w", "="],
+      "commands": ["workbench.action.evenEditorWidths"]
+    },
+    {
+      "before": ["c-w", "c-r"],
+      "commands": ["workbench.action.toggleEditorGroupLayout"]
+    },
+    {
+      "before": ["c-w", "r"],
+      "commands": ["workbench.action.toggleEditorGroupLayout"]
     },
     // Switch between buffers (<S-h> / <S-l>, <C-[> / <C-]>)
     {
@@ -315,6 +354,18 @@
     {
       "before": ["leader", "e"],
       "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["leader", "leader", "e"],
+      "commands": ["workbench.action.showAllEditorsByMostRecentlyUsed"]
+    },
+    {
+      "before": ["leader", "m"],
+      "after": ["m"]
+    },
+    {
+      "before": ["leader", "'"],
+      "commands": [":marks"]
     },
     {
       "before": ["leader", "t"],
@@ -366,6 +417,10 @@
       "before": ["g", "d"],
       "commands": ["editor.action.revealDefinition"]
     },
+    {
+      "before": ["leader", "g", "u"],
+      "commands": ["editor.action.revealDeclaration"]
+    },
 
     // LSP INFO, DIAGNOSTICS & FORMATTING (Neovim lsp.lua / trouble.lua parity)
     // -------------------------------------------------------------------------
@@ -388,6 +443,19 @@
           "args": { "focus": "focusIfVisible" }
         }
       ]
+    },
+    {
+      "before": ["leader", "s", "t"],
+      "commands": [
+        {
+          "command": "editor.action.showHover",
+          "args": { "focus": "focusIfVisible" }
+        }
+      ]
+    },
+    {
+      "before": ["leader", "s", "p"],
+      "commands": ["editor.action.triggerParameterHints"]
     },
     {
       "before": ["leader", "s", "d"],
@@ -424,6 +492,14 @@
     {
       "before": ["leader", "c", "a"],
       "commands": ["editor.action.quickFix"]
+    },
+    {
+      "before": ["leader", "leader", "r"],
+      "commands": ["editor.action.refactor"]
+    },
+    {
+      "before": ["leader", "leader", "m"],
+      "commands": ["editor.action.showContextMenu"]
     },
     // Review comment threads (VS Code comments API)
     {
@@ -720,6 +796,10 @@
       "commands": ["git.openChange"]
     },
     {
+      "before": ["leader", "v", "h"],
+      "commands": ["timeline.focus"]
+    },
+    {
       "before": ["leader", "v", "n"],
       "commands": [
         "workbench.action.editor.nextChange",
@@ -824,6 +904,77 @@
     {
       "before": ["leader", "d", "e"],
       "commands": ["editor.debug.action.selectionToWatch"]
+    },
+    // Find / grep / replace / symbols / refactor on visual selection (IntelliJ & Neovim parity)
+    {
+      "before": ["leader", "f", "f"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["leader", "f", "p"],
+      "commands": ["workbench.action.findInFiles"]
+    },
+    {
+      "before": ["leader", "f", "g"],
+      "commands": ["workbench.action.findInFiles"]
+    },
+    {
+      "before": ["leader", "f", "r"],
+      "commands": ["workbench.action.replaceInFiles"]
+    },
+    {
+      "before": ["leader", "f", "s"],
+      "commands": ["workbench.action.showAllSymbols"]
+    },
+    {
+      "before": ["leader", "f", "c"],
+      "commands": ["editor.action.goToTypeDefinition"]
+    },
+    {
+      "before": ["leader", "c", "a"],
+      "commands": ["editor.action.quickFix"]
+    },
+    {
+      "before": ["leader", "leader", "r"],
+      "commands": ["editor.action.refactor"]
+    }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    // CamelCase subword motion & inner-subword text object
+    {
+      "before": ["w"],
+      "after": ["<leader>", "w"]
+    },
+    {
+      "before": ["e"],
+      "after": ["<leader>", "e"]
+    },
+    {
+      "before": ["b"],
+      "after": ["<leader>", "b"]
+    },
+    {
+      "before": ["i", "w"],
+      "after": ["i", "<leader>", "w"]
+    }
+  ],
+  "vim.operatorPendingModeKeyBindingsNonRecursive": [
+    // CamelCase subword motion & inner-subword text object (dw, cw, yw, diw, ciw)
+    {
+      "before": ["w"],
+      "after": ["<leader>", "w"]
+    },
+    {
+      "before": ["e"],
+      "after": ["<leader>", "e"]
+    },
+    {
+      "before": ["b"],
+      "after": ["<leader>", "b"]
+    },
+    {
+      "before": ["i", "w"],
+      "after": ["i", "<leader>", "w"]
     }
   ],
   // To improve performance

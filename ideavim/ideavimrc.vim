@@ -33,7 +33,7 @@ nmap <C-t> m'<Action>(ShowNavBar)
 nmap <Leader><Leader>t m'<Action>(ShowNavBar)
 nmap <Leader>t m'<Action>(FileStructurePopup)
 
-# CamelCase motion
+" CamelCase motion
 map w [w
 map e ]w
 map b [b
@@ -204,6 +204,9 @@ nmap <Leader>am <Action>(ActivateDeviceManager2ToolWindow)
 nmap <Leader>al <Action>(ActivateLogcatToolWindow)
 
 " ### Refactor ###
+nmap <Leader>rn <Action>(RenameElement)
+nmap <Leader>ca <Action>(ShowIntentionActions)
+vmap <Leader>ca <Action>(ShowIntentionActions)
 nmap <Leader><Leader>a <Action>(AnalyzeMenu)
 nmap <Leader><Leader>g <Action>(RunAnything)
 nmap <Leader><Leader>r <Action>(Refactorings.QuickListPopupAction)

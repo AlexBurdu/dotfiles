@@ -180,8 +180,28 @@
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
   },
   {
+    "key": "ctrl+w shift+\\",
+    "command": "workbench.action.toggleMaximizeEditorGroup",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+w =",
+    "command": "workbench.action.evenEditorWidths",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "ctrl+w ctrl+r",
+    "command": "workbench.action.toggleEditorGroupLayout",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
     "key": "space e",
     "command": "workbench.action.quickOpen",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space space e",
+    "command": "workbench.action.showAllEditorsByMostRecentlyUsed",
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
   },
   {

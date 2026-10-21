@@ -115,6 +115,29 @@ return {
     vim.keymap.set("n", "<Leader>e", function()
       builtin.oldfiles({ cwd_only = true })
     end, {})
+    vim.keymap.set("n", "<Leader><Leader>e", function()
+      builtin.buffers({ sort_mru = true, ignore_current_buffer = false })
+    end, { desc = "Switch open buffers (MRU)" })
+    -- Bookmarks / Marks (IntelliJ <Leader>m / <Leader>' parity)
+    vim.keymap.set("n", "<Leader>'", builtin.marks, { desc = "Show marks / bookmarks" })
+    vim.keymap.set("n", "<Leader>m", function()
+      local ok, ch = pcall(vim.fn.getcharstr)
+      if not ok or not ch or not ch:match("^[a-zA-Z]$") then return end
+      local cur_buf = vim.api.nvim_get_current_buf()
+      local cur_line = vim.api.nvim_win_get_cursor(0)[1]
+      local pos = vim.fn.getpos("'" .. ch)
+      local mark_buf = pos[1] == 0 and cur_buf or pos[1]
+      if mark_buf == cur_buf and pos[2] == cur_line then
+        vim.cmd("delmarks " .. ch)
+        vim.notify("Deleted mark '" .. ch, vim.log.levels.INFO)
+      else
+        vim.cmd("normal! m" .. ch)
+        vim.notify("Set mark '" .. ch, vim.log.levels.INFO)
+      end
+    end, { desc = "Toggle mnemonic mark / bookmark" })
+    -- VCS file history (IntelliJ <Leader>vh parity)
+    vim.keymap.set("n", "<Leader>vh", builtin.git_bcommits, { desc = "VCS file history" })
+    vim.keymap.set("v", "<Leader>vh", builtin.git_bcommits_range, { desc = "VCS selection history" })
     -- Document symbols with hierarchy (heading markers for markdown, indentation for code)
     vim.keymap.set("n", "<Leader>t", function()
       local clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -247,10 +270,37 @@ return {
       builtin.lsp_workspace_symbols,
       builtin.live_grep
     ))
+    vim.keymap.set("v", "<Leader>fs", function()
+      local selection = vim.getVisualSelection()
+      local clients = vim.lsp.get_clients({ bufnr = 0 })
+      if #clients > 0 then
+        builtin.lsp_workspace_symbols({ default_text = selection })
+      else
+        builtin.live_grep({ default_text = selection })
+      end
+    end)
 
     -- LSP with grep fallbacks
     vim.keymap.set("n", "gd", lsp_or_fallback(
       vim.lsp.buf.definition,
+      function() builtin.grep_string({ word_match = '-w' }) end
+    ), {})
+    vim.keymap.set("n", "<Leader>gu", lsp_or_fallback(
+      function()
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+          if client:supports_method("textDocument/declaration") then
+            vim.lsp.buf.declaration()
+            return
+          end
+        end
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+          if client:supports_method("textDocument/prepareTypeHierarchy") then
+            vim.lsp.buf.typehierarchy("supertypes")
+            return
+          end
+        end
+        vim.lsp.buf.declaration()
+      end,
       function() builtin.grep_string({ word_match = '-w' }) end
     ), {})
     vim.keymap.set("n", "<Leader>fu", lsp_or_fallback(
@@ -265,6 +315,18 @@ return {
       builtin.lsp_type_definitions,
       function() builtin.grep_string({ word_match = '-w' }) end
     ))
+    vim.keymap.set("v", "<Leader>fc", function()
+      local selection = vim.getVisualSelection()
+      local clients = vim.lsp.get_clients({ bufnr = 0 })
+      if #clients > 0 then
+        builtin.lsp_workspace_symbols({
+          default_text = selection,
+          symbols = { "Class", "Interface", "Struct", "Enum" },
+        })
+      else
+        builtin.grep_string({ search = selection, word_match = '-w' })
+      end
+    end)
   end
 }
 

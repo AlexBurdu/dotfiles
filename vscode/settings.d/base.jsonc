@@ -88,25 +88,283 @@
     // (`remapper.ts`), so a 3-key chord bound straight to
     // `workbench.action.debug.start` freezes every Vim key until the preLaunch
     // build and the debug session have started. Instead `<leader>d` is a
-    // recursive remap that buffers the synthetic `<plug-ldr-d>` key and sets the
+    // recursive remap that buffers the 2-key synthetic prefix
+    // `["<plug-ldr-p>", "<plug-ldr-d>"]` (`keys.length === 2 > 1`) and sets the
     // `vim.leaderD` context, and keybindings.d/base.jsonc dispatches the third
-    // key through VS Code's KeybindingService, outside `taskQueue`. The
-    // `["<plug-ldr-d>", ...]` entries in vim.normalModeKeyBindingsNonRecursive
-    // are the fallbacks VSCodeVim matches itself when the third key arrives
-    // before the `setContext` RPC reaches the browser (fast typing), and
-    // `["<plug-ldr-d>"]` alone resets the context after the 1s timeout or an
-    // unmapped key (previously `<Space>d` + pause left Vim in operator-pending
-    // `d`, so the next `j` deleted two lines). Avoid `d-`, `c-`, `s-` inside
-    // `<plug-...>` names: VSCodeVim normalises them as modifiers.
+    // key through VS Code's KeybindingService, outside `taskQueue`. Buffering a
+    // 2-key prefix ensures that when `<TimeoutFinished>` fires after 1s (`remapper.ts:122`
+    // strips `<TimeoutFinished>`, leaving `keys.length === 2 > 1`), `VSCodeVim`
+    // enters `remapper.ts:161-251`, runs the 1-key `["<plug-ldr-d>"]` rule to
+    // reset `vim.leaderD = false`, and clears
+    // `wasPerformingRemapThatFinishedWaitingForTimeout = false`. The 3-key
+    // `["<plug-ldr-p>", "<plug-ldr-d>", ...]` entries below are recursive
+    // fallbacks when the third key arrives before the `setContext` RPC reaches
+    // the browser (fast typing < 50ms); being recursive lets their
+    // `"after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"]` break the dummy 2-key
+    // remap `["<plug-ldr-clr>", "<plug-ldr-never>"]` and clear
+    // `wasPerformingRemapThatFinishedWaitingForTimeout`. Avoid `d-`, `c-`, `s-`
+    // inside `<plug-...>` names: VSCodeVim normalises them as modifiers.
     // -------------------------------------------------------------------------
     {
       "before": ["leader", "d"],
-      "after": ["<plug-ldr-d>"],
+      "after": ["<plug-ldr-p>", "<plug-ldr-d>"],
       "commands": [
         {
           "command": "setContext",
           "args": ["vim.leaderD", true]
         }
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "d"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.start"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "a"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.selectandstart"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "A"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.start"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "p"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.selectandstart"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "P"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.selectandstart"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "t"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "testing.debugAtCursor"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "T"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "testing.debugCurrentFile"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "b"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.toggleBreakpoint"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "B"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.conditionalBreakpoint"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "c"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.continue"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "o"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stepOver"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "i"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stepInto"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "O"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stepOut"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "f"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.debug.action.focusCallStackView"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "h"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.showDebugHover"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "e"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "editor.debug.action.selectionToWatch"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "r"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.restart"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "x"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.stop"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "X"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.action.debug.disconnect"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "u"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.debug.action.toggleRepl"
+      ],
+      "silent": true
+    },
+    {
+      "before": ["<plug-ldr-p>", "<plug-ldr-d>", "v"],
+      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
+      "commands": [
+        {
+          "command": "setContext",
+          "args": ["vim.leaderD", false]
+        },
+        "workbench.view.debug"
       ],
       "silent": true
     }
@@ -533,8 +791,9 @@
       "before": ["leader", "leader", "c"],
       "commands": ["workbench.action.tasks.runTask"]
     },
-    // DEBUGGER (<leader>d*): fallbacks for the <plug-ldr-d> dispatch declared in
-    // vim.normalModeKeyBindings above; the primary path is keybindings.d/base.jsonc.
+    // DEBUGGER (<leader>d*): context-reset rules for the <plug-ldr-d> dispatch
+    // declared in vim.normalModeKeyBindings above; the primary path is
+    // keybindings.d/base.jsonc.
     {
       "before": ["<plug-ldr-d>"],
       "commands": [
@@ -562,222 +821,6 @@
     {
       "before": ["<plug-ldr-clr>", "<plug-ldr-never>"],
       "commands": [],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "d"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.start"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "a"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.selectandstart"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "t"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "testing.debugAtCursor"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "T"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "testing.debugCurrentFile"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "b"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "editor.debug.action.toggleBreakpoint"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "B"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "editor.debug.action.conditionalBreakpoint"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "c"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.continue"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "o"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.stepOver"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "i"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.stepInto"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "O"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.stepOut"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "f"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.debug.action.focusCallStackView"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "h"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "editor.debug.action.showDebugHover"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "e"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "editor.debug.action.selectionToWatch"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "r"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.restart"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "x"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.stop"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "X"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.action.debug.disconnect"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "u"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.debug.action.toggleRepl"
-      ],
-      "silent": true
-    },
-    {
-      "before": ["<plug-ldr-d>", "v"],
-      "after": ["<plug-ldr-clr>", "<plug-ldrd-ok>"],
-      "commands": [
-        {
-          "command": "setContext",
-          "args": ["vim.leaderD", false]
-        },
-        "workbench.view.debug"
-      ],
       "silent": true
     },
 

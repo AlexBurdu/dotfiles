@@ -310,8 +310,32 @@ return {
         end)
       end
 
+      local function attach_jvm_process()
+        local port = vim.fn.input("Host JVM JDWP port (default 5005): ", "5005")
+        if port == "" then return end
+        local port_num = tonumber(port)
+        local root = find_project_root()
+        local function run_jvm()
+          dap.run({
+            type = "kotlin",
+            name = "Attach to host JVM (:" .. port_num .. ")",
+            request = "attach",
+            hostName = "localhost",
+            port = port_num,
+            timeout = 10000,
+            projectRoot = root,
+          })
+        end
+        dap_attach.set_last(run_jvm)
+        run_jvm()
+      end
+
       dap_attach.register({ "kotlin", "java" }, function()
         dap_attach.check_tools({ "kotlin-debug-adapter", "adb" }, attach_kotlin,
+          { hints = tool_hints })
+      end)
+      dap_attach.register_process({ "kotlin", "java" }, function()
+        dap_attach.check_tools({ "kotlin-debug-adapter" }, attach_jvm_process,
           { hints = tool_hints })
       end)
     end,

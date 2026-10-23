@@ -589,7 +589,9 @@ in each section below.
 | Action | [Neovim](#debug-dap) | [IntelliJ](#debug-build--android) | [VS Code](#build-test--debug) |
 |---|---|---|---|
 | Debug saved / last config | `Space dd` | `Space dd` / `S-F9` / `S-F5` | `Space dd` / `S-F9` / `S-F5` |
-| Select & start / attach | `Space da` | `Space da` / `S-M-F9` / `C-S-F5` | `Space da` / `S-M-F9` / `C-S-F5` |
+| Android: attach / build+debug | `Space da` / `Space dA` | `Space da` / `Space dA` | `Space da` / `Space dA` |
+| Attach to host process | `Space dp` | `Space dp` | `Space dp` |
+| Select & start saved config | `Space dP` | `Space dP` / `S-M-F9` / `C-S-F5` | `Space dP` / `S-M-F9` / `C-S-F5` |
 | Run / build saved task picker | `Space bl` | `Space bl` / `Space Space c` / `S-M-F10` | `Space bl` / `Space Space c` / `S-M-F10` |
 | Build project / target | `Space bb` | `Space bb` / `C-F9` | `Space bb` |
 | Run test at cursor / all | `Space bt` / `Space bT` | `Space bt` / `Space bT` (`C-S-F10`) | `Space bt` / `Space bT` (`C-S-F10`) |
@@ -943,7 +945,10 @@ via init script to make coroutine locals inspectable.
 | `Space dd` | Rerun last debug configuration (or prompt to attach if none run yet) |
 | `Space dt` | Debug test under cursor (same targeting as `bt`) |
 | `Space dT` | Debug all tests (same targeting as `bT`) |
-| `Space da` | Attach to running process (Python: port; with `jvm`, Android: ADB package picker) |
+| `Space da` | Attach to Android / running app (with `jvm`, Android: ADB package picker; Python: port) |
+| `Space dA` | Android build and debug (`:AndroidBuild`, or rerun last debug configuration) |
+| `Space dp` | Attach to running host process (Python: port 5678; with `jvm`, host JVM JDWP port 5005) |
+| `Space dP` | Select and start saved DAP configuration |
 | `Space db` | Toggle breakpoint |
 | `Space dB` | Set conditional breakpoint (prompts for expression) |
 | `Space dc` | Continue (or start debug test if no active session) |
@@ -1068,7 +1073,10 @@ those bindings off rather than breaking startup.
 | `Space br` | Rerun last configuration |
 | `Space bl` / `Space Space c` | Choose and run saved configuration (`ChooseRunConfiguration`) |
 | `Space dd` | Debug active configuration |
-| `Space da` | Choose and start debug configuration |
+| `Space da` | Attach debugger to Android process (`AndroidConnectDebuggerAction`) |
+| `Space dA` | Build and debug Android / active configuration (`Debug`) |
+| `Space dp` | Attach debugger to running host process (`XDebugger.AttachToProcess`) |
+| `Space dP` | Choose and start saved debug configuration (`ChooseDebugConfiguration`) |
 | `Space dt` / `Space dT` | Debug context configuration (test/method/class at cursor) |
 | `Space db` / `Space Space b` | Toggle line breakpoint |
 | `Space dB` | Edit / conditional breakpoint |
@@ -1217,7 +1225,9 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space bl` | Open test explorer view |
 | `Space Space c` / `Shift-Alt-f10` | Select and run saved task / build configuration |
 | `Space dd` / `Shift-f9` / `Shift-f5` | Debug active / saved configuration |
-| `Space da` / `Shift-Alt-f9` / `C-Shift-f5` | Select and start debug configuration |
+| `Space da` / `Space dA` | Attach to Android app / build and debug Android app (falls back to `selectandstart` / `start` without an Android extension) |
+| `Space dp` | Attach debugger to running host process (or `selectandstart` without a host attach provider) |
+| `Space dP` / `Shift-Alt-f9` / `C-Shift-f5` | Select and start saved debug configuration |
 | `Shift-f10` / `f6` | Run active configuration without debugging |
 | `Space dt` / `Space dT` | Debug test at cursor / all tests in file |
 | `Space db` / `C-f8` | Toggle breakpoint |

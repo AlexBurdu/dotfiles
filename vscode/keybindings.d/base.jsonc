@@ -240,6 +240,21 @@
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
   },
   {
+    "key": "space d shift+a",
+    "command": "workbench.action.debug.start",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space d p",
+    "command": "workbench.action.debug.selectandstart",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
+    "key": "space d shift+p",
+    "command": "workbench.action.debug.selectandstart",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
+  {
     "key": "space d x",
     "command": "workbench.action.debug.stop",
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
@@ -716,11 +731,13 @@
   },
 
   // DEBUGGER <leader>d* FIRE-AND-FORGET DISPATCH (`when: vim.leaderD`)
-  // `<leader>d` (settings.d/base.jsonc) buffers `<plug-ldr-d>` in VSCodeVim and
-  // sets `vim.leaderD`; the third key is handled here so long-running debug
-  // commands (`debug.start` awaits preLaunchTasks and the session) never block
-  // VSCodeVim's `taskQueue`. Each rule resets the context, flushes the buffered
-  // `<plug-ldr-d>` via `<plug-ldrd-ok>` and runs the command.
+  // `<leader>d` (settings.d/base.jsonc) buffers `["<plug-ldr-p>", "<plug-ldr-d>"]`
+  // in VSCodeVim and sets `vim.leaderD`; the third key is handled here so
+  // long-running debug commands (`debug.start` awaits preLaunchTasks and the
+  // session) never block VSCodeVim's `taskQueue`. Each rule resets the context
+  // via `_setContext` (the browser renderer's `CommandsRegistry` ID; `setContext`
+  // without underscore is only registered inside the Extension Host), flushes
+  // the buffered prefix via `<plug-ldrd-ok>`, and runs the command.
   // ---------------------------------------------------------------------------
   {
     "key": "d",
@@ -728,7 +745,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -748,7 +765,67 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.selectandstart"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+a",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "_setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.start"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "p",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "_setContext",
+          "args": ["vim.leaderD", false]
+        },
+        {
+          "command": "vim.remap",
+          "args": {
+            "after": ["<plug-ldrd-ok>"]
+          }
+        },
+        "workbench.action.debug.selectandstart"
+      ]
+    },
+    "when": "vim.leaderD && editorTextFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+p",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        {
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -768,7 +845,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -788,7 +865,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -808,7 +885,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -828,7 +905,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -848,7 +925,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -868,7 +945,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -888,7 +965,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -908,7 +985,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -928,7 +1005,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -948,7 +1025,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -968,7 +1045,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -988,7 +1065,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -1008,7 +1085,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -1028,7 +1105,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -1048,7 +1125,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -1068,7 +1145,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -1088,7 +1165,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {
@@ -1108,7 +1185,7 @@
     "args": {
       "commands": [
         {
-          "command": "setContext",
+          "command": "_setContext",
           "args": ["vim.leaderD", false]
         },
         {

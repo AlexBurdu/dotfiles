@@ -6,6 +6,7 @@
 local M = {}
 
 local handlers = {}
+local process_handlers = {}
 local last_fn = nil
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
 
@@ -13,6 +14,13 @@ local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/"
 function M.register(filetypes, fn)
   for _, ft in ipairs(filetypes) do
     handlers[ft] = fn
+  end
+end
+
+-- register_process({ "kotlin", "java" }, fn): <Leader>dp in those filetypes runs fn.
+function M.register_process(filetypes, fn)
+  for _, ft in ipairs(filetypes) do
+    process_handlers[ft] = fn
   end
 end
 
@@ -43,6 +51,15 @@ function M.attach()
       .. "\nSupported: " .. table.concat(supported, ", "),
     vim.log.levels.WARN
   )
+end
+
+function M.attach_process()
+  local ft = vim.bo.filetype
+  if process_handlers[ft] then
+    process_handlers[ft]()
+    return
+  end
+  M.attach()
 end
 
 local function mason_install(pkg_name, on_success)

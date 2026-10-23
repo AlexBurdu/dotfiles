@@ -8,7 +8,10 @@
 -- Workflows:
 --   <Leader>dd     debug last / saved configuration (falls back to <Leader>da)
 --   <Leader>dt/dT  debug test under cursor / all tests (see keymap/build.lua)
---   <Leader>da      attach to running process, per filetype (util/dap_attach)
+--   <Leader>da      attach to Android / running app, per filetype (util/dap_attach)
+--   <Leader>dA      Android build & debug (:AndroidBuild, or fallback to run_last)
+--   <Leader>dp      attach to running host process, per filetype (util/dap_attach)
+--   <Leader>dP      select and start a saved DAP configuration
 --   <Leader>dc      continue (or start debug test if no session)
 --   <Leader>db/dB   toggle / conditional breakpoint
 --   <Leader>do/di/dO step over / into / out (;  repeats last step)
@@ -100,11 +103,58 @@ return {
       dap_attach.check_tools({ "debugpy" }, attach_python,
         { mason = { debugpy = "debugpy" } })
     end)
+    dap_attach.register_process({ "python" }, function()
+      dap_attach.check_tools({ "debugpy" }, attach_python,
+        { mason = { debugpy = "debugpy" } })
+    end)
+
+    local function select_and_start_config()
+      local ft = vim.bo.filetype
+      local configs = {}
+      for _, cfg in ipairs(dap.configurations[ft] or {}) do
+        table.insert(configs, cfg)
+      end
+      if #configs == 0 then
+        for _, ft_configs in pairs(dap.configurations) do
+          for _, cfg in ipairs(ft_configs) do
+            table.insert(configs, cfg)
+          end
+        end
+      end
+      if #configs == 0 then
+        vim.notify("No saved DAP configurations found", vim.log.levels.WARN)
+        return
+      end
+      vim.ui.select(configs, {
+        prompt = "Select debug configuration:",
+        format_item = function(cfg)
+          return string.format("%s (%s)", cfg.name or "unnamed", cfg.type or "dap")
+        end,
+      }, function(choice)
+        if not choice then return end
+        local function run_cfg()
+          dap.run(vim.deepcopy(choice))
+        end
+        dap_attach.set_last(run_cfg)
+        run_cfg()
+      end)
+    end
+
+    local function build_and_debug_android()
+      if vim.fn.exists(":AndroidBuild") == 2 then
+        vim.cmd("AndroidBuild")
+      else
+        dap_attach.run_last()
+      end
+    end
 
     -- ── Keymaps ─────────────────────────────────────────────────────────────
 
     vim.keymap.set("n", "<Leader>dd", dap_attach.run_last, { desc = "Debug last / saved configuration" })
-    vim.keymap.set("n", "<Leader>da", dap_attach.attach, { desc = "Attach debugger (language-aware)" })
+    vim.keymap.set("n", "<Leader>da", dap_attach.attach, { desc = "Attach debugger to Android / running app" })
+    vim.keymap.set("n", "<Leader>dA", build_and_debug_android, { desc = "Android build and debug" })
+    vim.keymap.set("n", "<Leader>dp", dap_attach.attach_process, { desc = "Attach debugger to host process" })
+    vim.keymap.set("n", "<Leader>dP", select_and_start_config, { desc = "Select and start saved debug configuration" })
     vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
     vim.keymap.set("n", "<Leader>dB", function()
       dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))

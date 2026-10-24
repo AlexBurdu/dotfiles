@@ -204,6 +204,7 @@ Today's names:
 | Name | Brings |
 | --- | --- |
 | `nvim.jvm` | Kotlin/Java LSP, debugger and Android attach |
+| `nvim.kotlin-lsp` | JetBrains kotlin-lsp, in place of `jvm`'s Kotlin servers |
 | `nvim.android` | Android plugin: logcat, devices, build, run |
 | `nvim.minuet` | Minuet AI ghost-text completion |
 | `vscode.copilot` | Copilot settings and keybindings |
@@ -929,7 +930,7 @@ pause, or on `C-n`/`C-p`. Switch AI provider with
 | `Space br` | Rerun last build task |
 | `Space bl` | Toggle build task list (Overseer) |
 | `Space gb` | Go to owning BUILD file |
-| `Space bJ` | Toggle JetBrains Kotlin LSP (optional `jvm`) |
+| `Space bJ` | Toggle JetBrains Kotlin LSP (optional `jvm`, not with `kotlin-lsp`) |
 | `gd`/`gf` (gradle.kts) | Go to source file quoted on current line |
 
 ### Debug (DAP)

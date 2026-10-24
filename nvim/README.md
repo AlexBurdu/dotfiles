@@ -28,6 +28,7 @@ This repo's optional specs, each declared by an `optional` line in
 | Name | File | Brings |
 | --- | --- | --- |
 | `nvim.jvm` | `lua/plugins/jvm.lua` | Kotlin/Java LSP (fast `kotlin_lsp`, on-demand JetBrains `kotlin_lsp_jb` via `Space bJ`), kotlin-debug-adapter, Android attach on `Space da` |
+| `nvim.kotlin-lsp` | `lua/plugins/kotlin-lsp.lua` | JetBrains kotlin-lsp, started on its own; takes the place of `jvm`'s Kotlin servers and `Space bJ` |
 | `nvim.android` | `lua/plugins/android.lua` | Android plugin: logcat, device picker, build, run (`Space a…`) |
 | `nvim.minuet` | `lua/plugins/minuet.lua` | Minuet AI ghost text (`Tab`, `C-y`, `C-h`, `C-n`/`C-p`) |
 

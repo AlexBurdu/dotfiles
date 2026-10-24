@@ -21,6 +21,9 @@ link_each lua/plugins ~/.config/nvim/lua/plugins \
 optional jvm link lua/plugins/jvm.lua \
   ~/.config/nvim/lua/plugins/jvm.lua \
   "Kotlin/Java language servers, debugger, Android attach"
+optional kotlin-lsp link lua/plugins/kotlin-lsp.lua \
+  ~/.config/nvim/lua/plugins/kotlin-lsp.lua \
+  "JetBrains kotlin-lsp for Kotlin, in place of jvm's Kotlin servers"
 optional android link lua/plugins/android.lua \
   ~/.config/nvim/lua/plugins/android.lua \
   "Android logcat, device picker, build and run"

@@ -41,7 +41,7 @@ return {
           -- JetBrains kotlin_lsp: full type-checking, started on demand via <leader>bJ
           configs.kotlin_lsp_jb = {
             default_config = {
-              cmd       = { vim.fn.stdpath("data") .. "/mason/bin/kotlin-lsp" },
+              cmd       = { "intellij-server", "--stdio" },
               filetypes = { "kotlin", "java" },
               root_dir  = lspconfig.util.root_pattern(
                 "build.gradle", "build.gradle.kts", "pom.xml", "settings.gradle", ".git"

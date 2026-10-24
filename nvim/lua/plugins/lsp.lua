@@ -58,9 +58,9 @@ return {
         vim.g.zig_fmt_autosave = 0
       end,
       -- Mason's kotlin_lsp is JetBrains' JVM server. Never auto-start it:
-      -- optional `jvm` registers it as kotlin_lsp_jb, started on demand,
-      -- and a machine without `jvm` may still have it installed from
-      -- before.
+      -- optional `kotlin-lsp` starts it, optional `jvm` registers it as
+      -- kotlin_lsp_jb, started on demand, and a machine with neither may
+      -- still have it installed from before.
       kotlin_lsp = function() end,
       lua_ls = function(capabilities)
         require("lspconfig").lua_ls.setup {

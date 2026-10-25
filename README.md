@@ -546,6 +546,7 @@ in each section below.
 | Trees (files, source control, ...): move / up / open | - | `j`/`k` / `h` / `l` (oil) | `j`/`k` / `h` / `l` | `j`/`k` / `h` / `l` (`C-h/j/k/l` too) | - |
 | Trees: search / next, prev / clear | - | `/` / `n` `N` / `C-n` | `/` (visible rows) / `Up` `Down` / `Escape` | `/` (whole workspace) / `n` `N` / `C-n` | - |
 | File tree: new file / folder / delete | - | `o` / `o` name`/` / `dd`, then `:w` | `o` / `O` / `dd` | `o` / `O` / `dd` (`Cmd-n` on macOS, `C-S-n` elsewhere, also new file) | - |
+| File tree: `Enter` on file / folder | - | open / enter it (oil) | open / unfold or fold | open and focus editor / unfold or fold | - |
 | Breadcrumb/navbar | - | `C-t` / `Space Space t` | `C-t` / `Space Space t` | `C-t` / `Space Space t` | - |
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
@@ -1170,7 +1171,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `C-n` (normal) | Clear search highlighting (`:noh`) |
 | `C-t` / `Space Space t` | Focus breadcrumbs picker (`C-h`/`C-l` prev/next crumb, `C-j`/`C-k` down/up, `Enter`/`C-Enter` unfold dir / open file) |
 | `\` / `Alt-f` | Reveal active file in explorer / focus file explorer (pure focus; `Shift-Escape` closes the sidebar) |
-| `Enter` (explorer) | Open file and pass focus to editor |
+| `Enter` (explorer) | Open file and pass focus to editor; on a folder, unfold / fold it |
 | `Alt-e` | Focus active editor group |
 | `Alt-v` | Focus source control file list (skips the commit input box when the provider shows one) |
 | `Escape` (sidebar / panel) | Back to the active editor in Normal mode with the selection cleared |

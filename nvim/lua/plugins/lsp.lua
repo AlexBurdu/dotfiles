@@ -38,7 +38,7 @@ return {
       jsonls = true,
       lua_ls = true,
       marksman = true,
-      pyright = true,
+      basedpyright = true,
       starpls = true,
     },
     handlers = {

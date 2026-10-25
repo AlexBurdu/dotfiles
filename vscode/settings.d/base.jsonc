@@ -18,6 +18,16 @@
   "extensions.ignoreRecommendations": true,
   "files.autoSave": "onFocusChange",
   "files.eol": "\n",
+  // The file tree's `/` find runs a workspace file search for every keystroke
+  // and lists everything under each matching folder. Contiguous matching
+  // (`*abc*` instead of fuzzy `*a*b*c*`) matches far fewer folders, so it
+  // returns much sooner; the find box's toggle switches back to fuzzy.
+  "workbench.list.defaultFindMatchType": "contiguous",
+  // That search also walks gitignored files and follows symlinks into them
+  // (build output, caches), which can be 100x the tracked files. Skipping
+  // them matches what Find in Files searches by default, but also hides them
+  // from the tree; Quick Open still opens them.
+  "explorer.excludeGitIgnore": true,
   // Only open the Run and Debug view when a breakpoint is hit, and never pull
   // window focus for it (the debugger is driven from Vim chords).
   "debug.openDebug": "openOnDebugBreak",

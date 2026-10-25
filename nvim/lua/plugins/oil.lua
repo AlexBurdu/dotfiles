@@ -33,6 +33,9 @@ return {
         ["g?"] = "actions.show_help",
         ["<CR>"] = "actions.select",
         ["-"] = "actions.parent",
+        -- h / l go up a directory / open, like the IntelliJ and VS Code trees
+        ["h"] = "actions.parent",
+        ["l"] = "actions.select",
         ["q"] = "actions.close",
         -- Disable defaults that clash with tmux-navigator and dropbar
         ["<C-h>"] = false,

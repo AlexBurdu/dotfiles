@@ -286,11 +286,6 @@
     "when": "editorTextFocus && !vim.active && editorHasSelection && !inlineSuggestionVisible"
   },
   {
-    "key": "ctrl+shift+n",
-    "command": "explorer.newFolder",
-    "when": "explorerViewletFocus"
-  },
-  {
     "key": "ctrl+t",
     "command": "breadcrumbs.focusAndSelect",
     "when": "breadcrumbsPossible && breadcrumbsVisible"
@@ -357,10 +352,18 @@
     "command": "workbench.explorer.fileView.focus",
     "when": "!editorTextFocus && !filesExplorerFocus && !inputFocus"
   },
+  // New file: Cmd+N on macOS, Ctrl+Shift+N elsewhere (`cmd` is Super on
+  // Linux). End the name with `/` for a folder. Ctrl+N clears the tree's find,
+  // like `:noh` in the editor (see LIST NAVIGATION).
   {
-    "key": "ctrl+n",
+    "key": "cmd+n",
     "command": "explorer.newFile",
-    "when": "explorerViewletFocus"
+    "when": "explorerViewletFocus && isMac"
+  },
+  {
+    "key": "ctrl+shift+n",
+    "command": "explorer.newFile",
+    "when": "explorerViewletFocus && !isMac"
   },
   {
     "key": "enter",
@@ -543,6 +546,85 @@
     "key": "ctrl+l",
     "command": "list.expand",
     "when": "listFocus && treeElementCanExpand && !inputFocus && !treestickyScrollFocused || listFocus && treeElementHasChild && !inputFocus && !treestickyScrollFocused"
+  },
+  // Every list and tree (file explorer, source control, search results,
+  // outline, debug variables, ...): plain h/j/k/l do what Ctrl+H/J/K/L do, as
+  // in oil.nvim, so those letters no longer type-to-find; `/` does instead.
+  // Notebook cells keep their own j/k.
+  //
+  // Search, as in Vim: `/` opens the find box, Enter returns to the tree
+  // (built in), n / N step to the next / previous match, Ctrl+N clears it.
+  // While find is open list.focusDown / Up stop only on matches, so n / N use
+  // them and j / k use the focusAny variants, which still move one row. Other
+  // trees match only what they have loaded; the explorer's find searches the
+  // whole workspace (VS Code has no setting to match only the visible rows).
+  {
+    "key": "/",
+    "command": "list.find",
+    "when": "listFocus && listSupportsFind && !inputFocus"
+  },
+  {
+    "key": "n",
+    "command": "list.focusDown",
+    "when": "listFocus && !notebookCellListFocused && treeFindOpen && !inputFocus"
+  },
+  {
+    "key": "shift+n",
+    "command": "list.focusUp",
+    "when": "listFocus && !notebookCellListFocused && treeFindOpen && !inputFocus"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "list.closeFind",
+    "when": "treeFindOpen"
+  },
+  {
+    "key": "j",
+    "command": "list.focusAnyDown",
+    "when": "listFocus && !notebookCellListFocused && !inputFocus && !treestickyScrollFocused"
+  },
+  {
+    "key": "k",
+    "command": "list.focusAnyUp",
+    "when": "listFocus && !notebookCellListFocused && !inputFocus && !treestickyScrollFocused"
+  },
+  {
+    "key": "h",
+    "command": "list.collapse",
+    "when": "listFocus && !notebookCellListFocused && !inputFocus && !treestickyScrollFocused && (treeElementCanCollapse || treeElementHasParent)"
+  },
+  {
+    "key": "l",
+    "command": "list.select",
+    "when": "listFocus && !notebookCellListFocused && !inputFocus && !treestickyScrollFocused"
+  },
+  {
+    "key": "l",
+    "command": "list.expand",
+    "when": "listFocus && !notebookCellListFocused && !inputFocus && !treestickyScrollFocused && (treeElementCanExpand || treeElementHasChild)"
+  },
+  // Edit the tree the way oil.nvim edits its buffer: o / O create a file /
+  // folder next to the selection, dd moves it to the trash (VS Code asks
+  // first) or deletes it where there is no trash.
+  {
+    "key": "o",
+    "command": "explorer.newFile",
+    "when": "filesExplorerFocus && !inputFocus && !explorerResourceReadonly"
+  },
+  {
+    "key": "shift+o",
+    "command": "explorer.newFolder",
+    "when": "filesExplorerFocus && !inputFocus && !explorerResourceReadonly"
+  },
+  {
+    "key": "d d",
+    "command": "moveFileToTrash",
+    "when": "filesExplorerFocus && !inputFocus && !explorerResourceReadonly && explorerResourceMoveableToTrash"
+  },
+  {
+    "key": "d d",
+    "command": "deleteFile",
+    "when": "filesExplorerFocus && !inputFocus && !explorerResourceReadonly && !explorerResourceMoveableToTrash"
   },
   {
     "key": "ctrl+j",

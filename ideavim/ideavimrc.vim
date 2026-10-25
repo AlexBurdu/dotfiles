@@ -27,6 +27,22 @@ source ~/.config/nvim/lua/keymap/keymap.vim
 " Open file explorer with current file selected (like oil.nvim's \)
 nmap \ m'<Action>(SelectInProjectView)
 nmap <M-f> m'<Action>(SelectInProjectView)
+" Vim keys inside the project view (IdeaVim's NERDTree emulation), matching
+" oil.nvim and the VS Code explorer: j/k move, l opens a file or toggles a
+" folder, h closes the folder and selects it, / starts speed search over the
+" visible rows (Up/Down step between matches, Escape clears it). As in oil,
+" o / O create a file / directory and dd deletes (IntelliJ asks first).
+" O's default (expand recursively) moves to zO, Vim's open-folds-recursively.
+" NERDTreeEverywhere gives every other tree (commit changes, structure, find
+" results, debugger variables, ...) the same j/k/h, / and l (acts like Enter).
+let g:NERDTreeMapActivateNode = 'l'
+let g:NERDTreeMapCloseDir = 'h'
+let g:NERDTreeMapNewFile = 'o'
+let g:NERDTreeMapNewDir = 'O'
+let g:NERDTreeMapOpenRecursively = 'zO'
+let g:NERDTreeMapDelete = 'dd'
+set NERDTree
+set NERDTreeEverywhere
 nmap <Leader>e m'<Action>(RecentFiles)
 nmap <Leader><Leader>e m'<Action>(Switcher)
 nmap <C-t> m'<Action>(ShowNavBar)

@@ -543,6 +543,9 @@ in each section below.
 | Action | [Tmux](#tmux-prefix-c-s) | [Neovim](#neovim-leader-space) | [IntelliJ](#intellij-idea-ideavim-leader-space) | [VS Code](#vs-code-vscodevim-leader-space) | [MC](#midnight-commander) |
 |---|---|---|---|---|---|
 | Navigate h/j/k/l | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `C-h/j/k/l` | `h/j/k/l` |
+| Trees (files, source control, ...): move / up / open | - | `j`/`k` / `h` / `l` (oil) | `j`/`k` / `h` / `l` | `j`/`k` / `h` / `l` (`C-h/j/k/l` too) | - |
+| Trees: search / next, prev / clear | - | `/` / `n` `N` / `C-n` | `/` (visible rows) / `Up` `Down` / `Escape` | `/` (whole workspace) / `n` `N` / `C-n` | - |
+| File tree: new file / folder / delete | - | `o` / `o` name`/` / `dd`, then `:w` | `o` / `O` / `dd` | `o` / `O` / `dd` (`Cmd-n` on macOS, `C-S-n` elsewhere, also new file) | - |
 | Breadcrumb/navbar | - | `C-t` / `Space Space t` | `C-t` / `Space Space t` | `C-t` / `Space Space t` | - |
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
@@ -814,7 +817,10 @@ note and the proposed text, `q` discard, `:q` closes only with nothing unsaved.
 |---|---|
 | `\` | Open at current file |
 | `Enter` | Open file/directory |
-| `-` | Go to parent directory |
+| `-` / `h` | Go to parent directory |
+| `l` | Open file/directory |
+| `/`, `n` / `N`, `C-n` | Search names, next / previous match, clear |
+| `o` / `dd`, then `:w` | New file (end the name with `/` for a folder) / delete |
 | `gh` | Toggle hidden files |
 | `gs` | Change sort order |
 | `Space .` | Set cwd to current directory (teaches zoxide) |
@@ -1011,6 +1017,12 @@ those bindings off rather than breaking startup.
 | `Space e` | Recent files |
 | `Space Space e` | Switcher |
 | `\` / `Alt-f` | Open file tree (current file selected) |
+| `j` / `k` (any tree) | Move down / up |
+| `l` / `h` (any tree) | Open or toggle (like `Enter`) / close the folder and select it |
+| `/` (any tree) | Speed search over the visible rows (`Up` / `Down` between matches, `Escape` clears) |
+| `o` / `O` (file tree) | New file / directory (`Cmd-n` on macOS is IntelliJ's New popup) |
+| `dd` (file tree) | Delete (IntelliJ asks first) |
+| `zO` (file tree) | Expand the folder recursively |
 
 ### Find & Goto
 | Shortcut | Action |
@@ -1262,6 +1274,13 @@ unmapped key the prefix is dropped (no stray `d` operator).
 | `C-j` / `C-k` | Move down/up |
 | `C-h` / `C-l` | Collapse/expand (breadcrumb picker: `C-h` opens the parent crumb's picker) |
 | `C-u` / `C-d` | Page up/down |
+| `h/j/k/l` (any list or tree) | Same as `C-h/j/k/l`: collapse / down / up / expand or open |
+| `/` | Find in the list or tree; the explorer's find searches the whole workspace, skipping gitignored files (`explorer.excludeGitIgnore`, which also hides them from the tree) |
+| `Enter` / `n` / `N` (tree find) | Back to the tree / next / previous match |
+| `C-n` (tree find) | Clear the find |
+| `o` / `O` (explorer) | New file / folder |
+| `dd` (explorer) | Move to trash (VS Code asks first) |
+| `Cmd-n` (macOS) / `C-S-n` (explorer) | New file; end the name with `/` for a folder |
 
 ### Completion (Insert Mode)
 

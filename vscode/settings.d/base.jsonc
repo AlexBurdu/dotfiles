@@ -782,6 +782,10 @@
     // BUILD, TEST & DEBUG (Neovim build.lua & dap.lua parity)
     // -------------------------------------------------------------------------
     {
+      "before": ["leader", "b", "b"],
+      "commands": ["workbench.action.tasks.build"]
+    },
+    {
       "before": ["leader", "b", "t"],
       "commands": ["testing.runAtCursor"]
     },

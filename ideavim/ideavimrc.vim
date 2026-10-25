@@ -169,8 +169,9 @@ map [c <Action>(VcsShowPrevChangeMarker)
 " IntelliJ's own make actions (CompileDirty, MakeModule, ...) are hidden in
 " Bazel projects, where "Compile File" (MakeBlazeModule) builds the
 " targets owning the current file and "Compile Project" (MakeBlazeProject)
-" builds everything in the project view, matching <Leader>bb / <Leader>bB in
-" Neovim and VS Code. CompileDirty stays as the fallback for plain projects.
+" builds everything in the project view. <Leader>bb matches Neovim and VS
+" Code; <Leader>bB has no counterpart there. CompileDirty stays as the
+" fallback for plain projects.
 nmap <Leader>bb <Action>(MakeBlazeModule)<Action>(CompileDirty)
 nmap <Leader>bB <Action>(MakeBlazeProject)
 nmap <Leader>bt <Action>(RunClass)

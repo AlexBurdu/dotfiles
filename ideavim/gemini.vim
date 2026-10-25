@@ -9,7 +9,8 @@
 " " This file only includes the actions that are specific to Gemini.
 imap <C-g> <Action>(com.google.tools.intellij.aiplugin.generation.GenerateManualInlineCompletionAction)
 
-" AI chat / inline edit, same chords as the Neovim and VS Code configs:
+" AI chat / inline edit (IntelliJ only; Neovim and VS Code have no
+" equivalent chords yet):
 " <Leader>ac asks Gemini (Android Studio's "StudioBot" chat tool window),
 " <Leader>ai opens Gemini "Transform Code" for an inline edit of the selection.
 " Find more ids with :actionlist sml.

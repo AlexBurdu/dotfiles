@@ -596,13 +596,13 @@ in each section below.
 | Android: attach / build+debug | `Space da` / `Space dA` | `Space da` / `Space dA` | `Space da` / `Space dA` |
 | Attach to host process | `Space dp` | `Space dp` | `Space dp` |
 | Select & start saved config | `Space dP` | `Space dP` / `S-M-F9` / `C-S-F5` | `Space dP` / `S-M-F9` / `C-S-F5` |
-| Run / build saved task picker | `Space bl` | `Space bl` / `Space Space c` / `S-M-F10` | `Space bl` / `Space Space c` / `S-M-F10` |
+| Run / build saved task picker | `Space bl` | `Space bl` / `Space Space c` / `S-M-F10` | `Space Space c` / `S-M-F10` |
 | Build project / target | `Space bb` | `Space bb` / `C-F9` | `Space bb` |
 | Run test at cursor / all | `Space bt` / `Space bT` | `Space bt` / `Space bT` (`C-S-F10`) | `Space bt` / `Space bT` (`C-S-F10`) |
 | Rerun last build / test | `Space br` | `Space br` | `Space br` |
 | Debug test at cursor / all | `Space dt` / `Space dT` | `Space dt` / `Space dT` (`C-S-F9`) | `Space dt` / `Space dT` |
-| Android: build+debug / run / attach | `Space ab` / `ar` / `aa` | `Space ab` / `ar` / `aa` | `Space ab` / `ar` / `aa` |
-| Android: device / manager / logcat | `Space ad` / `am` / `al` | `Space ad` / `am` / `al` (`Space Space d`) | `Space ad` / `am` / `al` |
+| Android: build+debug / run / attach | `Space ab` (build only) / `ar` / `Space da` | `Space ab` / `ar` / `aa` | - |
+| Android: device / manager / logcat | `Space ad` / `am` (menu) / `al` | `Space ad` / `am` / `al` (`Space Space d`) | - |
 | Toggle / conditional breakpoint | `Space db` / `Space dB` | `Space db` / `Space dB` / `C-F8` | `Space db` / `Space dB` / `C-F8` |
 | Continue / resume | `Space dc` | `Space dc` / `F9` / `F5` | `Space dc` / `F9` / `F5` |
 | Step over / into / out | `Space do` / `di` / `dO` | `Space do` / `di` / `dO` (`F8`/`F7`/`S-F8`) | `Space do` / `di` / `dO` (`F8`/`F7`/`S-F8`) |
@@ -1232,6 +1232,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 ### Build, Test & Debug
 | Shortcut | Action |
 |---|---|
+| `Space bb` | Run the default build task |
 | `Space bt` / `C-Shift-f10` | Run test at cursor |
 | `Space bT` | Run all tests in current file |
 | `Space br` | Rerun last test run |

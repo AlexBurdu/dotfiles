@@ -5,6 +5,12 @@
   // ---------------------------------------------------------------------------
   "boot-java.change-detection.on": true,
   "redhat.telemetry.enabled": false,
+  // JetBrains Kotlin extension: no data sharing, EU region
+  "intellij.dataSharing": "none",
+  "intellij.region": "europe",
+  "files.associations": {
+    "*.kts": "kotlin"
+  },
   // Eclipse project metadata the Java extension writes beside the sources
   "files.exclude": {
     "**/.classpath": true,

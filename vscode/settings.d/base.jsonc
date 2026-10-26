@@ -31,9 +31,12 @@
   // them matches what Find in Files searches by default, but also hides them
   // from the tree; Quick Open still opens them.
   "explorer.excludeGitIgnore": true,
-  // Only open the Run and Debug view when a breakpoint is hit, and never pull
-  // window focus for it (the debugger is driven from Vim chords).
-  "debug.openDebug": "openOnDebugBreak",
+  // Never auto-open the Run and Debug sidebar or bottom Debug Console, dock the
+  // debug toolbar inside the Run and Debug view instead of floating over the
+  // top Command Center, and never pull window focus on breakpoint hits.
+  "debug.openDebug": "neverOpen",
+  "debug.internalConsoleOptions": "neverOpen",
+  "debug.toolBarLocation": "docked",
   "debug.focusWindowOnBreak": false,
   "debug.breakpointsView.presentation": "tree",
   "window.reopenFolders": "all",

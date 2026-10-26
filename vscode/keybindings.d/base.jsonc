@@ -269,6 +269,11 @@
     "command": "workbench.view.debug",
     "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
   },
+  {
+    "key": "space v t",
+    "command": "workbench.action.toggleActivityBarVisibility",
+    "when": "editorAreaFocus && !editorTextFocus && !inputFocus && !inQuickInput && !terminalFocus"
+  },
   // Ctrl+N is Vim's :noh / clear selection (settings.d/base.jsonc), never
   // "New Untitled File"; in the suggest widget it navigates (see below).
   {

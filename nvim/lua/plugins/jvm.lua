@@ -314,6 +314,10 @@ return {
         local port = vim.fn.input("Host JVM JDWP port (default 5005): ", "5005")
         if port == "" then return end
         local port_num = tonumber(port)
+        if not port_num then
+          vim.notify("Invalid port: " .. port, vim.log.levels.ERROR)
+          return
+        end
         local root = find_project_root()
         local function run_jvm()
           dap.run({

@@ -5,6 +5,14 @@
   // ---------------------------------------------------------------------------
   "bazel.executable": "./bazelw",
   "bazel.buildifierFixOnFormat": true,
+  // Space gb: open the BUILD file that owns the current source (Neovim
+  // build_nav.lua / IdeaVim parity).
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["leader", "g", "b"],
+      "commands": ["bazel.goToBuildFile"]
+    }
+  ],
   "settingsSync.ignoredSettings": [
     "-bazel.executable",
     "-bazel.buildifierExecutable"

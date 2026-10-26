@@ -573,6 +573,7 @@ in each section below.
 | Find references | `Space fu` | `Space fu` | `Space fu` |
 | Find implementations | `Space fi` | `Space fi` | `Space fi` |
 | Go to declaration / super | `Space gu` | `Space gu` | `Space gu` |
+| Go to owning BUILD file | `Space gb` | `Space gb` | `Space gb` (optional `bazel`) |
 | Type definitions / class | `Space fc` | `Space fc` | `Space fc` |
 | Document symbols | `Space t` | `Space t` | `Space t` |
 | Hover / type / param info | `Space sh` / `st` / `sp` | `Space sh` / `st` / `sp` | `Space sh` / `st` / `sp` |
@@ -1239,6 +1240,7 @@ Settings: [vscode/settings.d/](./vscode/settings.d/)
 | `Space bT` | Run all tests in current file |
 | `Space br` | Rerun last test run |
 | `Space bl` | Open test explorer view |
+| `Space gb` | Go to owning BUILD file (optional `bazel`) |
 | `Space Space c` / `Shift-Alt-f10` | Select and run saved task / build configuration |
 | `Space dd` / `Shift-f9` / `Shift-f5` | Debug active / saved configuration |
 | `Space da` / `Space dA` | Attach to Android app / build and debug Android app (falls back to `selectandstart` / `start` without an Android extension) |

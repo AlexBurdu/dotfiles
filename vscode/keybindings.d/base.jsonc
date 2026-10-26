@@ -342,7 +342,7 @@
   // ---------------------------------------------------------------------------
   // File tree (Alt+F and \ both work; Enter opens file and passes focus).
   // Alt+F, Alt+V and \ only ever focus (Neovim oil.nvim / VCS status parity);
-  // Shift+Escape closes the sidebar explicitly.
+  // Shift+Escape closes the sidebar and the bottom panel explicitly.
   {
     "key": "alt+f",
     "command": "workbench.explorer.fileView.focus"
@@ -473,11 +473,23 @@
   },
   {
     "key": "ctrl+shift+escape",
-    "command": "workbench.action.closeSidebar"
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.closeSidebar",
+        "workbench.action.closePanel"
+      ]
+    }
   },
   {
     "key": "shift+escape",
-    "command": "workbench.action.closeSidebar"
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.closeSidebar",
+        "workbench.action.closePanel"
+      ]
+    }
   },
 
   // LIST NAVIGATION

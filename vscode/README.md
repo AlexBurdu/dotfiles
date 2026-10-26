@@ -6,6 +6,18 @@
 - `keybindings.d/*.jsonc` - Fragments that `keybindings.json` is built from
 - `manifest.sh` - Declares which fragments go into which file, which of
   them are optional, and the config directory on each platform
+- `install.sh` - On macOS, turns off "Add period with double-space" for
+  VS Code alone (see below)
+
+## Double Space on macOS
+
+macOS turns a quick double Space into ". " by asking the app to replace
+the previous character instead of sending a second Space. VSCodeVim
+ignores that request in Normal mode, so a fast `Space Space` leader
+chord loses its second Space; pressed slowly, both arrive. `install.sh`
+sets `NSAutomaticPeriodSubstitutionEnabled` to false in VS Code's own
+preferences, so every other app keeps the period. VS Code reads it at
+launch, so quit and reopen it after the first setup run.
 
 ## Section Formatting
 

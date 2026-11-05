@@ -548,6 +548,7 @@ in each section below.
 | File tree: new file / folder / delete | - | `o` / `o` name`/` / `dd`, then `:w` | `o` / `O` / `dd` | `o` / `O` / `dd` (`Cmd-n` on macOS, `C-S-n` elsewhere, also new file) | - |
 | File tree: `Enter` on file / folder | - | open / enter it (oil) | open / unfold or fold | open and focus editor / unfold or fold | - |
 | Close sidebar and bottom panel | - | - | - | `Shift-Escape` / `C-Shift-Escape` | - |
+| Reload window | - | - | - | `Cmd-r` (macOS) | - |
 | Breadcrumb/navbar | - | `C-t` / `Space Space t` | `C-t` / `Space Space t` | `C-t` / `Space Space t` | - |
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
@@ -1332,6 +1333,7 @@ Only where `vscode.gemini` / `vscode.copilot` are enabled; see above.
 | `Space u` | Focus timeline / local history |
 | `Space vt` | Toggle activity bar visibility |
 | `Shift-Space` | Trigger suggestions |
+| `Cmd-r` | Reload window (macOS; not in the GitHub PR overview) |
 
 ---
 

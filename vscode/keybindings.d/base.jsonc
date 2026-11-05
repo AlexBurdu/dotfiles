@@ -491,6 +491,13 @@
       ]
     }
   },
+  // VS Code binds Cmd+R to Reload Window only in development builds.
+  // The PR overview keeps it for its own refresh.
+  {
+    "key": "cmd+r",
+    "command": "workbench.action.reloadWindow",
+    "when": "isMac && activeWebviewPanelId != 'PullRequestOverview'"
+  },
 
   // LIST NAVIGATION
   // ---------------------------------------------------------------------------

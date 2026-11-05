@@ -25,6 +25,9 @@ source "$root_dir/bash/manifest_lib.sh"
 # override exists so the test suite can answer for a sandbox machine
 # without writing into the repo it is testing.
 MACHINE_FILE="${DOTFILES_MACHINE:-$root_dir/machine.sh}"
+# This machine's own fragments for merged files, unversioned like
+# machine.sh: local/<module>/<file>.jsonc, merged after every other.
+LOCAL_DIR="${DOTFILES_LOCAL:-$root_dir/local}"
 # What earlier runs put on this machine.  Not in the checkout, because
 # it describes the disk rather than the config: it has to outlive a
 # fresh clone or a `git clean`, or the next run could not tell what the
@@ -418,7 +421,8 @@ unclaimed() {
 # Three files under STATE_DIR, tab-separated, one path per line:
 #
 #   links       destination, target    every link a run left in place
-#   generated   destination, checksum  every file `merge` built
+#   generated   destination, checksum  every file `merge` built, less
+#                                      what its local fragment names
 #   kept        destination            ones the owner chose to keep
 #               after they stopped being declared; never asked again
 #
@@ -435,6 +439,24 @@ state_has() {
 }
 
 checksum() { cksum < "$1" | awk '{ print $1 "-" $2 }'; }
+
+# A generated file's checksum, leaving out the top-level settings its
+# local fragment names: the app saves those itself, as VS Code does the
+# zoom level, so a change to one is not an edit to ask about.
+# Arguments:  $1 - destination
+fingerprint() {
+  local lf json
+  lf=$(local_fragment "$1")
+  if [ -f "$lf" ] \
+    && json=$(awk -f "$root_dir/bash/jsonc.awk" "$1" \
+      | jq -S --slurpfile l <(awk -f "$root_dir/bash/jsonc.awk" "$lf") \
+        'if type == "object" and ($l[0] | type) == "object"
+         then del(.[($l[0] | keys[])]) else . end' 2>/dev/null); then
+    printf '%s\n' "$json" | cksum | awk '{ print $1 "-" $2 }'
+  else
+    checksum "$1"
+  fi
+}
 
 # Whether a path lies under a module root.  Arguments:  $1 - path
 owned_by_repo() {
@@ -588,7 +610,7 @@ reconcile() {
       fi
     else
       note="generated"
-      if [ "$(checksum "$dst")" != "$what" ]; then
+      if [ "$(fingerprint "$dst")" != "$what" ]; then
         note="generated, edited since"
       fi
       printf '\n  %s (%s)\n' "$dst" "$note"
@@ -630,15 +652,45 @@ def merge($a; $b):
   else $b end;
 reduce inputs as $x (null; merge(.; $x))'
 
+# The machine-local fragment for a merged destination, whether or not it
+# exists: named after the module that first declares the destination
+# and the file, as local/vscode/settings.jsonc.
+# Arguments:  $1 - destination
+local_fragment() {
+  local mod
+  mod=$(active | awk -F'\t' -v d="$1" \
+    '$1 == "merge" && $3 == d { print $6; exit }')
+  printf '%s/%s/%s.jsonc\n' "$LOCAL_DIR" "${mod##*/}" "$(basename "$1" .json)"
+}
+
 # Build one merged destination from its active fragments, in the order
-# they were declared.  Arguments:  $1 - destination;  $2 - output file
+# they were declared, then its local fragment.  Each setting the local
+# fragment names keeps the value the destination holds now, so what the
+# app saved for it survives the rebuild; the fragment gives the value
+# only where the destination has none.
+# Arguments:  $1 - destination;  $2 - output file
 render() {
-  local src
-  active | awk -F'\t' -v d="$1" '$1 == "merge" && $3 == d { print $4 }' \
+  local src lf
+  lf=$(local_fragment "$1")
+  { active | awk -F'\t' -v d="$1" '$1 == "merge" && $3 == d { print $4 }'
+    printf '%s\n' "$lf"; } \
     | while IFS= read -r src; do
         if [ -f "$src" ]; then awk -f "$root_dir/bash/jsonc.awk" "$src"; fi
       done \
     | jq -n "$MERGE_JQ" > "$2"
+  if [ -f "$lf" ] && [ -f "$1" ] && [ ! -L "$1" ] \
+    && jq -n --slurpfile out "$2" \
+      --slurpfile l <(awk -f "$root_dir/bash/jsonc.awk" "$lf") \
+      --slurpfile now <(awk -f "$root_dir/bash/jsonc.awk" "$1") '
+      $out[0] as $o | $now[0] as $n
+      | if ($o | type) == "object" and ($n | type) == "object"
+          and ($l[0] | type) == "object"
+        then reduce ($l[0] | keys_unsorted[]) as $k ($o;
+          if $n | has($k) then .[$k] = $n[$k] else . end)
+        else $o end' > "$2.live" 2>/dev/null; then
+    mv "$2.live" "$2"
+  fi
+  rm -f "$2.live"
 }
 
 # Write a generated file, unless someone has edited it since the last
@@ -656,7 +708,7 @@ install_generated() {
     written "$dst"
     return 0
   elif [ -f "$dst" ] && [ -n "$recorded" ] \
-    && [ "$(checksum "$dst")" != "$recorded" ]; then
+    && [ "$(fingerprint "$dst")" != "$recorded" ]; then
     printf '\n  %s was edited since setup wrote it:\n' "$dst"
     diff -u "$dst" "$new" | sed -n '3,40s/^/    /p' || true
     echo "    (- the file now, + what the fragments give)"
@@ -680,7 +732,7 @@ install_generated() {
 # Note that a generated file on disk is exactly what setup made of it.
 # Arguments:  $1 - destination
 written() {
-  printf '%s\t%s\n' "$1" "$(checksum "$1")" >> "$scratch/written"
+  printf '%s\t%s\n' "$1" "$(fingerprint "$1")" >> "$scratch/written"
 }
 
 # The generated files queued so far that are ready to build: with a
@@ -778,7 +830,7 @@ doctor() {
   unclaimed_features
 
   while IFS=$'\t' read -r dst sum; do
-    if [ -f "$dst" ] && [ ! -L "$dst" ] && [ "$(checksum "$dst")" != "$sum" ]
+    if [ -f "$dst" ] && [ ! -L "$dst" ] && [ "$(fingerprint "$dst")" != "$sum" ]
     then
       if [ "$any" = 0 ]; then
         echo ""

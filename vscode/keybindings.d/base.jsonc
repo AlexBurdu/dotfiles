@@ -498,6 +498,47 @@
     "command": "workbench.action.reloadWindow",
     "when": "isMac && activeWebviewPanelId != 'PullRequestOverview'"
   },
+  // Zoom by 10% a step rather than VS Code's 20%; see ../zoom-step.
+  {
+    "key": "cmd+=",
+    "command": "zoomStep.in",
+    "when": "isMac"
+  },
+  {
+    "key": "cmd+numpad_add",
+    "command": "zoomStep.in",
+    "when": "isMac"
+  },
+  {
+    "key": "cmd+-",
+    "command": "zoomStep.out",
+    "when": "isMac"
+  },
+  {
+    "key": "cmd+numpad_subtract",
+    "command": "zoomStep.out",
+    "when": "isMac"
+  },
+  {
+    "key": "ctrl+=",
+    "command": "zoomStep.in",
+    "when": "!isMac"
+  },
+  {
+    "key": "ctrl+numpad_add",
+    "command": "zoomStep.in",
+    "when": "!isMac"
+  },
+  {
+    "key": "ctrl+-",
+    "command": "zoomStep.out",
+    "when": "!isMac"
+  },
+  {
+    "key": "ctrl+numpad_subtract",
+    "command": "zoomStep.out",
+    "when": "!isMac"
+  },
 
   // LIST NAVIGATION
   // ---------------------------------------------------------------------------

@@ -248,6 +248,15 @@ wrote, shows the difference, and asks before overwriting — keeping the
 edited copy as `settings.json.edited`. Carry a change you want to keep
 into its fragment.
 
+A setting that differs per machine goes in that machine's *local
+fragment*, `local/<module>/<file>.jsonc` (for VS Code's settings,
+`local/vscode/settings.jsonc`). It merges after every other fragment,
+and `local/` is gitignored, like `machine.sh`. Each top-level setting
+it names belongs to the app: a rebuild keeps the value the file holds
+now, and a change to it is not called an edit. The fragment's value
+applies only where the file has none. VS Code's zoom level lives there,
+since every zoom saves it.
+
 `merge` needs `jq`, which macOS ships in `/usr/bin` and Linux
 distributions package. Without it the run says which files it could not
 build and carries on.
@@ -549,6 +558,7 @@ in each section below.
 | File tree: `Enter` on file / folder | - | open / enter it (oil) | open / unfold or fold | open and focus editor / unfold or fold | - |
 | Close sidebar and bottom panel | - | - | - | `Shift-Escape` / `C-Shift-Escape` | - |
 | Reload window | - | - | - | `Cmd-r` (macOS) | - |
+| Zoom in / out (10% steps) | - | - | - | `Cmd-=` / `Cmd--` | - |
 | Breadcrumb/navbar | - | `C-t` / `Space Space t` | `C-t` / `Space Space t` | `C-t` / `Space Space t` | - |
 | Create split h/j/k/l | `C-s h/j/k/l` | `Space h/j/k/l` | - | `Space h/j/k/l` | - |
 | Resize split h/j/k/l | `C-s M-Arrow` | `Space Space h/j/k/l` | - | `Space Space h/j/k/l` | - |
@@ -1331,6 +1341,7 @@ Only where `vscode.gemini` / `vscode.copilot` are enabled; see above.
 |---|---|
 | `Space z` | Toggle zen mode |
 | `Space u` | Focus timeline / local history |
+| `Cmd-=` / `Cmd--` | Zoom in / out by 10% ([zoom-step](./vscode/zoom-step); `C-=` / `C--` elsewhere) |
 | `Space vt` | Toggle activity bar visibility |
 | `Shift-Space` | Trigger suggestions |
 | `Cmd-r` | Reload window (macOS; not in the GitHub PR overview) |

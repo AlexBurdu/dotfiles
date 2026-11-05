@@ -6,8 +6,9 @@
 - `keybindings.d/*.jsonc` - Fragments that `keybindings.json` is built from
 - `manifest.sh` - Declares which fragments go into which file, which of
   them are optional, and the config directory on each platform
-- `install.sh` - On macOS, turns off "Add period with double-space" for
-  VS Code alone (see below)
+- `install.sh` - Installs the zoom-step extension, and on macOS turns
+  off "Add period with double-space" for VS Code alone (see below)
+- `zoom-step/` - A small extension that zooms by 10% a step
 
 ## Double Space on macOS
 
@@ -18,6 +19,21 @@ chord loses its second Space; pressed slowly, both arrive. `install.sh`
 sets `NSAutomaticPeriodSubstitutionEnabled` to false in VS Code's own
 preferences, so every other app keeps the period. VS Code reads it at
 launch, so quit and reopen it after the first setup run.
+
+## Zoom by 10%
+
+VS Code's own zoom scales the window by 1.2 to the power of
+`window.zoomLevel`, so each step is 20%, and the step is fixed. The
+`zoom-step` extension's commands add or take away the level that
+scales by 1.1 instead, and `Cmd-=` / `Cmd--` (`C-=` / `C--` elsewhere)
+run them. `install.sh` packs it into a `.vsix` and installs it with
+VS Code's `code` CLI, only when its files change.
+
+The commands write `window.zoomLevel` to `settings.json` for every
+window, rather than zooming one window as VS Code's do. So the level is
+set in the machine's local fragment, `local/vscode/settings.jsonc`, and
+setup keeps whatever VS Code last saved for it; see "Merged files" in
+[../README.md](../README.md).
 
 ## Section Formatting
 

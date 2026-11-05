@@ -24,3 +24,7 @@ __pycache__/
 # Machine-local setup answers — which optional links this machine wants,
 # and where its overlays are. Seeded from machine.example.sh.
 /machine.sh
+
+# This machine's own fragments for merged files, merged after every
+# other: settings that differ per machine, such as VS Code's zoom.
+/local/

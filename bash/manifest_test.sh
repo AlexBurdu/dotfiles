@@ -26,20 +26,21 @@ check() {
 # dialog on screen.  Stubs make that outcome impossible rather than
 # unlikely.
 STUBS=$(mktemp -d "${TMPDIR:-/tmp}/manifest-stubs.XXXXXX")
-for cmd in git brew sudo curl; do
+for cmd in git brew sudo curl code; do
   printf '#!/bin/sh\nexit 0\n' > "$STUBS/$cmd"
   chmod +x "$STUBS/$cmd"
 done
 trap 'rm -rf "$STUBS"' EXIT
 
-# DOTFILES_MACHINE on every invocation, without exception: the machine
-# file lives in the checkout, and a run that inherited the default
-# would seed and read the answers of the repo under test.  The state
+# DOTFILES_MACHINE and DOTFILES_LOCAL on every invocation, without
+# exception: the machine file and local fragments live in the checkout,
+# and a run that inherited the defaults would seed and read the answers
+# of the repo under test.  The state
 # lands under the sandbox HOME, since XDG_STATE_HOME is cleared.
 setup() { # setup <home> [args...]
   local home="$1"; shift
   PATH="$STUBS:$PATH" HOME="$home" DOTFILES_MACHINE="$home/machine.sh" \
-    XDG_STATE_HOME="" "$ROOT/setup.sh" "$@" 2>&1
+    DOTFILES_LOCAL="$home/local" XDG_STATE_HOME="" "$ROOT/setup.sh" "$@" 2>&1
 }
 
 # Stdin closed, so every prompt takes its default: modules are set up,
@@ -384,7 +385,7 @@ check "which holds the common settings" \
 check "and none of the optional ones" \
   "null" "$(jq '."bazel.executable"' "$S")"
 check "keybindings are the common set alone" \
-  "228" "$(jq length "$K")"
+  "237" "$(jq length "$K")"
 
 machine "$SB" "enable vscode.bazel" "enable vscode.gemini"
 run "$SB" >/dev/null
@@ -393,7 +394,7 @@ check "enabling a name merges its settings in" \
 check "without losing the common ones" \
   '"<Space>"' "$(jq '."vim.leader"' "$S")"
 check "and keybinding fragments are appended, not replaced" \
-  "233" "$(jq length "$K")"
+  "242" "$(jq length "$K")"
 
 machine "$SB" "enable vscode.gemini"
 run "$SB" >/dev/null
@@ -421,6 +422,43 @@ check "and keeps the edit beside it" \
 out=$(run "$SB")
 check "after which it is no longer called edited" \
   "0" "$(count "$out" 'was edited since')"
+rm -rf "$SB"
+
+# A local fragment merges last, and each setting it names is the app's
+# to change: VS Code saves the zoom level itself on every zoom.
+SB=$(sandbox); machine "$SB"
+mkdir -p "$SB/local/vscode"
+printf '// mine\n{ "window.zoomLevel": 2, "editor.fontSize": 14, }\n' \
+  > "$SB/local/vscode/settings.jsonc"
+run "$SB" >/dev/null
+S="$SB/$VSC_MAC/settings.json"
+check "a local fragment's settings are merged in" \
+  "2" "$(jq '."window.zoomLevel"' "$S")"
+check "after every other fragment" \
+  "14" "$(jq '."editor.fontSize"' "$S")"
+jq '."window.zoomLevel" = 2.5' "$S" > "$SB/edited" && cp "$SB/edited" "$S"
+out=$(run "$SB")
+check "a setting it names, changed by the app, is not an edit" \
+  "0" "$(count "$out" 'was edited since')"
+check "and keeps the app's value through the rebuild" \
+  "2.5" "$(jq '."window.zoomLevel"' "$S")"
+out=$(setup "$SB" --doctor </dev/null)
+check "nor does doctor call it edited" \
+  "0" "$(count "$out" 'Edited since setup wrote them')"
+jq 'del(."window.zoomLevel")' "$S" > "$SB/edited" && cp "$SB/edited" "$S"
+run "$SB" >/dev/null
+check "where the file has none, the fragment's value comes back" \
+  "2" "$(jq '."window.zoomLevel"' "$S")"
+jq '. + {"window.zoomLevel": 3, "editor.tabSize": 8}' "$S" > "$SB/edited" \
+  && cp "$SB/edited" "$S"
+out=$(run "$SB")
+check "an edit to any other setting is still noticed" \
+  "1" "$(count "$out" 'was edited since setup wrote it')"
+answer "$SB" o >/dev/null
+check "and overwriting it keeps the app's value" \
+  "3" "$(jq '."window.zoomLevel"' "$S")"
+check "while the edit itself goes" \
+  "null" "$(jq '."editor.tabSize"' "$S")"
 rm -rf "$SB"
 
 # ── leftovers ──────────────────────────────────────────────────────────

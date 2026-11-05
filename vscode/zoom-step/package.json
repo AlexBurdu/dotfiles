@@ -1,0 +1,23 @@
+{
+  "name": "zoom-step",
+  "displayName": "Zoom Step",
+  "description": "Zooms the window in and out by 10% a step.",
+  "version": "0.1.0",
+  "publisher": "dotfiles",
+  "engines": { "vscode": "^1.74.0" },
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "zoomStep.in",
+        "title": "Zoom In by 10%",
+        "category": "View"
+      },
+      {
+        "command": "zoomStep.out",
+        "title": "Zoom Out by 10%",
+        "category": "View"
+      }
+    ]
+  }
+}

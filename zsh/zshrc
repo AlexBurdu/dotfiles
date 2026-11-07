@@ -69,6 +69,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+# The tmux plugin's FIXTERM starts tmux with -f tmux.extra.conf, which only
+# sources ~/.tmux.conf and so skips the XDG config. tmux.conf sets the
+# terminal itself.
+ZSH_TMUX_FIXTERM=false
 plugins=(
   extract
   git

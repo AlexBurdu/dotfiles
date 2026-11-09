@@ -4,6 +4,8 @@
 
 - `settings.d/*.jsonc` - Fragments that `settings.json` is built from
 - `keybindings.d/*.jsonc` - Fragments that `keybindings.json` is built from
+- `tasks.d/*.jsonc` - Fragments that the user-level `tasks.json` is built
+  from
 - `manifest.sh` - Declares which fragments go into which file, which of
   them are optional, and the config directory on each platform
 - `install.sh` - Installs the zoom-step extension, and on macOS turns
@@ -34,6 +36,24 @@ window, rather than zooming one window as VS Code's do. So the level is
 set in the machine's local fragment, `local/vscode/settings.jsonc`, and
 setup keeps whatever VS Code last saved for it; see "Merged files" in
 [../README.md](../README.md).
+
+## Keeping a checkout current
+
+A checkout kept open in VS Code goes stale, and pulling into it while
+VS Code watches makes its language servers reindex at random times.
+Give VS Code its own worktree instead and move it when you sit down:
+Terminal > Run Task... (or "Tasks: Run Task" in the Command Palette) >
+"Sync to origin default branch". It runs, in the workspace folder:
+
+```sh
+git fetch origin && git remote set-head origin --auto \
+  && git switch --detach origin/HEAD
+```
+
+`origin/HEAD` follows the remote's default branch, whatever its name.
+The head is left detached, so nothing is committed or pushed to that
+branch by accident. Uncommitted changes make `git switch` refuse: the
+task fails in its terminal and never stashes, resets or overwrites.
 
 ## Section Formatting
 
@@ -69,6 +89,7 @@ comments and trailing commas are fine.
 | `keybindings.d/base.jsonc` — AI, navigation | every machine |
 | `keybindings.d/gemini.jsonc` | `enable vscode.gemini` |
 | `keybindings.d/copilot.jsonc` | `enable vscode.copilot` |
+| `tasks.d/base.jsonc` — user tasks | every machine |
 
 The `enable` lines go in the gitignored `machine.sh` at the repo root;
 the first setup run asks about each name. An overlay repo can add its

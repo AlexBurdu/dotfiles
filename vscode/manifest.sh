@@ -34,3 +34,6 @@ optional gemini merge keybindings.d/gemini.jsonc "$config/keybindings.json" \
   "Gemini Code Assist"
 optional copilot merge keybindings.d/copilot.jsonc "$config/keybindings.json" \
   "Copilot chat keys"
+
+merge tasks.d/base.jsonc "$config/tasks.json" \
+  "User tasks: sync the checkout to the remote's default branch"

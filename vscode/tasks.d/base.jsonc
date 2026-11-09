@@ -1,0 +1,18 @@
+// Built into the user-level tasks.json by setup.sh. See ../README.md.
+{
+  "version": "2.0.0",
+  "tasks": [
+    // Move the open checkout to the remote's default branch, detached, so
+    // nothing lands on that branch by accident.  origin/HEAD follows the
+    // remote's choice (main, master, ...).  Uncommitted changes make
+    // `git switch` refuse, and the task fails without touching them.
+    {
+      "label": "Sync to origin default branch",
+      "type": "shell",
+      "command": "git fetch origin && git remote set-head origin --auto && git switch --detach origin/HEAD",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+  ],
+}
